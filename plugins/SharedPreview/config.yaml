@@ -1,0 +1,15 @@
+name: SharedPreview
+version: 0.001000
+
+applications:
+  cms:
+    callbacks:
+      template_param.edit_entry: $SharedPreview::SharedPreview::CMS::Entry::on_template_param_edit_entry
+  shared_preview:
+    handler: MT::App::SharedPreview
+    script: $SharedPreview::MT::App::SharedPreview::script_name
+
+config_settings:
+  SharedPreviewScript:
+    default: mt-shared-preview.cgi
+
