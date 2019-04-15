@@ -1,21 +1,24 @@
-package SharedPreview::CMS::Entry;
+package SharedPreview::CMS::ContentData;
 use strict;
 use warnings;
 
 use base qw(SharedPreview::CMS::SharedPreviewBase);
 
 sub on_template_param_edit {
-    my ( $cb, $app, $param, $tmpl ) = @_;
+    my ($cb, $app, $param) = @_;
     return unless my $base = SharedPreview::CMS::SharedPreviewBase->new($app);
 
     my $id = $app->param('id');
     my $type = $app->param('_type');
+    my $content_type_id = $app->param('content_type_id');
+
     my $href = $app->uri_params(
         mode => 'dialog_shared_preview',
         args => {
             blog_id         => $app->blog->id,
             _type           => $type,
             id              => $id,
+            content_type_id => $content_type_id,
             dialog          => 1,
         },
     );
@@ -26,26 +29,36 @@ sub on_template_param_edit {
 
 sub _build_preview {
     my ($class, $app) = @_;
+    my $at = 'ContentType';
+    my $content_type_id = $app->param('content_type_id');
     my $id = $app->param('id');
     my $type = $app->param('_type');
 
-    my $entry = $app->model($type)->load($id);
-    return $app->errtrans( 'invalid id: [_1]', $id ) unless $entry;
+    my $content_data = $app->model($type)->load($id);
 
     # build entry
-    my $at       = $entry->class eq 'page' ? 'Page' : 'Individual';
     my $tmpl_map = $app->model('templatemap')->load(
-        {   archive_type => $at,
+        { archive_type   => $at,
             blog_id      => $app->blog->id,
             is_preferred => 1,
-        }
+
+        },
+        {
+            join => MT::Template->join_on(
+                undef,
+                {
+                    id              => \'= templatemap_template_id',
+                    content_type_id => $content_type_id,
+                },
+            ),
+        },
     );
 
     my $fullscreen;
     my $tmpl;
     if ($tmpl_map) {
         $tmpl = $tmpl_map->template;
-        $app->request( 'build_template', $tmpl );
+        $app->request('build_template', $tmpl);
     }
     else {
         # TODO
@@ -54,22 +67,24 @@ sub _build_preview {
     return $app->errtrans('Cannot load template.')
         unless $tmpl;
 
-    my $ctx  = $tmpl->context;
+    my $ctx = $tmpl->context;
     my $blog = $app->blog;
-    $ctx->stash( 'entry',    $entry );
-    $ctx->stash( 'blog',     $blog );
-    $ctx->stash( 'category', $entry->category );
-    my $ao_ts = $entry->authored_on;
+    $ctx->stash('content_data', $content_data);
+    $ctx->stash('blog', $blog);
+
+    my $ao_ts = $content_data->authored_on;
     $ao_ts =~ s/\D//g;
-    $ctx->{current_timestamp}    = $ao_ts;
+    $ctx->{current_timestamp} = $ao_ts;
     $ctx->{current_archive_type} = $at;
-    $ctx->var( 'preview_template', 1 );
+    $ctx->var('preview_template', 1);
 
     my $archiver = $app->publisher->archiver($at);
-    if ( my $params = $archiver->template_params ) {
-        $ctx->var( $_, $params->{$_} ) for keys %$params;
+    if (my $params = $archiver->template_params) {
+        $ctx->var($_, $params->{$_}) for keys %$params;
     }
 
+    my $html = $tmpl->output;
+    return unless defined $html;
     my @inputs  = (
         {
             data_name  => 'id',
@@ -83,14 +98,18 @@ sub _build_preview {
             data_name  => 'blog_id',
             data_value => $app->blog->id,
         },
+        {
+            data_name  => 'content_type_id',
+            data_value => $content_type_id,
+
+        }
     );
 
-    my $html = $tmpl->output;
     my %param = (
         id              => $id,
         object_type     => $type,
         preview_content => $html,
-        title           => $entry->title,
+        title           => $content_data->label,
         inputs          => \@inputs
     );
 
@@ -98,4 +117,3 @@ sub _build_preview {
 }
 
 1;
-

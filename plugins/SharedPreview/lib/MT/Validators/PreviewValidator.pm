@@ -1,0 +1,23 @@
+package MT::Validators::PreviewValidator;
+use strict;
+use warnings;
+
+sub validator {
+    my ($self, $app) = @_;
+
+    my $blog = $app->blog;
+    return $app->translate('No Blog') unless $blog;
+
+    my $type = $app->param('_type');
+    return $app->translate('no type') unless $type;
+
+    my $obj_class = $app->model($type);
+    return $app->translate( 'invalid type: [_1]', $type ) unless $obj_class;
+
+    my $id = $app->param('id');
+    return $app->translate('no id') unless $id;
+
+    return undef;
+}
+
+1;
