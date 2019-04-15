@@ -1,5 +1,9 @@
 name: SharedPreview
 version: 0.001000
+schema_version: 0.01
+
+object_types:
+  preview: MT::Preview
 
 applications:
   cms:
