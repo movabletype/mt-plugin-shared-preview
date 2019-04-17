@@ -2,7 +2,9 @@ package MT::Validators::PreviewValidator;
 use strict;
 use warnings;
 
-sub validator {
+use MT::Preview;
+
+sub make_validator {
     my ($self, $app) = @_;
 
     my $blog = $app->blog;
@@ -12,7 +14,7 @@ sub validator {
     return $app->translate('no type') unless $type;
 
     my $obj_class = $app->model($type);
-    return $app->translate( 'invalid type: [_1]', $type ) unless $obj_class;
+    return $app->translate('invalid type: [_1]', $type) unless $obj_class;
 
     my $id = $app->param('id');
     return $app->translate('no id') unless $id;
@@ -20,4 +22,14 @@ sub validator {
     return undef;
 }
 
+sub view_validator {
+    my ($self, $app) = @_;
+    my $spid = $app->param('spid');
+    return $app->translate('no id') unless $spid;
+
+    my $preview = MT::Preview->load({ id => $spid });
+    return $app->translate('There is no shared preview') unless $preview;
+
+    return undef;
+}
 1;

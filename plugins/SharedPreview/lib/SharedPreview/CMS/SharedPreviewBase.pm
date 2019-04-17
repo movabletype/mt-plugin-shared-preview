@@ -1,7 +1,7 @@
 package SharedPreview::CMS::SharedPreviewBase;
 use strict;
 use warnings;
-use MT::Preview;
+
 sub new {
     my ($class, $app) = @_;
     return undef unless $app->param('id') || $class->can_shared_preview;
@@ -25,7 +25,7 @@ sub add_shared_preview_link {
     my $release_status = MT::Entry::RELEASE();
 
     return <<"__JS__";
-jQuery('button[name=preview_$type]').after('<div id="shared_preview" style="display:none;" class="text-right"><a href="$link" class="mt-open-dialog mt-modal-open">Shared Preview</a></div>');
+jQuery('button[name=preview_$type]').after('<div id="shared_preview" style="display:none;" class="text-right"><a href="$link">Shared Preview</a></div>');
     jQuery('select[name=status]').on('change', function(){
         switch_display_preview();
     });

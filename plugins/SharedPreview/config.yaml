@@ -1,23 +1,38 @@
 name: SharedPreview
 version: 0.001000
-schema_version: 0.01
+schema_version: 0.02
 
 object_types:
   preview: MT::Preview
+  preview_setting: MT::PreviewSetting
 
 applications:
   cms:
+    menus:
+      settings:shared_preview:
+        label: "Shared Preview Setting"
+        order: 1000
+        mode: "shared_preview_setting"
+        permission: "administer_site"
+        view:
+          - website
+          - blog
+          - content_data
+
     callbacks:
       template_param.edit_entry: $SharedPreview::SharedPreview::CMS::Entry::on_template_param_edit
       template_param.edit_content_data: $SharedPreview::SharedPreview::CMS::ContentData::on_template_param_edit
 
-  dialog_shared_preview:
+  make_shared_preview:
     handler: MT::App::SharedPreview
     script: $SharedPreview::MT::App::SharedPreview::script_name
 
   shared_preview:
     handler: MT::App::SharedPreview
     script: $SharedPreview::MT::App::SharedPreview::script_name
+
+  shared_preview_setting:
+    handler: MT::App::SharedPreview
 
 config_settings:
   SharedPreviewScript:

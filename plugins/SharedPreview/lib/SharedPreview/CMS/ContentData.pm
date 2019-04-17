@@ -13,13 +13,12 @@ sub on_template_param_edit {
     my $content_type_id = $app->param('content_type_id');
 
     my $href = $app->uri_params(
-        mode => 'dialog_shared_preview',
+        mode => 'make_shared_preview',
         args => {
             blog_id         => $app->blog->id,
             _type           => $type,
             id              => $id,
             content_type_id => $content_type_id,
-            dialog          => 1,
         },
     );
 
@@ -85,26 +84,8 @@ sub _build_preview {
 
     my $html = $tmpl->output;
     return unless defined $html;
-    my @inputs  = (
-        {
-            data_name  => 'id',
-            data_value => $id,
-        },
-        {
-            data_name  => '_type',
-            data_value => $type,
-        },
-        {
-            data_name  => 'blog_id',
-            data_value => $app->blog->id,
-        },
-        {
-            data_name  => 'content_type_id',
-            data_value => $content_type_id,
 
-        }
-    );
-
+    my @inputs = &trim_parameter($app);
     my %param = (
         id              => $id,
         object_type     => $type,
@@ -114,6 +95,37 @@ sub _build_preview {
     );
 
     return \%param;
+}
+
+sub trim_parameter {
+    my ($app) = @_;
+    my $content_type_id = $app->param('content_type_id');
+    my $id = $app->param('id');
+    my $type = $app->param('_type');
+    my @params;
+
+    return @params = (
+        {
+            object_name => 'object_id',
+            data_name   => 'id',
+            data_value  => $id,
+        },
+        {
+            object_name => 'object_type',
+            data_name   => '_type',
+            data_value  => $type,
+        },
+        {
+            object_name => 'blog_id',
+            data_name   => 'blog_id',
+            data_value  => $app->blog->id,
+        },
+        {
+            object_name => 'data',
+            data_name   => 'content_type_id',
+            data_value  => $content_type_id,
+        }
+    );
 }
 
 1;
