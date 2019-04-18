@@ -1,0 +1,42 @@
+<p><__trans phrase="**************************."></p>
+<mtapp:setting
+   id="shared_preview_setting"
+   label="<__trans phrase="Use Password">">
+  <ul class="list-unstyled">
+    <li>
+      <div class="custom-control custom-radio">
+        <input type="radio" name="use_password" id="not_use" class="custom-control-input" value="0"<mt:unless name="use_password"> checked="checked"</mt:unless> />
+        <label class="custom-control-label" for="not_use"><__trans phrase="Do not use password"></label>
+      </div>
+    </li>
+    <li>
+      <div class="custom-control custom-radio">
+        <input type="radio" name="use_password" id="use" class="custom-control-input" value="1"<mt:if name="use_password"> checked="checked"</mt:if>" />
+        <label class="custom-control-label" for="use"><__trans phrase="Use password"></label>
+      </div>
+    </li>
+    <li>
+      <div id="set_password" class="form-group" >
+        <input type="text" name="password" id="password" class="" value="<mt:var name="password">" />
+      </div>
+    </li>
+  </ul>
+</mtapp:setting>
+
+<script type="text/javascript">
+jQuery(function($) {
+    showSharedPreviewPasswordField();
+    jQuery('input[name=use_password]').on('change', function(){
+        showSharedPreviewPasswordField();
+    });
+
+    function showSharedPreviewPasswordField() {
+        var checkedValue = $('input[name=use_password]:checked').val();
+        if (checkedValue == 1) {
+            jQuery('#set_password').show();
+        } else {
+            jQuery('#set_password').hide();
+        }
+    }
+});
+</script>

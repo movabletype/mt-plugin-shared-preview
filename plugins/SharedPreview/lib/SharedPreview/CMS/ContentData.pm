@@ -5,11 +5,11 @@ use warnings;
 use base qw(SharedPreview::CMS::SharedPreviewBase);
 
 sub on_template_param_edit {
-    my ($cb, $app, $param) = @_;
+    my ( $cb, $app, $param ) = @_;
     return unless my $base = SharedPreview::CMS::SharedPreviewBase->new($app);
 
-    my $id = $app->param('id');
-    my $type = $app->param('_type');
+    my $id              = $app->param('id');
+    my $type            = $app->param('_type');
     my $content_type_id = $app->param('content_type_id');
 
     my $href = $app->uri_params(
@@ -22,22 +22,22 @@ sub on_template_param_edit {
         },
     );
 
-    ($param->{jq_js_include} ||= '')
-        .= $base->add_shared_preview_link($href);
+    ( $param->{jq_js_include} ||= '' ) .= $base->add_shared_preview_link($href);
 }
 
 sub _build_preview {
-    my ($class, $app) = @_;
-    my $at = 'ContentType';
+    my ( $class, $app ) = @_;
+    my $at              = 'ContentType';
     my $content_type_id = $app->param('content_type_id');
-    my $id = $app->param('id');
-    my $type = $app->param('_type');
+    my $id              = $app->param('id');
+    my $type            = $app->param('_type');
 
     my $content_data = $app->model($type)->load($id);
 
     # build entry
     my $tmpl_map = $app->model('templatemap')->load(
-        { archive_type   => $at,
+        {
+            archive_type => $at,
             blog_id      => $app->blog->id,
             is_preferred => 1,
 
@@ -57,36 +57,36 @@ sub _build_preview {
     my $tmpl;
     if ($tmpl_map) {
         $tmpl = $tmpl_map->template;
-        $app->request('build_template', $tmpl);
+        $app->request( 'build_template', $tmpl );
     }
     else {
         # TODO
         $fullscreen = 1;
     }
     return $app->errtrans('Cannot load template.')
-        unless $tmpl;
+      unless $tmpl;
 
-    my $ctx = $tmpl->context;
+    my $ctx  = $tmpl->context;
     my $blog = $app->blog;
-    $ctx->stash('content_data', $content_data);
-    $ctx->stash('blog', $blog);
+    $ctx->stash( 'content_data', $content_data );
+    $ctx->stash( 'blog',         $blog );
 
     my $ao_ts = $content_data->authored_on;
     $ao_ts =~ s/\D//g;
-    $ctx->{current_timestamp} = $ao_ts;
+    $ctx->{current_timestamp}    = $ao_ts;
     $ctx->{current_archive_type} = $at;
-    $ctx->var('preview_template', 1);
+    $ctx->var( 'preview_template', 1 );
 
     my $archiver = $app->publisher->archiver($at);
-    if (my $params = $archiver->template_params) {
-        $ctx->var($_, $params->{$_}) for keys %$params;
+    if ( my $params = $archiver->template_params ) {
+        $ctx->var( $_, $params->{$_} ) for keys %$params;
     }
 
     my $html = $tmpl->output;
     return unless defined $html;
 
     my @inputs = &trim_parameter($app);
-    my %param = (
+    my %param  = (
         id              => $id,
         object_type     => $type,
         preview_content => $html,
@@ -98,10 +98,10 @@ sub _build_preview {
 }
 
 sub trim_parameter {
-    my ($app) = @_;
+    my ($app)           = @_;
     my $content_type_id = $app->param('content_type_id');
-    my $id = $app->param('id');
-    my $type = $app->param('_type');
+    my $id              = $app->param('id');
+    my $type            = $app->param('_type');
     my @params;
 
     return @params = (

@@ -1,24 +1,23 @@
 name: SharedPreview
 version: 0.001000
 schema_version: 0.02
+description: <__trans phrase="This plugin can be share blogs, websites, and content previews with others. Please check the Shared Preview settings from the plugin settings of the site.">
 
 object_types:
   preview: MT::Preview
   preview_setting: MT::PreviewSetting
 
+# blog_config_template: shared_preview_setting.tmpl
+
+settings:
+  shared_preview_setting_blog:
+    scope: blog
+
+blog_config_template:
+  code:  $SharedPreview::MT::App::SharedPreview::shared_preview_setting
+
 applications:
   cms:
-    menus:
-      settings:shared_preview:
-        label: "Shared Preview Setting"
-        order: 1000
-        mode: "shared_preview_setting"
-        permission: "administer_site"
-        view:
-          - website
-          - blog
-          - content_data
-
     callbacks:
       template_param.edit_entry: $SharedPreview::SharedPreview::CMS::Entry::on_template_param_edit
       template_param.edit_content_data: $SharedPreview::SharedPreview::CMS::ContentData::on_template_param_edit
@@ -30,9 +29,6 @@ applications:
   shared_preview:
     handler: MT::App::SharedPreview
     script: $SharedPreview::MT::App::SharedPreview::script_name
-
-  shared_preview_setting:
-    handler: MT::App::SharedPreview
 
 config_settings:
   SharedPreviewScript:

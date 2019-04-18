@@ -3,25 +3,25 @@ use strict;
 use warnings;
 
 sub new {
-    my ($class, $app) = @_;
+    my ( $class, $app ) = @_;
     return undef unless $app->param('id') || $class->can_shared_preview;
 
     my $property = {
-        'type'     => scalar $app->param('_type'),
+        'type' => scalar $app->param('_type'),
         'href' => $app->app_path . $app->config->SharedPreviewScript,
     };
 
     bless $property, $class;
-};
+}
 
 sub can_shared_preview {
     1;
 }
 
 sub add_shared_preview_link {
-    my($class, $href) = @_;
-    my $type = $class->{type};
-    my $link = $class->{href} . $href;
+    my ( $class, $href ) = @_;
+    my $type           = $class->{type};
+    my $link           = $class->{href} . $href;
     my $release_status = MT::Entry::RELEASE();
 
     return <<"__JS__";

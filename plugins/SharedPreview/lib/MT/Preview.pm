@@ -15,19 +15,19 @@ use MT::Util qw(dirify);
 
 __PACKAGE__->install_properties(
     {
-        column_defs =>
-            {
-                'id'          => 'string(40) not null',
-                'object_id'   => 'integer not null',
-                'object_type' => 'string(50) not null',
-                'blog_id'     => 'integer(11) not null',
-                'data'        => {
-                    type       => 'blob',
-                    revisioned => 1,
-                },
+        column_defs => {
+            'id'          => 'string(40) not null',
+            'object_id'   => 'integer not null',
+            'object_type' => 'string(50) not null',
+            'blog_id'     => 'integer(11) not null',
+            'data'        => {
+                type       => 'blob',
+                revisioned => 1,
             },
-        indexes     => {
-            blog_tag => { columns => [ 'blog_id', 'object_type', 'object_id' ], },
+        },
+        indexes => {
+            blog_tag =>
+              { columns => [ 'blog_id', 'object_type', 'object_id' ], },
         },
         primary_key => 'id',
         datasource  => 'preview',
@@ -40,9 +40,9 @@ sub class_label {
 
 sub save {
     my $self = shift;
-    if (my $data = $self->{__data}) {
+    if ( my $data = $self->{__data} ) {
         require MT::Serialize;
-        my $ser = MT::Serialize->serialize(\$data);
+        my $ser = MT::Serialize->serialize( \$data );
         $self->data($ser);
     }
     $self->{__dirty} = 0;
@@ -50,10 +50,10 @@ sub save {
 }
 
 sub make_unique_id {
-    my $self = shift;
+    my $self  = shift;
     my %param = @_;
-    my ($blog_id, $object_id, $object_type)
-        = @param{qw(blog_id object_id object_type)};
+    my ( $blog_id, $object_id, $object_type ) =
+      @param{qw(blog_id object_id object_type)};
 
     return time;
 }
@@ -65,7 +65,7 @@ sub thaw_data {
     $data = '' unless $data;
     require MT::Serialize;
     my $out = MT::Serialize->unserialize($data);
-    if (ref $out eq 'REF') {
+    if ( ref $out eq 'REF' ) {
         $self->{__data} = $$out;
     }
     else {
@@ -76,20 +76,20 @@ sub thaw_data {
 }
 
 sub get {
-    my $self = shift;
+    my $self  = shift;
     my ($var) = @_;
-    my $data = $self->thaw_data;
+    my $data  = $self->thaw_data;
     $data->{$var};
 }
 
 sub purge {
     my $class = shift;
-    my ($kind, $ttl) = @_;
+    my ( $kind, $ttl ) = @_;
 
     $class = ref($class) if ref($class);
 
-    my $terms = { $kind ? (kind => $kind) : () };
-    my $args = {};
+    my $terms = { $kind ? ( kind => $kind ) : () };
+    my $args  = {};
     if ($ttl) {
         $terms->{start} = [ undef, time - $ttl ];
         $args->{range} = { start => 1 };
@@ -100,8 +100,8 @@ sub purge {
         $args->{range} = { duration => 1 };
     }
 
-    $class->remove($terms, $args)
-        or return $class->error($class->errstr);
+    $class->remove( $terms, $args )
+      or return $class->error( $class->errstr );
     1;
 }
 
