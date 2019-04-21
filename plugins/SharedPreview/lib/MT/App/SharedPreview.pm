@@ -9,7 +9,6 @@ use MT;
 use MT::Serialize;
 use MT::Validators::PreviewValidator;
 use MT::Preview;
-use MT::PreviewSetting;
 use SharedPreview::CMS::Entry;
 use SharedPreview::CMS::ContentData;
 
@@ -36,10 +35,6 @@ sub shared_preview_setting {
     my ( $plugin, $param, $scope ) = @_;
     my @blog_parameter = split(/:/, $scope);
     my $parameter;
-
-    if ($blog_parameter[1]) {
-        $parameter = MT::PreviewSetting->load({blog_id => $blog_parameter[1]});
-    }
 
     $plugin->load_tmpl( 'shared_preview_setting.tmpl', $parameter);
 }
@@ -129,15 +124,6 @@ sub shared_preview {
     my $preview_id = $app->param('spid');
 
     my $preview = MT::Preview->load( { id => $preview_id } );
-
-    if (
-        MT::PreviewSetting->load(
-            { blog_id => $preview->blog_id, use_password => 0 }
-        )
-      )
-    {
-        # $app->redirect();
-    }
 
     &set_app_parameters( $app, $preview );
 
