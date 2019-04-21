@@ -5,7 +5,6 @@ description: <__trans phrase="This plugin can be share blogs, websites, and cont
 
 object_types:
   preview: MT::Preview
-  preview_setting: MT::PreviewSetting
 
 # blog_config_template: shared_preview_setting.tmpl
 
