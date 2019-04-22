@@ -9,13 +9,14 @@ use strict;
 use warnings;
 
 use MT::Object;
+use MT::Serialize;
+
 @MT::Preview::ISA = qw(MT::Object);
 
 use MT::Util qw(dirify);
 
 __PACKAGE__->install_properties(
-    {
-        column_defs => {
+    {   column_defs => {
             'id'          => 'string(40) not null',
             'object_id'   => 'integer not null',
             'object_type' => 'string(50) not null',
@@ -27,12 +28,15 @@ __PACKAGE__->install_properties(
         },
         indexes => {
             blog_tag =>
-              { columns => [ 'blog_id', 'object_type', 'object_id' ], },
+                { columns => [ 'blog_id', 'object_type', 'object_id' ], },
         },
         primary_key => 'id',
         datasource  => 'preview',
     }
 );
+
+sub USE_PASSWORD_VALID   {1}
+sub USE_PASSWORD_UNVALID {0}
 
 sub class_label {
     return MT->translate("Preview");
@@ -52,8 +56,8 @@ sub save {
 sub make_unique_id {
     my $self  = shift;
     my %param = @_;
-    my ( $blog_id, $object_id, $object_type ) =
-      @param{qw(blog_id object_id object_type)};
+    my ( $blog_id, $object_id, $object_type )
+        = @param{qw(blog_id object_id object_type)};
 
     return time;
 }
@@ -101,7 +105,7 @@ sub purge {
     }
 
     $class->remove( $terms, $args )
-      or return $class->error( $class->errstr );
+        or return $class->error( $class->errstr );
     1;
 }
 
@@ -143,5 +147,11 @@ sub purge {
         }
     }
 }
+
+sub get_preview_data_by_id {
+    my ( $self, $preview_id ) = @_;
+    return $self->load( { id => $preview_id } ) || undef;
+}
+
 1;
 

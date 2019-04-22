@@ -4,7 +4,7 @@ use warnings;
 
 sub new {
     my ( $class, $app ) = @_;
-    return undef unless $app->param('id') || $class->can_shared_preview;
+    return undef unless $app->param('id');
 
     my $property = {
         'type' => scalar $app->param('_type'),
@@ -12,10 +12,6 @@ sub new {
     };
 
     bless $property, $class;
-}
-
-sub can_shared_preview {
-    1;
 }
 
 sub add_shared_preview_link {

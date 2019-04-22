@@ -22,7 +22,8 @@ sub on_template_param_edit {
         },
     );
 
-    ( $param->{jq_js_include} ||= '' ) .= $base->add_shared_preview_link($href);
+    ( $param->{jq_js_include} ||= '' )
+        .= $base->add_shared_preview_link($href);
 }
 
 sub _build_preview {
@@ -36,17 +37,14 @@ sub _build_preview {
 
     # build entry
     my $tmpl_map = $app->model('templatemap')->load(
-        {
-            archive_type => $at,
+        {   archive_type => $at,
             blog_id      => $app->blog->id,
             is_preferred => 1,
 
         },
-        {
-            join => MT::Template->join_on(
+        {   join => MT::Template->join_on(
                 undef,
-                {
-                    id              => \'= templatemap_template_id',
+                {   id              => \'= templatemap_template_id',
                     content_type_id => $content_type_id,
                 },
             ),
@@ -64,7 +62,7 @@ sub _build_preview {
         $fullscreen = 1;
     }
     return $app->errtrans('Cannot load template.')
-      unless $tmpl;
+        unless $tmpl;
 
     my $ctx  = $tmpl->context;
     my $blog = $app->blog;
@@ -85,7 +83,7 @@ sub _build_preview {
     my $html = $tmpl->output;
     return unless defined $html;
 
-    my @inputs = &trim_parameter($app);
+    my @inputs = trim_parameter($app);
     my %param  = (
         id              => $id,
         object_type     => $type,
@@ -105,23 +103,19 @@ sub trim_parameter {
     my @params;
 
     return @params = (
-        {
-            object_name => 'object_id',
+        {   object_name => 'object_id',
             data_name   => 'id',
             data_value  => $id,
         },
-        {
-            object_name => 'object_type',
+        {   object_name => 'object_type',
             data_name   => '_type',
             data_value  => $type,
         },
-        {
-            object_name => 'blog_id',
+        {   object_name => 'blog_id',
             data_name   => 'blog_id',
             data_value  => $app->blog->id,
         },
-        {
-            object_name => 'data',
+        {   object_name => 'data',
             data_name   => 'content_type_id',
             data_value  => $content_type_id,
         }
