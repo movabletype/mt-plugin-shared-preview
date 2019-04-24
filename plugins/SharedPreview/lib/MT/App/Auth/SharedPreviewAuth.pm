@@ -7,6 +7,7 @@ use base 'MT::App';
 use MT;
 use MT::Preview;
 use MT::Serialize;
+use MT::Session;
 #
 # sub id          {'shared_preview_auth'}
 # sub script_name { MT->config->SharedPreviewScript }
@@ -57,12 +58,25 @@ sub check_auth {
         }
     );
 
-    return $plugin_data->password eq $parameters->{password};
+    return $plugin_data->data->{password} eq $parameters->{password};
 
 }
 
 sub check_session {
-    my ( $self, $parameters ) = @_;
+    my ( $self, $app, $blog_id ) = @_;
+    my $cookie_name = 'shared_preview_' . $blog_id;
+    my $cookies     = $app->cookies;
+
+    return 0 unless $cookies->{$cookie_name};
+
+    my @cookie_session = split '::', $cookies->{$cookie_name}->{value}[0];
+    my $session_id     = $cookie_session[1];
+
+    my $session = MT::Session->load( { id => $session_id } );
+
+    return 0 unless $session;
+
+    return $session->thaw_data->{blog_id} == $blog_id;
 
 }
 

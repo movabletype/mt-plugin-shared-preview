@@ -7,6 +7,7 @@ use base 'MT::App';
 use MT;
 use MT::App::Auth::SharedPreviewAuth;
 use MT::Preview;
+use MT::Session;
 use MT::SharedPreviewPluginData;
 use MT::Validators::PreviewValidator;
 use MT::Validators::SharedPreviewAuthValidator;
@@ -21,8 +22,8 @@ sub init {
     $app->SUPER::init(@_) or return;
     $app->add_methods( shared_preview       => \&shared_preview );
     $app->add_methods( make_shared_preview  => \&make_shared_preview );
-    $app->add_methods( shared_preview_login => \&login );
-    $app->add_methods( shared_preview_auth  => \&auth_login );
+    $app->add_methods( shared_preview_login => \&login_form );
+    $app->add_methods( shared_preview_auth  => \&login );
 
     return $app;
 }
@@ -33,7 +34,7 @@ sub init_request {
     $app->{default_mode} = 'shared_preview';
 }
 
-sub auth_login {
+sub login {
     my $app = shift;
     my %validate
         = MT::Validators::SharedPreviewAuthValidator->login_validate($app);
@@ -45,9 +46,14 @@ sub auth_login {
     return $app->error( $app->translate('Passwords do not match.') )
         unless $check_result;
 
-    #TODO: セッション開始
+    my $preview_data = MT::Preview->get_preview_data_by_id( $validate{spid} );
+    return $app->error( $app->translate('not found Shared Preview page.') )
+        unless $preview_data;
 
-    $app->redirect(
+    my $start_session_result = start_session( $app, $preview_data->blog_id );
+    return $app->error($start_session_result) if $start_session_result;
+
+    return $app->redirect(
         $app->uri(
             mode => 'shared_preview',
             args => { spid => $validate{spid} },
@@ -55,7 +61,7 @@ sub auth_login {
     );
 }
 
-sub login {
+sub login_form {
     my $app = shift;
     my %validate
         = MT::Validators::SharedPreviewAuthValidator->spid_validate($app);
@@ -78,6 +84,21 @@ sub login {
             ]
         }
     );
+}
+
+sub make_session {
+    my ( $app, $blog_id ) = @_;
+    my $session = MT::Session->new;
+
+    $session->id( $app->make_magic_token() );
+    $session->kind('SP');
+    $session->start(time);
+    $session->name('shared_preview');
+    $session->set( 'blog_id', $blog_id );
+    $session->save;
+
+    return $session;
+
 }
 
 sub make_shared_preview {
@@ -118,7 +139,7 @@ sub make_shared_preview {
             "Could not create share preview link : " . $preview_obj->errstr );
     }
 
-    $app->redirect(
+    return $app->redirect(
         $app->uri(
             mode => 'shared_preview',
             args => { spid => $created_id },
@@ -150,27 +171,48 @@ sub set_save_values {
     $preview_obj->{__dirty} = 1;
 }
 
+sub start_session {
+    my ( $app, $blog_id ) = @_;
+
+    my $make_session = make_session(@_);
+    return $make_session->errstr if $make_session->errstr;
+
+    my %arg = (
+        -name  => 'shared_preview_' . $blog_id,
+        -value => Encode::encode(
+            $app->charset, join( '::', 'shared_preview', $make_session->id )
+        ),
+        -path => $app->config->CookiePath || $app->mt_path
+    );
+
+    $app->bake_cookie(%arg);
+
+    return '';
+
+}
+
 sub shared_preview {
     my $app    = shift;
     my $result = MT::Validators::PreviewValidator->view_validator($app);
     return $app->error($result) if defined $result;
     my $preview_id = $app->param('spid');
+    my $preview    = MT::Preview->get_preview_data_by_id($preview_id);
 
     my $need_login
         = MT::App::Auth::SharedPreviewAuth->need_login($preview_id);
+
     if ($need_login) {
+        my $check_auth_result
+            = MT::App::Auth::SharedPreviewAuth->check_session( $app,
+            $preview->blog_id );
 
-        #TODO: セッションがあるかチェック
-        MT::App::Auth::SharedPreviewAuth->check_auth();
-
-        $app->redirect(
+        return $app->redirect(
             $app->uri(
                 mode => 'shared_preview_login',
                 args => { spid => $preview_id },
             )
-        );
+        ) unless $check_auth_result;
     }
-    my $preview = MT::Preview->get_preview_data_by_id($preview_id);
 
     &set_app_parameters( $app, $preview );
 
@@ -190,6 +232,7 @@ sub shared_preview {
 
     return $app->component('SharedPreview')
         ->load_tmpl( 'shared_preview_strip.tmpl', $param );
+
 }
 
 sub set_app_parameters {
