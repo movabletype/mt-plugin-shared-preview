@@ -1,8 +1,8 @@
-<mt:setvar name="page_title" value="<__trans phrase="Sign in">">
+<mt:setvar name="page_title" value="<__trans phrase="Shared Preview">">
 <mt:setvar name="no_page_header" value="1">
 <mt:setvar name="complete" value="1">
-<mt:setvar name="screen_id" value="sign-in">
-<mt:setvar name="screen_class" value="sign-in">
+<mt:setvar name="screen_id" value="shared_preview">
+<mt:setvar name="screen_class" value="shared_preview">
 <mt:setvarblock name="html_head" append="1">  <meta name='robots' content='noindex,nofollow' /></mt:setvarblock>
 
 <mt:setvarblock name="page_content">
@@ -10,22 +10,41 @@
 <mt:loop name="query_params">
   <input type="hidden" name="<mt:var name="name" escape="html">" value="<mt:var name="value" escape="html">" />
 </mt:loop>
-
+<div id="msg-block">
+<mt:if name="error">
+  <mtapp:statusmsg
+     id="error"
+     class="error"
+     can_close="0">
+    <mt:var name="error">
+  </mtapp:statusmsg>
+</mt:if>
+</div>
 <mtapp:setting
      id="password"
      label="<__trans phrase="Password">"
      label_for="password"
      label_class="top-label">
+    <p>
+    <mt:if name="site_name">
+      <a href="<mt:var name="site_url">"><mt:var name="site_name"></a>
+      <__trans phrase="password is required to display [_1]'s share preview." params="<mt:var name="site_name">" >
+    <mt:else>
+      <__trans phrase="password is required to display this share preview." >
+    </mt:if>
+    </p>
     <input type="password" name="password" id="password" class="form-control text password" value="" />
+    <p><__trans phrase="It is different from the account login password."></p>
   </mtapp:setting>
+
   <div class="col-12 col-md-auto order-first order-md-last mb-4 mb-md-0 text-right">
         <button
            type="submit"
            id="sign-in-button"
            accesskey="s"
-           title="<__trans phrase="Sign In (s)">"
+           title="<__trans phrase="View (s)">"
            class="btn__mobile btn-primary">
-          <__trans phrase="Sign In">
+          <__trans phrase="View">
         </button>
       </div>
 </form>
@@ -34,37 +53,10 @@
 <mt:setvarblock name="js_include" append="1">
 <script type="text/javascript">
 /* <![CDATA[ */
+
 /* ]]> */
 </script>
 </mt:setvarblock>
 
 <mt:include name="layout/chromeless.tmpl">
 <mt:var name="layout">
-
-<mt:setvarblock name="html_head" append="1">  <meta name='robots' content='noindex,nofollow' /></mt:setvarblock>
-<mt:setvar name="no_page_header" value="1">
-
-<mt:setvarblock name="page_content">
-<form method="post" action="<mt:var name="script_url">">
-<mt:loop name="query_params">
-  <input type="hidden" name="<mt:var name="name" escape="html">" value="<mt:var name="value" escape="html">" />
-</mt:loop>
-<mtapp:setting
-     id="password"
-     label="<__trans phrase="Password">"
-     label_for="password"
-     label_class="top-label">
-    <input type="password" name="password" id="password" class="form-control text password" value="" />
-  </mtapp:setting>
-  <div class="col-12 col-md-auto order-first order-md-last mb-4 mb-md-0 text-right">
-        <button
-           type="submit"
-           id="sign-in-button"
-           accesskey="s"
-           title="<__trans phrase="Sign In (s)">"
-           class="btn__mobile btn-primary">
-          <__trans phrase="Sign In">
-        </button>
-      </div>
-</form>
-</mt:setvarblock>

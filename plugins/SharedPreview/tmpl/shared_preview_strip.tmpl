@@ -1,5 +1,6 @@
 <mt:setvar name="edit_button_value" value="<__trans phrase="Return to the compose screen">">
 <mt:setvar name="edit_button_title" value="<__trans phrase="Return to the compose screen (e)">">
+
 <mt:if name="object_type" eq="entry">
   <mt:if name="status" eq="2">
     <mt:setvar name="save_button_value" value="<__trans phrase="Publish this entry">">
@@ -100,44 +101,100 @@
     <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.mt.min.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
 </mt:unless>
 <mt:var name="js_include">
+
+<style>
+.mt-navbar-arrow {
+    background: #fff;
+    height: 40px;
+    position: absolute;
+    display: inline-block;
+}
+.mt-navbar-arrow:before {
+    border-top: 30px solid transparent;
+    border-bottom: 30px solid transparent;
+    content: "";
+    height: 60px;
+    position: absolute;
+    top: -10px;
+    width: 0;
+    border-left: 15px solid #fff;
+    left: 0;
+    box-sizing: border-box;
+}
+.mt-navbar-arrow:after {
+    border-left: 15px solid #343a40;
+    left: -2px;
+    border-top: 30px solid transparent;
+    border-bottom: 30px solid transparent;
+    content: "";
+    height: 60px;
+    position: absolute;
+    top: -10px;
+    width: 0;
+    box-sizing: border-box;
+}
+
+</style>
   </head>
   <body class="<mt:if name="scope_type" eq="user">user system <mt:else><mt:var name="scope_type"> </mt:if>main-screen preview-screen">
-    <div id="brand">
-      <span><img alt="<$mt:var name="mt_product_name"$>" src="<$mt:var name="static_uri"$>images/logo/movable-type-logo.png" /></span>
-    </div>
-    <table id="entry-preview-layout" class="preview-layout">
-      <tr>
-        <td id="entry-preview-control-strip" class="preview-control-strip">
-          <p id="entry-preview-label" class="preview-label"><mt:if name="object_type" eq="entry"><__trans phrase="You are previewing the entry entitled &ldquo;[_1]&rdquo;" params="<$mt:var name="title" remove_html="1" escape="html"$>"><mt:else><__trans phrase="You are previewing the page entitled &ldquo;[_1]&rdquo;" params="<$mt:var name="title" remove_html="1" escape="html"$>"></mt:if></p>
-          <form method="post" action="<$mt:var name="back_edit"$>" mt:once="1">
-            <input type="hidden" name="__mode" value="edit_<$mt:var name="object_type"$>" />
-            <input type="hidden" name="magic_token" value="<$mt:var name="magic_token"$>" />
 
-            <input type="hidden" name="dirty" value="1" />
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark mt-3 mb-3" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a>
+          <span>
+            <img src="<$mt:var name="static_uri"$>images/logo-mark-mono.svg" alt="Movable Type" width="32" height="32" class="first-child">
+          </span>
+        </a>
+      </div>
+
+      <ul class="nav navbar-nav">
+        <li id="current-site" class="scope">
+          <!-- <b class="mt-navbar-arrow"></b> -->
+          <a class="reset" href="<mt:var name="script_url">?__mode=shared_preview&spid=<mt:var name="spid">"><span class="current-site-name"><__trans phrase="Preview">: <mt:var name="site_name"> </span></a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav">
+        <li>
+          <a class="btn btn-link" id="edit" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Move to edit screen">" >
+              <svg title="Edit" class="mt-icon--inverse mt-icon" >
+                <use xlink:href="<$mt:var name="static_uri"$>images/sprite.svg#ic_edit">
+              </svg>
+          </a>
+        </li>
+        <li>
+          <a class="btn btn-link" id="shared-preview-url" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Show shared preview link.">" >
+              <svg title="Preview" class="mt-icon--inverse mt-icon">
+                <use xlink:href="<$mt:var name="static_uri"$>images/sprite.svg#ic_preview">
+              </svg>
+          </a>
+        </li>
+        <li>
+          <a class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Show public links on this page.">" >
+              <svg title="Permalink" class="mt-icon--inverse mt-icon">
+                <use xlink:href="<$mt:var name="static_uri"$>images/sprite.svg#ic_permalink">
+              </svg>
+          </a>
+        </li>
+      </ul>
+    </div>
+    </nav>
+    <form method="post" action="<$mt:var name="back_edit"$>" mt:once="1">
+        <input type="hidden" name="__mode" value="edit_<$mt:var name="object_type"$>" />
+        <input type="hidden" name="magic_token" value="<$mt:var name="magic_token"$>" />
+
+        <input type="hidden" name="dirty" value="1" />
 <mt:loop name="inputs">
-            <input type="hidden" name="<$mt:var name="data_name" escape="html"$>" value="<$mt:var name="data_value" escape="html"$>" />
+        <input type="hidden" name="<$mt:var name="data_name" escape="html"$>" value="<$mt:var name="data_value" escape="html"$>" />
 </mt:loop>
-<mt:setvarblock name="action_buttons">
-  <button
-     mt:mode="view"
-     type="submit"
-     name="reedit"
-     value="reedit"
-     accesskey="e"
-     title="<$mt:var name="edit_button_title"$>"
-     class="btn btn-default action">
-    <mt:var name="edit_button_value">
-  </button>
-</mt:setvarblock>
-<mt:include name="include/actions_bar.tmpl" bar_position="bottom" hide_pager="1" settings_bar="1">
-          </form>
-        </td>
-      </tr>
-      <tr>
-        <td id="entry-preview-content" class="preview-content">
-          <iframe id="frame" frameborder="0" scrolling="auto" srcdoc='<$mt:var name="preview_content"$>' onclick="return TC.stopEvent(event);"></iframe>
-        </td>
-      </tr>
+    </form>
+
+    <table id="entry-preview-layout" class="preview-layout">
+    <tr>
+      <td id="entry-preview-content" class="preview-content">
+        <iframe id="frame" frameborder="0" scrolling="auto" srcdoc='<$mt:var name="preview_content"$>' onclick="return TC.stopEvent(event);"></iframe>
+      </td>
+    </tr>
     </table>
 
     <div id="bootstrapper" class="hidden"></div>
@@ -146,9 +203,9 @@
       /* <![CDATA[ */
       svg4everybody();
 
-<mt:unless name="delayed_bootstrap">
+    <mt:unless name="delayed_bootstrap">
       App.bootstrapInline( false );
-</mt:unless>
+    </mt:unless>
       jQuery(function() {
         if (typeof document.body.style.maxHeight == "undefined") {
           jQuery('#brand span').pngfix();
@@ -160,6 +217,12 @@
       jQuery(window).resize( function() {
         jQuery('#frame').height( jQuery(window).height() - jQuery('#entry-preview-control-strip').height() );
       });
+
+      jQuery('#edit').on('click', function () {
+        jQuery('form').submit();
+        return false;
+      });
+
       /* ]]> */
     </script>
   </body>
