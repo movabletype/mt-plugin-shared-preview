@@ -152,14 +152,14 @@ sub set_save_values {
     my ($set_data)  = @_;
     my $data        = {};
 
-    for my $column ( keys $set_data ) {
-        my $column_name = $set_data->[$column]{object_name};
+    for my $column ( @{ $set_data || [] } ) {
+        my $column_name = $column->{object_name};
         if ( $column_name eq 'data' ) {
-            $data->{ $set_data->[$column]{data_name} }
-                = $set_data->[$column]{data_value};
+            $data->{ $column->{data_name} }
+                = $column->{data_value};
         }
         elsif ($column_name) {
-            $preview_obj->$column_name( $set_data->[$column]{data_value} );
+            $preview_obj->$column_name( $column->{data_value} );
         }
     }
 
