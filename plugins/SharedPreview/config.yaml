@@ -1,7 +1,12 @@
 name: SharedPreview
+id: SharedPreview
+key: SharedPreview
 version: 0.01
 schema_version: 0.03
 description: <__trans phrase="Enable to share preview of entry, page and content data.">
+author_name: Six Apart, Ltd.
+author_link: https://www.movabletype.org/
+l10n_class: SharedPreview::L10N
 
 object_types:
   preview: MT::Preview
