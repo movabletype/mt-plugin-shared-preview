@@ -19,8 +19,11 @@ sub on_template_param_edit {
         },
     );
 
-    ( $param->{jq_js_include} ||= '' )
-        .= $base->add_shared_preview_link($href);
+    my $add_link = '';
+    $add_link = $base->add_shared_preview_link($href)
+        if $param->{status} != MT::Entry::RELEASE;
+
+    ( $param->{jq_js_include} ||= '' ) .= $add_link;
 }
 
 sub _build_preview {

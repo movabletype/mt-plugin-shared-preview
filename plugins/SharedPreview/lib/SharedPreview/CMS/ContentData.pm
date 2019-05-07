@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use base qw(SharedPreview::CMS::SharedPreviewBase);
+use MT::ContentStatus;
 
 sub on_template_param_edit {
     my ( $cb, $app, $param ) = @_;
@@ -22,8 +23,11 @@ sub on_template_param_edit {
         },
     );
 
-    ( $param->{jq_js_include} ||= '' )
-        .= $base->add_shared_preview_link($href);
+    my $add_link = '';
+    $add_link = $base->add_shared_preview_link($href)
+        if $param->{status} != MT::ContentStatus::RELEASE;
+
+    ( $param->{jq_js_include} ||= '' ) .= $add_link;
 }
 
 sub _build_preview {

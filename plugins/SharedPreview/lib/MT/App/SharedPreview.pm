@@ -5,7 +5,7 @@ use warnings;
 use base 'MT::App';
 
 use MT;
-use MT::App::Auth::SharedPreviewAuth;
+use MT::Auth::SharedPreviewAuth;
 use MT::Blog;
 use MT::Preview;
 use MT::Session;
