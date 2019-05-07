@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use base qw(SharedPreview::CMS::SharedPreviewBase);
+use MT::Entry;
 
 sub on_template_param_edit {
     my ( $cb, $app, $param, $tmpl ) = @_;
