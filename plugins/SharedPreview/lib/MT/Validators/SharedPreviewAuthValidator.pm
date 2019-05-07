@@ -21,7 +21,9 @@ sub login_validate {
 sub password_validate {
     my ( $self, $app ) = @_;
     my $password = $app->param('password');
-    my $message  = $app->translate('no password') unless $password;
+    my $message;
+    $message = $app->translate('no password') unless $password;
+
     return (
         error   => $message || 0,
         message => $message,
@@ -32,7 +34,8 @@ sub password_validate {
 sub spid_validate {
     my ( $self, $app ) = @_;
     my $spid    = $app->param('spid');
-    my $message = $app->translate('no id') unless $spid;
+    my $message;
+    $message = $app->translate('no id') unless $spid;
 
     return (
         error   => $message || 0,
