@@ -33,7 +33,7 @@ sub password_validate {
 
 sub spid_validate {
     my ( $self, $app ) = @_;
-    my $spid    = $app->param('spid');
+    my $spid = $app->param('spid');
     my $message;
     $message = $app->translate('no id') unless $spid;
 

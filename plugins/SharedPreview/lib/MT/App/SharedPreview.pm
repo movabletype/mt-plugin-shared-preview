@@ -225,7 +225,7 @@ sub shared_preview {
     $param->{spid} = $preview_id;
 
     my $site;
-    $site =  MT::Blog->load( { id => $preview_data->blog_id } ) if $preview_data->blog_id;
+    $site = MT::Blog->load( $preview_data->blog_id ) if $preview_data->blog_id;
 
     if ($site) {
         $param->{site_name} = $site->name if $site;
@@ -255,9 +255,10 @@ sub load_login_form {
     if ($preview_id) {
         my $site;
         my $preview_data = MT::Preview->get_preview_data_by_id($preview_id);
-        $site =  MT::Blog->load( { id => $preview_data->blog_id } ) if $preview_data->blog_id;
-        $site_name = $site->name if $site;
-        $site_url = $site->site_url if $site;
+        $site = MT::Blog->load( $preview_data->blog_id )
+          if $preview_data->blog_id;
+        $site_name = $site->name     if $site;
+        $site_url  = $site->site_url if $site;
     }
 
     return $app->component('SharedPreview')->load_tmpl(

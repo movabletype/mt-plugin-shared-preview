@@ -150,7 +150,7 @@ sub purge {
 
 sub get_preview_data_by_id {
     my ( $self, $preview_id ) = @_;
-    return $self->load( { id => $preview_id } ) || undef;
+    return $self->load($preview_id) || undef;
 }
 
 1;

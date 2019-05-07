@@ -72,7 +72,7 @@ sub check_session {
     my @cookie_session = split '::', $cookies->{$cookie_name}->{value}[0];
     my $session_id     = $cookie_session[1];
 
-    my $session = MT::Session->load( { id => $session_id } );
+    my $session = MT::Session->load($session_id);
 
     return 0 unless $session;
 

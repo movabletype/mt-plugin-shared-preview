@@ -27,7 +27,7 @@ sub view_validator {
     my $spid = $app->param('spid');
     return $app->translate('no id') unless $spid;
 
-    my $preview = MT::Preview->load( { id => $spid } );
+    my $preview = MT::Preview->load($spid);
     return $app->translate('There is no shared preview') unless $preview;
 
     return undef;
