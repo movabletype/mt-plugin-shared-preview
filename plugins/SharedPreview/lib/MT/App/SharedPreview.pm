@@ -49,9 +49,11 @@ sub login {
     return $app->error( $app->translate('not found Shared Preview page.') )
         unless $preview_data;
 
-    my $check_result
-        = MT::App::Auth::SharedPreviewAuth->check_auth( \%validate );
-    return load_login_form( $app, $validate{spid}, $app->translate('Passwords do not match.') ) unless $check_result;
+    my $check_result =
+      MT::Auth::SharedPreviewAuth->check_auth( \%validate );
+    return load_login_form( $app, $validate{spid},
+        $app->translate('Passwords do not match.') )
+      unless $check_result;
 
     my $start_session_result = start_session( $app, $preview_data->blog_id );
     return load_login_form( $app, $validate{spid}, $start_session_result ) unless $check_result;
@@ -191,12 +193,11 @@ sub shared_preview {
     my $preview_id = $app->param('spid');
     my $preview_data    = MT::Preview->get_preview_data_by_id($preview_id);
 
-    my $need_login
-        = MT::App::Auth::SharedPreviewAuth->need_login($preview_id);
+    my $need_login = MT::Auth::SharedPreviewAuth->need_login($preview_id);
 
     if ($need_login) {
-        my $check_auth_result
-            = MT::App::Auth::SharedPreviewAuth->check_session( $app,
+        my $check_auth_result =
+          MT::Auth::SharedPreviewAuth->check_session( $app,
             $preview_data->blog_id );
 
         return $app->redirect(
