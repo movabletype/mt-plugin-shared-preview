@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: masiuchi/docker-mt-test:trusty-full
+    steps:
+      - checkout
+      - run:
+          name: Checkout core
+          command: |
+            git clone -b develop --depth 1 https://github.com/movabletype/movabletype.git
+            cp -r movabletype/* .
+            cp movabletype/.proverc .
+      - run:
+          name: Run test
+          command: |
+            bash /docker-entrypoint.sh prove -j4 -PMySQLPool=MT::Test::Env -It/lib t plugins/SharedPreview/t
+
