@@ -10,6 +10,7 @@ use warnings;
 
 use MT::Object;
 use MT::Serialize;
+use MT::Util qw( perl_sha1_digest_hex );
 
 @MT::Preview::ISA = qw(MT::Object);
 
@@ -59,7 +60,10 @@ sub make_unique_id {
     my ( $blog_id, $object_id, $object_type )
         = @param{qw(blog_id object_id object_type)};
 
-    return time;
+    my $key = join( $blog_id, $object_id, $object_type, time );
+
+    return MT::Util::perl_sha1_digest_hex($key);
+
 }
 
 sub thaw_data {
