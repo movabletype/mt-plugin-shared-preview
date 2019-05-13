@@ -25,17 +25,14 @@ applications:
       template_param.edit_entry: $SharedPreview::SharedPreview::CMS::Entry::on_template_param_edit
       template_param.edit_content_data: $SharedPreview::SharedPreview::CMS::ContentData::on_template_param_edit
 
-  make_shared_preview:
-    handler: MT::App::SharedPreview
-    script: $SharedPreview::MT::App::SharedPreview::script_name
-
   shared_preview:
     handler: MT::App::SharedPreview
     script: $SharedPreview::MT::App::SharedPreview::script_name
-
-  shared_preview_login:
-    handler: MT::App::SharedPreview
-    script: $SharedPreview::MT::App::SharedPreview::script_name
+    methods:
+      shared_preview: $SharedPreview::MT::App::SharedPreview::shared_preview
+      make_shared_preview: $SharedPreview::MT::App::SharedPreview::make_shared_preview
+      shared_preview_login: $SharedPreview::MT::App::SharedPreview::login_form
+      shared_preview_auth: $SharedPreview::MT::App::SharedPreview::login
 
 config_settings:
   SharedPreviewScript:
