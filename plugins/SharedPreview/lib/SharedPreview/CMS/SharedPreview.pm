@@ -4,9 +4,11 @@ use warnings;
 
 use base qw(SharedPreview::CMS::SharedPreviewBase);
 
+use MT::App::SharedPreview;
+use MT::Preview;
+use MT::Validators::PreviewValidator;
 use SharedPreview::CMS::Entry;
 use SharedPreview::CMS::ContentData;
-use MT::Validators::PreviewValidator;
 
 sub make_shared_preview {
     my $app = shift;
@@ -39,7 +41,7 @@ sub make_shared_preview {
         $created_id = $preview->id;
     }
     else {
-        set_save_values( $preview_obj, \@params );
+        MT::App::SharedPreview::set_save_values( $preview_obj, \@params );
         $created_id = $preview_obj->id;
         $preview_obj->save
             or $app->error(
@@ -47,10 +49,12 @@ sub make_shared_preview {
     }
 
     return $app->redirect(
-        $app->uri(
+              $app->app_path
+            . $app->config->SharedPreviewScript
+            . $app->uri_params(
             mode => 'shared_preview',
             args => { spid => $created_id },
-        )
+            )
     );
 }
 

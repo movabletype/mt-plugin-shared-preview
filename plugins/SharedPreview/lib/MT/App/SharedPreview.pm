@@ -24,9 +24,7 @@ sub ERROR_PASSWORD {1}
 sub init {
     my $app = shift;
     $app->SUPER::init(@_) or return;
-    $app->add_methods( shared_preview => \&shared_preview );
-    $app->add_methods( make_shared_preview =>
-            \SharedPreview::CMS::SharedPreview::make_shared_preview($app) );
+    $app->add_methods( shared_preview       => \&shared_preview );
     $app->add_methods( shared_preview_login => \&login_form );
     $app->add_methods( shared_preview_auth  => \&login );
 

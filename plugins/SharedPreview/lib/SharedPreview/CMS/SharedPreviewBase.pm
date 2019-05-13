@@ -8,7 +8,7 @@ sub new {
 
     my $property = {
         'type' => scalar $app->param('_type'),
-        'href' => $app->app_path . $app->config->SharedPreviewScript,
+        'href' => $app->app_path . $app->config->AdminScript,
     };
 
     bless $property, $class;
