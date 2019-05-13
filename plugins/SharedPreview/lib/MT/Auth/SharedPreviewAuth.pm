@@ -41,7 +41,7 @@ sub check_auth {
         }
     );
 
-    return $plugin_data->data->{password} =~ /(\{\\\"value\\\":\\\"$parameters->{password}\\\"\})/;
+    return $plugin_data->data->{password} =~ /(\Q{\"value\":\"$parameters->{password}\"}\E)/;
 
 }
 
