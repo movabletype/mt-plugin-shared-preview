@@ -18,12 +18,13 @@ use SharedPreview::CMS::ContentData;
 sub id          {'shared_preview'}
 sub script_name { MT->config->SharedPreviewScript }
 
-sub ERROR_PASSWORD { 1 };
+sub ERROR_PASSWORD {1}
 
 sub init {
     my $app = shift;
     $app->SUPER::init(@_) or return;
-    $app->add_methods( shared_preview       => \&shared_preview );
+    $app->add_methods( shared_preview => \&shared_preview );
+    # $app->add_methods( make_shared_preview  => \SharedPreview::CMS::SharedPreviewBase::make_shared_preview );
     $app->add_methods( make_shared_preview  => \&make_shared_preview );
     $app->add_methods( shared_preview_login => \&login_form );
     $app->add_methods( shared_preview_auth  => \&login );
@@ -38,25 +39,26 @@ sub init_request {
 }
 
 sub login {
-    my $app = shift;
+    my $app  = shift;
     my $spid = $app->param('spid');
 
     my %validate
         = MT::Validators::SharedPreviewAuthValidator->login_validate($app);
-    return load_login_form( $app, $spid, $validate{message}) if $validate{error};
+    return load_login_form( $app, $spid, $validate{message} )
+        if $validate{error};
 
     my $preview_data = MT::Preview->get_preview_data_by_id( $validate{spid} );
     return $app->error( $app->translate('not found Shared Preview page.') )
         unless $preview_data;
 
-    my $check_result =
-      MT::Auth::SharedPreviewAuth->check_auth( \%validate );
+    my $check_result = MT::Auth::SharedPreviewAuth->check_auth( \%validate );
     return load_login_form( $app, $validate{spid},
         $app->translate('Passwords do not match.') )
-      unless $check_result;
+        unless $check_result;
 
     my $start_session_result = start_session( $app, $preview_data->blog_id );
-    return load_login_form( $app, $validate{spid}, $start_session_result ) unless $check_result;
+    return load_login_form( $app, $validate{spid}, $start_session_result )
+        unless $check_result;
 
     return $app->redirect(
         $app->uri(
@@ -149,8 +151,7 @@ sub set_save_values {
     for my $column ( @{ $set_data || [] } ) {
         my $column_name = $column->{object_name};
         if ( $column_name eq 'data' ) {
-            $data->{ $column->{data_name} }
-                = $column->{data_value};
+            $data->{ $column->{data_name} } = $column->{data_value};
         }
         elsif ($column_name) {
             $preview_obj->$column_name( $column->{data_value} );
@@ -176,8 +177,8 @@ sub start_session {
         -value => Encode::encode(
             $app->charset, join( '::', 'shared_preview', $make_session->id )
         ),
-        -path => $app->config->CookiePath || $app->mt_path,
-        -expires =>  '+3M',
+        -path    => $app->config->CookiePath || $app->mt_path,
+        -expires => '+3M',
     );
 
     $app->bake_cookie(%arg);
@@ -190,14 +191,14 @@ sub shared_preview {
     my $app    = shift;
     my $result = MT::Validators::PreviewValidator->view_validator($app);
     return $app->error($result) if defined $result;
-    my $preview_id = $app->param('spid');
-    my $preview_data    = MT::Preview->get_preview_data_by_id($preview_id);
+    my $preview_id   = $app->param('spid');
+    my $preview_data = MT::Preview->get_preview_data_by_id($preview_id);
 
     my $need_login = MT::Auth::SharedPreviewAuth->need_login($preview_id);
 
     if ($need_login) {
-        my $check_auth_result =
-          MT::Auth::SharedPreviewAuth->check_session( $app,
+        my $check_auth_result
+            = MT::Auth::SharedPreviewAuth->check_session( $app,
             $preview_data->blog_id );
 
         return $app->redirect(
@@ -213,7 +214,6 @@ sub shared_preview {
     my $param;
     my $type = $app->param('_type');
 
-    #TODO: 処理まとめる
     if ( $type eq 'entry' || $type eq 'page' ) {
         $param = SharedPreview::CMS::Entry->_build_preview($app);
     }
@@ -223,18 +223,19 @@ sub shared_preview {
 
     return unless defined $param;
     $param->{back_edit} = $app->app_path . MT->config->AdminScript;
-    $param->{spid} = $preview_id;
+    $param->{spid}      = $preview_id;
 
     my $site;
-    $site = MT::Blog->load( $preview_data->blog_id ) if $preview_data->blog_id;
+    $site = MT::Blog->load( $preview_data->blog_id )
+        if $preview_data->blog_id;
 
     if ($site) {
-        $param->{site_name} = $site->name if $site;
-        $param->{site_url} = $site->site_url if $site;
+        $param->{site_name} = $site->name     if $site;
+        $param->{site_url}  = $site->site_url if $site;
     }
 
     return $app->component('SharedPreview')
-    ->load_tmpl( 'shared_preview_strip.tmpl', $param );
+        ->load_tmpl( 'shared_preview_strip.tmpl', $param );
 
 }
 
@@ -257,24 +258,24 @@ sub load_login_form {
         my $site;
         my $preview_data = MT::Preview->get_preview_data_by_id($preview_id);
         $site = MT::Blog->load( $preview_data->blog_id )
-          if $preview_data->blog_id;
+            if $preview_data->blog_id;
         $site_name = $site->name     if $site;
         $site_url  = $site->site_url if $site;
     }
 
     return $app->component('SharedPreview')->load_tmpl(
         'shared_preview_login.tmpl',
-        { query_params => [
-            { name    => 'spid',
-                value => $preview_id,
-            },
-            { name    => '__mode',
-                value => 'shared_preview_auth',
-            },
-        ],
+        {   query_params => [
+                {   name  => 'spid',
+                    value => $preview_id,
+                },
+                {   name  => '__mode',
+                    value => 'shared_preview_auth',
+                },
+            ],
             site_name => $site_name,
-            site_url => $site_url,
-            error       => $error
+            site_url  => $site_url,
+            error     => $error
         }
     );
 }
