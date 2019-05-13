@@ -93,6 +93,7 @@ sub _build_preview {
         object_type     => $type,
         preview_content => $html,
         title           => $content_data->label,
+        permalink       => MT::Util::encode_html( $content_data->permalink ),
         inputs          => \@inputs
     );
 

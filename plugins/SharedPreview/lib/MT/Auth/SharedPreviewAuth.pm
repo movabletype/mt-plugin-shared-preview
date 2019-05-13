@@ -6,6 +6,7 @@ use MT;
 use MT::Preview;
 use MT::Serialize;
 use MT::Session;
+use JSON();
 
 sub need_login {
     my ( $app, $preview_id ) = @_;
@@ -41,7 +42,7 @@ sub check_auth {
         }
     );
 
-    return $plugin_data->data->{password} eq $parameters->{password};
+    return $plugin_data->data->{password} =~ /(\{\\\"value\\\":\\\"$parameters->{password}\\\"\})/;
 
 }
 

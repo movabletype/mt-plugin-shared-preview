@@ -4,6 +4,7 @@ use warnings;
 
 use base qw(SharedPreview::CMS::SharedPreviewBase);
 use MT::Entry;
+use MT::Util;
 
 sub on_template_param_edit {
     my ( $cb, $app, $param, $tmpl ) = @_;
@@ -81,6 +82,7 @@ sub _build_preview {
         object_type     => $type,
         preview_content => $html,
         title           => $entry->title,
+        permalink       => MT::Util::encode_html( $entry->permalink ),
         inputs          => \@inputs
     );
 

@@ -10,11 +10,10 @@
     </li>
     <li>
       <div class="custom-control custom-radio">
-        <input type="radio" name="use_password" id="use" class="custom-control-input" value="1"<mt:if name="use_password"> checked="checked"</mt:if>" />
+        <input type="radio" name="use_password" id="use" class="custom-control-input" value="1"<mt:if name="use_password"> checked="checked"</mt:if> />
         <label class="custom-control-label" for="use"><__trans phrase="Use password"></label>
       </div>
     </li>
-
   </ul>
 </mtapp:setting>
 
@@ -22,18 +21,102 @@
     id="password"
     label="<__trans phrase="Password">"
     show_hint="1">
-  <div id="password" class="form-group" >
-    <input type="text" name="password" id="password" class="form-control w-50" value="<mt:var name="password">" />
+  <ul id="password1" class="list-inline">
+    <li class="list-inline-item w-25">
+      <input type="text" name="password-1" class="form-control" value="" data-index="1" />
+    </li>
+    <li class="list-inline-item delete-password-btn" style="display: none;">
+      <button type="button" class="btn btn-default btn-sm delete-password" data-target="#password1"><svg title="削除" role="img" class="mt-icon mt-icon--sm"><use xlink:href="<$mt:var name="static_uri"$>images/sprite.svg#ic_trash"></use></svg><__trans phrase="Delete"></button>
+    </li>
+  </ul>
+  <div>
+    <a href="javascript:void(0);" id="add_password" ><__trans phrase="Add Password."></a>
+    <input type="hidden" name="password" value=<mt:var name="password"> />
   </div>
+
 </mtapp:setting>
-<input type="hidden" name="spid" value="<mt:var name="spid">" />
 
 <script type="text/javascript">
 jQuery(function($) {
     showSharedPreviewPasswordField();
+    setPasswordAreaInit();
+
     jQuery('input[name=use_password]').on('change', function(){
         showSharedPreviewPasswordField();
     });
+
+    jQuery('#add_password').on('click', function(){
+        setPasswordArea();
+    });
+
+    jQuery('form').on('submit', function(){
+        if (jQuery(this).find('input[name="plugin_sig"]').val() != 'SharedPreview') return;
+
+        var data = [];
+        jQuery(this).find('input[name^="password-"]').each(function(index) {
+            if (jQuery(this).val() != '') {
+                data.push({value : jQuery(this).val()});
+            }
+        });
+
+        jQuery(this).find('input[name="password"]').val(JSON.stringify(data));
+
+    });
+
+    function setPasswordAreaInit() {
+        var parameter = <mt:var name="password"><mt:unless name="password">''</mt:unless>;
+        if (parameter != '') {
+            var data = JSON.parse(parameter);
+            jQuery.each(data, function(key){
+                setPasswordArea(this.value);
+            });
+        }
+    }
+
+    function setPasswordArea(value = '') {
+        var copy = jQuery('ul[id^=password]').last().clone();
+        var count = jQuery('input[name^="password-"]').length;
+        var counter = parseInt(copy.find('input').attr('data-index')) + 1;
+        var newId = 'password' + counter;
+        var target = '#' + copy.attr('id');
+
+        if (copy.find('input').val() == '' && value != '' && count == 1) {
+            jQuery(target).find('input').val(value);
+            jQuery(target).find('.delete-password-btn').css('display','none');
+            return;
+        }
+
+        copy.attr('id', newId)
+        .find('input')
+        .attr('name', 'password-' + counter)
+        .attr('data-index', counter)
+        .val(value);
+
+        copy.find('.delete-password').attr('data-target', '#' + newId);
+
+        if (copy.find('.delete-password-btn').is(':visible') == false) {
+           copy.find('.delete-password-btn').css('display','');
+        }
+
+        if (jQuery(target).find('.delete-password-btn').is(':visible') == false) {
+           jQuery(target).find('.delete-password-btn').css('display','');
+        }
+
+        jQuery(target).after(copy);
+
+        jQuery('button.delete-password').on('click', function(){
+            var target = jQuery(this).attr('data-target');
+            var inputName = 'input[name^="password-"]';
+
+            if (jQuery('input[name^="password-"]').length > 1) {
+               jQuery(target).remove();
+               if (jQuery(inputName).length <= 1) {
+                   jQuery(inputName).parent().next().css('display','none');
+               }
+            }
+
+        });
+    }
 
     function showSharedPreviewPasswordField() {
         var checkedValue = $('input[name=use_password]:checked').val();
@@ -43,5 +126,6 @@ jQuery(function($) {
             jQuery('#password-field').hide();
         }
     }
+
 });
 </script>

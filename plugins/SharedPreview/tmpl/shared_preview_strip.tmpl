@@ -1,27 +1,4 @@
-<mt:setvar name="edit_button_value" value="<__trans phrase="Return to the compose screen">">
-<mt:setvar name="edit_button_title" value="<__trans phrase="Return to the compose screen (e)">">
-
-<mt:if name="object_type" eq="entry">
-  <mt:if name="status" eq="2">
-    <mt:setvar name="save_button_value" value="<__trans phrase="Publish this entry">">
-    <mt:setvar name="save_button_title" value="<__trans phrase="Publish this entry (s)">">
-  <mt:else>
-    <mt:setvar name="save_button_value" value="<__trans phrase="Save this entry">">
-    <mt:setvar name="save_button_title" value="<__trans phrase="Save this entry (s)">">
-  </mt:if>
-    <mt:setvar name="edit_button_value" value="<__trans phrase="Re-Edit this entry">">
-    <mt:setvar name="edit_button_title" value="<__trans phrase="Re-Edit this entry (e)">">
-<mt:else>
-  <mt:if name="status" eq="2">
-    <mt:setvar name="save_button_value" value="<__trans phrase="Publish this page">">
-    <mt:setvar name="save_button_title" value="<__trans phrase="Publish this page (s)">">
-  <mt:else>
-    <mt:setvar name="save_button_value" value="<__trans phrase="Save this page">">
-    <mt:setvar name="save_button_title" value="<__trans phrase="Save this page (s)">">
-  </mt:if>
-    <mt:setvar name="edit_button_value" value="<__trans phrase="Re-Edit this page">">
-    <mt:setvar name="edit_button_title" value="<__trans phrase="Re-Edit this page (e)">">
-</mt:if>
+<mt:setvar name="preview_link" value="<mt:var name="script_url">?__mode=shared_preview&spid=<mt:var name="spid">">
 
 <!DOCTYPE html>
 <html lang="<$mt:var name="language_tag"$>">
@@ -101,7 +78,8 @@
     <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.mt.min.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
 </mt:unless>
 <mt:var name="js_include">
-
+    <script type="text/javascript" src="<mt:var name="static_uri">popper/popper.js?v=<mt:var name="mt_version_id" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri"$>bootstrap/js/bootstrap.js?v=<$mt:var name="mt_version_id" escape="url"$>"></script>
 <style>
 .mt-navbar-arrow {
     background: #fff;
@@ -162,15 +140,14 @@
               </svg>
           </a>
         </li>
-        <li>
-          <a class="btn btn-link" id="shared-preview-url" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Show shared preview link.">" >
+          <a class="btn btn-link copy-popover" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Show shared preview link.">"  href="javascript:void(0);" data-href="<mt:var name="script_url">?__mode=shared_preview&spid=<mt:var name="spid">" >
               <svg title="Preview" class="mt-icon--inverse mt-icon">
                 <use xlink:href="<$mt:var name="static_uri"$>images/sprite.svg#ic_preview">
               </svg>
           </a>
         </li>
         <li>
-          <a class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Show public links on this page.">" >
+          <a class="btn btn-link copy-popover" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Show public links on this page.">" href="javascript:void(0);" data-href="<mt:var name="permalink">" >
               <svg title="Permalink" class="mt-icon--inverse mt-icon">
                 <use xlink:href="<$mt:var name="static_uri"$>images/sprite.svg#ic_permalink">
               </svg>
@@ -192,7 +169,7 @@
     <table id="entry-preview-layout" class="preview-layout">
     <tr>
       <td id="entry-preview-content" class="preview-content">
-        <iframe id="frame" frameborder="0" scrolling="auto" srcdoc='<$mt:var name="preview_content"$>' onclick="return TC.stopEvent(event);"></iframe>
+        <iframe id="frame" frameborder="0" scrolling="auto" srcdoc='<$mt:var name="preview_content"$>' ></iframe>
       </td>
     </tr>
     </table>
@@ -206,11 +183,6 @@
     <mt:unless name="delayed_bootstrap">
       App.bootstrapInline( false );
     </mt:unless>
-      jQuery(function() {
-        if (typeof document.body.style.maxHeight == "undefined") {
-          jQuery('#brand span').pngfix();
-        }
-      });
       jQuery('#frame').load( function() {
         jQuery(this).height( jQuery(window).height() - jQuery('#entry-preview-control-strip').height() );
       });
@@ -222,6 +194,70 @@
         jQuery('form').submit();
         return false;
       });
+
+      jQuery(function() {
+        if (typeof document.body.style.maxHeight == "undefined") {
+          jQuery('#brand span').pngfix();
+        }
+        jQuery('[data-toggle="tooltip"]').tooltip();
+
+        jQuery('.copy-popover').popover({
+          //container: '.container-fluid',
+          html: true,
+          trigger: 'manual',
+          tabindex: 0,
+        }).on('show.bs.popover', function(event, a, b, c){
+          var link = "";
+          if (jQuery(event.target).attr('data-href')) {
+            link = jQuery(event.target).attr('data-href');
+          }
+          var content = '<input type="text" name="target_link" value="' + link + '" readonly="readonly" class="popover-item" /><button name="copy" value="copy" onclick="linkCopy(this)" class="popover-item"><__trans phrase="Copy"></button>';
+          jQuery(event.target).attr('data-content', content);
+          jQuery('[data-toggle="tooltip"]').tooltip('hide');
+        }).on('click', function(){
+          jQuery(this).popover('toggle');
+        });
+
+      });
+
+      jQuery('iframe').on("load", function(e){
+          jQuery(this).contents().find("html").on('click', function(){
+            checkPopover(event);
+            return TC.stopEvent(event);
+          });
+      });
+
+      jQuery('html').on('click', function(event){
+        checkPopover(event);
+      });
+
+      function checkPopover(event) {
+        if (jQuery(event.target).hasClass('copy-popover')
+          || jQuery(event.target).hasClass('popover-item')
+          || jQuery(event.target).hasClass('popover')
+          || jQuery(event.target).parent().hasClass('popover')) return;
+
+        jQuery('.copy-popover').popover('hide');
+
+      }
+
+      function linkCopy () {
+        jQuery('input[name="target_link"]').select();
+        var message = "<__trans phrase="Could not copy to clipboard.">";
+        if (document.execCommand("Copy")) {
+          message = "<__trans phrase="Could copy to clipboard.">"
+        };
+
+        jQuery('button[name="copy"]').tooltip({
+          title: message,
+          placement: 'bottom',
+          trigger: 'manual',
+        }).on('shown.bs.tooltip', function(){
+          setTimeout((function(){
+            jQuery(this).tooltip('dispose');
+          }).bind(this), 1000);
+        }).tooltip('show');
+      }
 
       /* ]]> */
     </script>
