@@ -21,16 +21,6 @@ sub script_name { MT->config->SharedPreviewScript }
 
 sub ERROR_PASSWORD {1}
 
-sub init {
-    my $app = shift;
-    $app->SUPER::init(@_) or return;
-    $app->add_methods( shared_preview       => \&shared_preview );
-    $app->add_methods( shared_preview_login => \&login_form );
-    $app->add_methods( shared_preview_auth  => \&login );
-
-    return $app;
-}
-
 sub init_request {
     my $app = shift;
     $app->SUPER::init_request(@_);

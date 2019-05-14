@@ -15,6 +15,7 @@ use_ok 'MT::Validators::SharedPreviewAuthValidator';
 use_ok 'SharedPreview::CMS::ContentData';
 use_ok 'SharedPreview::CMS::Entry';
 use_ok 'SharedPreview::CMS::SharedPreviewBase';
+use_ok 'SharedPreview::CMS::SharedPreview';
 use_ok 'SharedPreview::L10N';
 use_ok 'SharedPreview::L10N::en_us';
 use_ok 'SharedPreview::L10N::ja';
