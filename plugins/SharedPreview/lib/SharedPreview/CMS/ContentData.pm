@@ -4,6 +4,7 @@ use warnings;
 
 use base qw(SharedPreview::CMS::SharedPreviewBase);
 use MT::ContentStatus;
+use MT::Preview;
 
 sub on_template_param_edit {
     my ( $cb, $app, $param ) = @_;
@@ -28,6 +29,27 @@ sub on_template_param_edit {
         if $param->{status} != MT::ContentStatus::RELEASE;
 
     ( $param->{jq_js_include} ||= '' ) .= $add_link;
+}
+
+sub post_save_content_data {
+    my ( $cb, $app, $obj, $org_obj ) = @_;
+    my $id   = $app->param('id');
+    my $type = $app->param('_type');
+
+    return 1 if $obj->status != MT::ContentStatus::RELEASE;
+
+    if (my $preview = MT::Preview->load(
+            {   blog_id     => $app->blog->id,
+                object_type => $type,
+                object_id   => $id,
+            }
+        )
+        )
+    {
+        $preview->remove;
+    }
+
+    1;
 }
 
 sub _build_preview {

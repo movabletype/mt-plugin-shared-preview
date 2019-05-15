@@ -27,6 +27,8 @@ applications:
     callbacks:
       template_param.edit_entry: $SharedPreview::SharedPreview::CMS::Entry::on_template_param_edit
       template_param.edit_content_data: $SharedPreview::SharedPreview::CMS::ContentData::on_template_param_edit
+      cms_post_save.content_data: $SharedPreview::SharedPreview::CMS::ContentData::post_save_content_data
+      cms_post_save.entry: $SharedPreview::SharedPreview::CMS::Entry::post_save_entry
 
   shared_preview:
     methods:
