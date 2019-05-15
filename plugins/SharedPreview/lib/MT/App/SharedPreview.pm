@@ -45,9 +45,10 @@ sub login {
         $app->translate('Passwords do not match.') )
         unless $check_result;
 
-    my $start_session_result = start_session( $app, $preview_data->blog_id );
+    my $start_session_result
+        = start_session( $app, $preview_data->blog_id, $validate{password} );
     return load_login_form( $app, $validate{spid}, $start_session_result )
-        unless $check_result;
+        if $start_session_result;
 
     return $app->redirect(
         $app->uri(
@@ -72,14 +73,15 @@ sub login_form {
 }
 
 sub make_session {
-    my ( $app, $blog_id ) = @_;
+    my ( $app, $blog_id, $password ) = @_;
     my $session = MT::Session->new;
 
     $session->id( $app->make_magic_token() );
     $session->kind('SP');
     $session->start(time);
     $session->name('shared_preview');
-    $session->set( 'blog_id', $blog_id );
+    $session->set( 'blog_id',  $blog_id );
+    $session->set( 'password', $password );
     $session->save;
 
     return $session;
@@ -140,7 +142,7 @@ sub shared_preview {
     my $need_login = MT::Auth::SharedPreviewAuth->need_login($preview_id);
 
     if ($need_login) {
-        my $check_auth_result
+        my $check_session_result
             = MT::Auth::SharedPreviewAuth->check_session( $app,
             $preview_data->blog_id );
 
@@ -149,7 +151,25 @@ sub shared_preview {
                 mode => 'shared_preview_login',
                 args => { spid => $preview_id },
             )
-        ) unless $check_auth_result;
+        ) unless $check_session_result;
+
+        my $check_auth_result = MT::Auth::SharedPreviewAuth->check_auth(
+            {   'spid'     => $preview_id,
+                'password' => $check_session_result->{password}
+            }
+        );
+
+        unless ($check_auth_result) {
+            MT::Auth::SharedPreviewAuth->remove_session( $app,
+                $preview_data->blog_id );
+            return $app->redirect(
+                $app->uri(
+                    mode => 'shared_preview_login',
+                    args => { spid => $preview_id },
+                )
+            );
+        }
+
     }
 
     set_app_parameters( $app, $preview_data );
