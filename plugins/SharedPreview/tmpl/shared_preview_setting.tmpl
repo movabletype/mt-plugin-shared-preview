@@ -59,8 +59,6 @@ jQuery(function($) {
             }
         });
 
-
-
         jQuery(this).find('input[name="password"]').val(JSON.stringify(data));
 
     });
@@ -68,11 +66,13 @@ jQuery(function($) {
     function setPasswordAreaInit() {
         var parameter = <mt:var name="password"><mt:unless name="password">''</mt:unless>;
         if (parameter != '') {
+          try {
             var data = JSON.parse(parameter);
             jQuery.each(data, function(key){
-                setPasswordArea(this.value);
+              setPasswordArea(this.value);
             });
-        }
+          } catch (e) {}
+        };
 
         var count = jQuery('input[name^="password-"]').length;
         var limit = 5;
