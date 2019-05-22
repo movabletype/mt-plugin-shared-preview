@@ -31,6 +31,8 @@ applications:
       cms_post_save.entry: $SharedPreview::SharedPreview::CMS::Entry::post_save_entry
 
   shared_preview:
+    script: '$SharedPreview::MT::App::SharedPreview::script_name'
+    handler: MT::App::SharedPreview
     methods:
       shared_preview: $SharedPreview::MT::App::SharedPreview::shared_preview
       shared_preview_login: $SharedPreview::MT::App::SharedPreview::login_form
