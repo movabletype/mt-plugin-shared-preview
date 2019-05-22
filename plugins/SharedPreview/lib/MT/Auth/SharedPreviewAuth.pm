@@ -71,18 +71,16 @@ sub remove_session {
 
 sub get_session_id_from_cookie {
     my ( $self, $app, $blog_id ) = @_;
-
     my $cookie_name = 'shared_preview_' . $blog_id;
     my $cookies     = $app->cookies;
 
-    return 0 unless $cookies->{$cookie_name} or $cookies->{$cookie_name}->value();
+    return 0 unless $cookies->{$cookie_name};
 
-    my @cookie_session = split '::', $cookies->{$cookie_name}->value();
+    my @cookie_session = split '::', $cookies->{$cookie_name}->{value}[0];
 
     return 0 unless $cookie_session[1];
 
     return $cookie_session[1];
-
 }
 
 1;
