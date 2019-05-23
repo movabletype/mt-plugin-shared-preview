@@ -12,7 +12,7 @@ sub need_login {
 
     my $preview_data = MT::Preview->load($preview_id);
 
-    return undef unless $preview_data;
+    return unless $preview_data;
 
     my $plugin_data = MT::PluginData->load(
         {
@@ -21,7 +21,7 @@ sub need_login {
         }
     );
 
-    return undef unless $plugin_data;
+    return unless $plugin_data;
 
     return 1
       if $plugin_data->data->{use_password} == MT::Preview::USE_PASSWORD_VALID;
@@ -32,7 +32,7 @@ sub check_auth {
     my ( $self, $parameters ) = @_;
 
     my $preview_data = MT::Preview->load($parameters->{spid});
-    return undef unless $preview_data;
+    return unless $preview_data;
 
     my $plugin_data = MT::PluginData->load(
         {

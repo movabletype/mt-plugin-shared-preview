@@ -19,7 +19,7 @@ sub make_validator {
     my $id = $app->param('id');
     return $app->translate('no id') unless $id;
 
-    return undef;
+    return;
 }
 
 sub view_validator {
@@ -30,6 +30,6 @@ sub view_validator {
     my $preview = MT::Preview->load($spid);
     return $app->translate('There is no shared preview') unless $preview;
 
-    return undef;
+    return;
 }
 1;

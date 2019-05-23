@@ -4,7 +4,7 @@ use warnings;
 
 sub new {
     my ( $class, $app ) = @_;
-    return undef unless $app->param('id');
+    return unless $app->param('id');
 
     my $property = {
         'type' => scalar $app->param('_type'),
