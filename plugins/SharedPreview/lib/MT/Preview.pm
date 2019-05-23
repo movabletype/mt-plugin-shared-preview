@@ -55,12 +55,10 @@ sub save {
 }
 
 sub make_unique_id {
-    my $self  = shift;
-    my %param = @_;
-    my ( $blog_id, $object_id, $object_type )
-        = @param{qw(blog_id object_id object_type)};
+    my $self = shift;
 
-    my $key = join( $blog_id, $object_id, $object_type, time );
+    my $key
+        = join( $self->blog_id, $self->object_id, $self->object_type, time );
 
     return MT::Util::perl_sha1_digest_hex($key);
 
