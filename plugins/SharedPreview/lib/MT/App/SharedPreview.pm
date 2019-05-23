@@ -36,9 +36,9 @@ sub login {
     return load_login_form( $app, $spid, $validate{message} )
         if $validate{error};
 
-    my $preview_data = MT::Preview->get_preview_data_by_id( $validate{spid} );
+    my $preview_data = MT::Preview->load( $validate{spid} );
     return $app->error( $app->translate('not found Shared Preview page.') )
-        unless $preview_data;
+      unless $preview_data;
 
     my $check_result = MT::Auth::SharedPreviewAuth->check_auth( \%validate );
     return load_login_form( $app, $validate{spid},
@@ -64,10 +64,9 @@ sub login_form {
         = MT::Validators::SharedPreviewAuthValidator->spid_validate($app);
     return $app->error( $validate{message} ) if $validate{error};
 
-    my $preview_data
-        = MT::Preview->get_preview_data_by_id( $validate{value} );
+    my $preview_data = MT::Preview->load( $validate{value} );
     return $app->error( $app->translate('not found : shared preview page.') )
-        unless $preview_data;
+      unless $preview_data;
 
     return load_login_form( $app, $validate{value} );
 }
@@ -137,7 +136,7 @@ sub shared_preview {
     my $result = MT::Validators::PreviewValidator->view_validator($app);
     return $app->error($result) if defined $result;
     my $preview_id   = $app->param('spid');
-    my $preview_data = MT::Preview->get_preview_data_by_id($preview_id);
+    my $preview_data = MT::Preview->load($preview_id);
 
     my $need_login = MT::Auth::SharedPreviewAuth->need_login($preview_id);
 
@@ -222,7 +221,7 @@ sub load_login_form {
     my $site_url;
     if ($preview_id) {
         my $site;
-        my $preview_data = MT::Preview->get_preview_data_by_id($preview_id);
+        my $preview_data = MT::Preview->load($preview_id);
         $site = MT::Blog->load( $preview_data->blog_id )
             if $preview_data->blog_id;
         $site_name = $site->name     if $site;

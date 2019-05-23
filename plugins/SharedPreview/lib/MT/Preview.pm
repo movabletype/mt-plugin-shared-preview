@@ -150,10 +150,5 @@ sub purge {
     }
 }
 
-sub get_preview_data_by_id {
-    my ( $self, $preview_id ) = @_;
-    return $self->load($preview_id) || undef;
-}
-
 1;
 

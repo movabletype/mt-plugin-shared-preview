@@ -10,7 +10,8 @@ use MT::Session;
 sub need_login {
     my ( $app, $preview_id ) = @_;
 
-    my $preview_data = MT::Preview->get_preview_data_by_id($preview_id);
+    my $preview_data = MT::Preview->load($preview_id);
+
     return undef unless $preview_data;
 
     my $plugin_data = MT::PluginData->load(
@@ -30,8 +31,7 @@ sub need_login {
 sub check_auth {
     my ( $self, $parameters ) = @_;
 
-    my $preview_data =
-      MT::Preview->get_preview_data_by_id( $parameters->{spid} );
+    my $preview_data = MT::Preview->load($parameters->{spid});
     return undef unless $preview_data;
 
     my $plugin_data = MT::PluginData->load(
