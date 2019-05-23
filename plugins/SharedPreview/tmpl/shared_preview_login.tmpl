@@ -16,7 +16,7 @@
      id="error"
      class="error"
      can_close="0">
-    <mt:var name="error">
+    <mt:var name="error" escape="html">
   </mtapp:statusmsg>
 </mt:if>
 </div>
@@ -27,8 +27,8 @@
      label_class="top-label">
     <p>
     <mt:if name="site_name">
-      <a href="<mt:var name="site_url">"><mt:var name="site_name"></a>
-      <__trans phrase="password is required to display [_1]'s share preview." params="<mt:var name="site_name">" >
+      <a href="<mt:var name="site_url">"><mt:var name="site_name" escape="html"></a>
+      <__trans phrase="password is required to display [_1]'s share preview." params="<mt:var name="site_name" escape="html">" >
     <mt:else>
       <__trans phrase="password is required to display this share preview." >
     </mt:if>
