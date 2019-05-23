@@ -98,14 +98,14 @@ sub _build_preview {
 
     my $html = $tmpl->output;
 
-    my @inputs = trim_parameter($app);
-    my %param  = (
-        id              => $id,
-        object_type     => $type,
+    my %param = (
         preview_content => $html,
         title           => $entry->title,
         permalink       => MT::Util::encode_html( $entry->permalink ),
-        inputs          => \@inputs
+        edit_uri_params => $app->uri_params(
+            mode => 'view',
+            args => { blog_id => $app->blog->id, _type => $type, id => $id },
+        )
     );
 
     return \%param;

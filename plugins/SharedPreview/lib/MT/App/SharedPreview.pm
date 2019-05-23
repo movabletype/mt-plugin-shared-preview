@@ -185,8 +185,11 @@ sub shared_preview {
     }
 
     return unless defined $param;
-    $param->{back_edit} = $app->app_path . MT->config->AdminScript;
-    $param->{spid}      = $preview_id;
+    $param->{back_edit}
+        = $app->app_path
+        . MT->config->AdminScript
+        . $param->{edit_uri_params};
+    $param->{spid} = $preview_id;
 
     my $site;
     $site = MT::Blog->load( $preview_data->blog_id )

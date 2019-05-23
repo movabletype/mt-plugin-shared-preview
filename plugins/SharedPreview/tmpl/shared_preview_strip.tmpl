@@ -1,5 +1,3 @@
-<mt:setvar name="preview_link" value="<mt:var name="script_url">?__mode=shared_preview&spid=<mt:var name="spid">">
-
 <!DOCTYPE html>
 <html lang="<$mt:var name="language_tag"$>">
   <head>
@@ -134,7 +132,7 @@
       </ul>
       <ul class="nav navbar-nav">
         <li>
-          <a class="btn btn-link" id="edit" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Move to edit screen">" >
+          <a class="btn btn-link" id="edit" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Move to edit screen">" href="<mt:var name="back_edit">" >
               <svg title="Edit" class="mt-icon--inverse mt-icon" >
                 <use xlink:href="<$mt:var name="static_uri"$>images/sprite.svg#ic_edit">
               </svg>
@@ -156,15 +154,6 @@
       </ul>
     </div>
     </nav>
-    <form method="post" action="<$mt:var name="back_edit"$>" mt:once="1">
-        <input type="hidden" name="__mode" value="edit_<$mt:var name="object_type"$>" />
-        <input type="hidden" name="magic_token" value="<$mt:var name="magic_token"$>" />
-
-        <input type="hidden" name="dirty" value="1" />
-<mt:loop name="inputs">
-        <input type="hidden" name="<$mt:var name="data_name" escape="html"$>" value="<$mt:var name="data_value" escape="html"$>" />
-</mt:loop>
-    </form>
 
     <table id="entry-preview-layout" class="preview-layout">
     <tr>
@@ -188,11 +177,6 @@
       });
       jQuery(window).resize( function() {
         jQuery('#frame').height( jQuery(window).height() - jQuery('#entry-preview-control-strip').height() );
-      });
-
-      jQuery('#edit').on('click', function () {
-        jQuery('form').submit();
-        return false;
       });
 
       jQuery(function() {
