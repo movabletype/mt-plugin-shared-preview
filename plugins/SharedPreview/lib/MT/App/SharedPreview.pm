@@ -19,8 +19,6 @@ use SharedPreview::CMS::SharedPreview;
 sub id          {'shared_preview'}
 sub script_name { MT->config->SharedPreviewScript }
 
-sub ERROR_PASSWORD {1}
-
 sub init_request {
     my $app = shift;
     $app->SUPER::init_request(@_);
