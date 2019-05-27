@@ -27,14 +27,13 @@
      label_class="top-label">
     <p>
     <mt:if name="site_name">
-      <a href="<mt:var name="site_url">"><mt:var name="site_name" escape="html"></a>
-      <__trans phrase="password is required to display [_1]'s share preview." params="<mt:var name="site_name" escape="html">" >
+      <__trans phrase="In order to view shared preview of [_1], password is required." params="<a href="<mt:var name="site_url">"><mt:var name="site_name" escape="html"></a>" >
     <mt:else>
       <__trans phrase="password is required to display this share preview." >
     </mt:if>
     </p>
-    <input type="password" name="password" id="password" class="form-control text password" value="" />
-    <p><__trans phrase="It is different from the account login password."></p>
+    <input type="password" name="password" id="password" class="form-control text password w-50" value="" />
+    <p><__trans phrase="This password is different from your login password.."></p>
   </mtapp:setting>
 
   <div class="col-12 col-md-auto order-first order-md-last mb-4 mb-md-0 text-right">
