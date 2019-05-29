@@ -82,29 +82,6 @@ sub make_session {
 
 }
 
-sub set_save_values {
-    my $preview_obj = shift;
-    my ($set_data)  = @_;
-    my $data        = {};
-
-    for my $column ( @{ $set_data || [] } ) {
-        my $column_name = $column->{object_name};
-        if ( $column_name eq 'data' ) {
-            $data->{ $column->{data_name} } = $column->{data_value};
-        }
-        elsif ($column_name) {
-            $preview_obj->$column_name( $column->{data_value} );
-        }
-    }
-
-    if ($data) {
-        $preview_obj->data($data);
-    }
-
-    $preview_obj->id( $preview_obj->make_unique_id );
-    $preview_obj->{__dirty} = 1;
-}
-
 sub start_session {
     my ( $app, $blog_id ) = @_;
 
@@ -208,7 +185,7 @@ sub set_app_parameters {
     $app->param( 'blog_id', $preview->blog_id );
 
     if ( $preview->object_type eq 'content_data' ) {
-        $app->param( 'content_type_id', $preview->data->{content_type_id} );
+        $app->param( 'content_type_id', $preview->content_type_id );
     }
 }
 

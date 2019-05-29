@@ -18,14 +18,11 @@ use MT::Util qw(dirify);
 
 __PACKAGE__->install_properties(
     {   column_defs => {
-            'id'          => 'string(40) not null',
-            'object_id'   => 'integer not null',
-            'object_type' => 'string(50) not null',
-            'blog_id'     => 'integer(11) not null',
-            'data'        => {
-                type       => 'blob',
-                revisioned => 1,
-            },
+            'id'              => 'string(40) not null',
+            'object_id'       => 'integer not null',
+            'object_type'     => 'string(50) not null',
+            'blog_id'         => 'integer(11) not null',
+            'content_type_id' => 'integer(11)',
         },
         indexes => {
             blog_tag =>
@@ -42,17 +39,6 @@ sub class_label {
     return MT->translate("Preview");
 }
 
-sub save {
-    my $self = shift;
-    if ( my $data = $self->{__data} ) {
-        require MT::Serialize;
-        my $ser = MT::Serialize->serialize( \$data );
-        $self->data($ser);
-    }
-    $self->{__dirty} = 0;
-    $self->SUPER::save(@_);
-}
-
 sub make_unique_id {
     my $self = shift;
 
@@ -61,23 +47,6 @@ sub make_unique_id {
 
     return MT::Util::perl_sha1_digest_hex($key);
 
-}
-
-sub thaw_data {
-    my $self = shift;
-    return $self->{__data} if $self->{__data};
-    my $data = $self->data;
-    $data = '' unless $data;
-    require MT::Serialize;
-    my $out = MT::Serialize->unserialize($data);
-    if ( ref $out eq 'REF' ) {
-        $self->{__data} = $$out;
-    }
-    else {
-        $self->{__data} = {};
-    }
-    $self->{__dirty} = 0;
-    $self->{__data};
 }
 
 sub get {

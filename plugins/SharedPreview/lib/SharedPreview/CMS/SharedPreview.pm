@@ -21,13 +21,6 @@ sub make_shared_preview {
     my $blog_id = $app->blog->id;
     my $created_id;
 
-    if ( $type eq 'content_data' ) {
-        @params = SharedPreview::CMS::ContentData::trim_parameter($app);
-    }
-    else {
-        @params = SharedPreview::CMS::Entry::trim_parameter($app);
-    }
-
     my $preview_obj = MT::Preview->new;
 
     if (my $preview = MT::Preview->load(
@@ -41,11 +34,22 @@ sub make_shared_preview {
         $created_id = $preview->id;
     }
     else {
-        MT::App::SharedPreview::set_save_values( $preview_obj, \@params );
+
+        if ( $type eq 'content_data' ) {
+            my $content_type_id = $app->param('content_type_id');
+            $preview_obj->content_type_id($content_type_id);
+        }
+
+        $preview_obj->blog_id($blog_id);
+        $preview_obj->object_id($id);
+        $preview_obj->object_type($type);
+        $preview_obj->id( $preview_obj->make_unique_id );
         $created_id = $preview_obj->id;
+
         $preview_obj->save
             or $app->error(
             "Could not create share preview link : " . $preview_obj->errstr );
+
     }
 
     return $app->redirect(
