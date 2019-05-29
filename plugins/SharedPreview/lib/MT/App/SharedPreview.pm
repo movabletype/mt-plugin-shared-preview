@@ -24,47 +24,46 @@ sub init_request {
 }
 
 sub login {
-    my $app  = shift;
+    my $app = shift;
+
     my $spid = $app->param('spid');
+    return $app->error( $app->translate('no id') )
+        unless $spid;
 
-    my %validate
-        = MT::Validators::SharedPreviewAuthValidator->login_validate($app);
-    return load_login_form( $app, $spid, $validate{message} )
-        if $validate{error};
+    my $preview_data = MT::Preview->load($spid);
+    return $app->error( $app->translate('not found : shared preview page.') )
+        unless $preview_data;
 
-    my $preview_data = MT::Preview->load( $validate{spid} );
-    return $app->error( $app->translate('not found Shared Preview page.') )
-      unless $preview_data;
+    return load_login_form( $app, $spid ) if $app->request_method eq 'GET';
 
-    my $check_result = MT::Auth::SharedPreviewAuth->check_auth( \%validate );
-    return load_login_form( $app, $validate{spid},
+    my $password = $app->param('password');
+    return load_login_form( $app, $spid, $app->translate('no password') )
+        unless $password;
+
+    my $plugin_data = MT::PluginData->load(
+        {   plugin => 'SharedPreview',
+            key    => 'configuration:blog:' . $preview_data->blog_id,
+        }
+    );
+
+    my $check_result
+        = MT::Auth::SharedPreviewAuth->check_auth( $password, $plugin_data );
+    return load_login_form( $app, $spid,
         $app->translate('Passwords do not match.') )
         unless $check_result;
 
     my $start_session_result
-        = start_session( $app, $preview_data->blog_id, $validate{password} );
-    return load_login_form( $app, $validate{spid}, $start_session_result )
+        = start_session( $app, $preview_data->blog_id, $password );
+    return load_login_form( $app, $spid, $start_session_result )
         if $start_session_result;
 
     return $app->redirect(
         $app->uri(
             mode => 'shared_preview',
-            args => { spid => $validate{spid} },
+            args => { spid => $spid },
         )
     );
-}
 
-sub login_form {
-    my $app = shift;
-    my %validate
-        = MT::Validators::SharedPreviewAuthValidator->spid_validate($app);
-    return $app->error( $validate{message} ) if $validate{error};
-
-    my $preview_data = MT::Preview->load( $validate{value} );
-    return $app->error( $app->translate('not found : shared preview page.') )
-      unless $preview_data;
-
-    return load_login_form( $app, $validate{value} );
 }
 
 sub make_session {
