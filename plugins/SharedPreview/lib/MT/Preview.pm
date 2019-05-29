@@ -118,5 +118,13 @@ sub purge {
     }
 }
 
+sub add_shared_preview_link {
+    my ( $class, $type, $href ) = @_;
+
+    return <<"__JS__";
+jQuery('button[name=preview_$type]').after('<div id="shared_preview" class="text-right"><a href="$href">Shared Preview</a></div>');
+__JS__
+}
+
 1;
 
