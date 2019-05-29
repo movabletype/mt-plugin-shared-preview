@@ -53,7 +53,7 @@ sub post_save_content_data {
     1;
 }
 
-sub _build_preview {
+sub build_preview {
     my ( $class, $app ) = @_;
     my $at              = 'ContentType';
     my $content_type_id = $app->param('content_type_id');

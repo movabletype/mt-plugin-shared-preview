@@ -51,7 +51,7 @@ sub post_save_entry {
     1;
 }
 
-sub _build_preview {
+sub build_preview {
     my ( $class, $app ) = @_;
     my $id   = $app->param('id');
     my $type = $app->param('_type');

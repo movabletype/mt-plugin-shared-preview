@@ -2,8 +2,6 @@ package SharedPreview::CMS::SharedPreview;
 use strict;
 use warnings;
 
-use base qw(SharedPreview::CMS::SharedPreviewBase);
-
 use MT::App::SharedPreview;
 use MT::Preview;
 use MT::Validators::PreviewValidator;

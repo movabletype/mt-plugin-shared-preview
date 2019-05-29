@@ -113,13 +113,14 @@ sub shared_preview {
     my $type = $app->param('_type');
 
     if ( $type eq 'entry' || $type eq 'page' ) {
-        $param = SharedPreview::CMS::Entry->_build_preview($app);
+        $param = SharedPreview::CMS::Entry->build_preview($app);
     }
     else {
-        $param = SharedPreview::CMS::ContentData->_build_preview($app);
+        $param = SharedPreview::CMS::ContentData->build_preview($app);
     }
 
     return unless defined $param;
+
     $param->{back_edit}
         = $app->app_path
         . MT->config->AdminScript
