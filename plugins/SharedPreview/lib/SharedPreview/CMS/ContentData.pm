@@ -2,19 +2,20 @@ package SharedPreview::CMS::ContentData;
 use strict;
 use warnings;
 
-use base qw(SharedPreview::CMS::SharedPreviewBase);
 use MT::ContentStatus;
 use MT::Preview;
 
 sub on_template_param_edit {
     my ( $cb, $app, $param ) = @_;
-    return unless my $base = SharedPreview::CMS::SharedPreviewBase->new($app);
 
     my $id              = $app->param('id');
     my $type            = $app->param('_type');
     my $content_type_id = $app->param('content_type_id');
 
-    my $href = $app->uri_params(
+    my $href
+        = $app->app_path
+        . $app->config->AdminScript
+        . $app->uri_params(
         mode => 'make_shared_preview',
         args => {
             blog_id         => $app->blog->id,
@@ -22,10 +23,10 @@ sub on_template_param_edit {
             id              => $id,
             content_type_id => $content_type_id,
         },
-    );
+        );
 
     my $add_link = '';
-    $add_link = $base->add_shared_preview_link($href)
+    $add_link = MT::Preview->add_shared_preview_link( $type, $href )
         if $param->{status} != MT::ContentStatus::RELEASE;
 
     ( $param->{jq_js_include} ||= '' ) .= $add_link;

@@ -2,28 +2,29 @@ package SharedPreview::CMS::Entry;
 use strict;
 use warnings;
 
-use base qw(SharedPreview::CMS::SharedPreviewBase);
 use MT::Entry;
 use MT::Preview;
 use MT::Util;
 
 sub on_template_param_edit {
     my ( $cb, $app, $param, $tmpl ) = @_;
-    return unless my $base = SharedPreview::CMS::SharedPreviewBase->new($app);
 
     my $id   = $app->param('id');
     my $type = $app->param('_type');
-    my $href = $app->uri_params(
+    my $href
+        = $app->app_path
+        . $app->config->AdminScript
+        . $app->uri_params(
         mode => 'make_shared_preview',
         args => {
             blog_id => $app->blog->id,
             _type   => $type,
             id      => $id,
         },
-    );
+        );
 
     my $add_link = '';
-    $add_link = $base->add_shared_preview_link($href)
+    $add_link = MT::Preview->add_shared_preview_link( $type, $href )
         if $param->{status} != MT::Entry::RELEASE;
 
     ( $param->{jq_js_include} ||= '' ) .= $add_link;
