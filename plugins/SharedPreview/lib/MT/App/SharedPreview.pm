@@ -133,7 +133,13 @@ sub shared_preview {
     my $preview_id   = $app->param('spid');
     my $preview_data = MT::Preview->load($preview_id);
 
-    my $need_login = MT::Auth::SharedPreviewAuth->need_login($preview_id);
+    my $plugin_data = MT::PluginData->load(
+        {   plugin => 'SharedPreview',
+            key    => 'configuration:blog:' . $preview_data->blog_id,
+        }
+    );
+
+    my $need_login = MT::Auth::SharedPreviewAuth->need_login($plugin_data);
 
     if ($need_login) {
         my $check_session_result
@@ -148,10 +154,7 @@ sub shared_preview {
         ) unless $check_session_result;
 
         my $check_auth_result = MT::Auth::SharedPreviewAuth->check_auth(
-            {   'spid'     => $preview_id,
-                'password' => $check_session_result->{password}
-            }
-        );
+            $check_session_result->{password}, $plugin_data );
 
         unless ($check_auth_result) {
             MT::Auth::SharedPreviewAuth->remove_session( $app,
@@ -163,7 +166,6 @@ sub shared_preview {
                 )
             );
         }
-
     }
 
     set_app_parameters( $app, $preview_data );
