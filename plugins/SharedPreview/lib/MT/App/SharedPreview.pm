@@ -9,7 +9,6 @@ use MT::Auth::SharedPreviewAuth;
 use MT::Blog;
 use MT::Preview;
 use MT::Session;
-use MT::SharedPreviewPluginData;
 use MT::Validators::PreviewValidator;
 use MT::Validators::SharedPreviewAuthValidator;
 use SharedPreview::CMS::Entry;
