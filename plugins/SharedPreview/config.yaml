@@ -35,8 +35,8 @@ applications:
     handler: MT::App::SharedPreview
     methods:
       shared_preview: $SharedPreview::MT::App::SharedPreview::shared_preview
-      shared_preview_login: $SharedPreview::MT::App::SharedPreview::login_form
-      shared_preview_auth: $SharedPreview::MT::App::SharedPreview::login
+      shared_preview_login: $SharedPreview::MT::App::SharedPreview::login
+
 
 config_settings:
   SharedPreviewScript:

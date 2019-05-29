@@ -10,7 +10,6 @@ use MT::Blog;
 use MT::Preview;
 use MT::Session;
 use MT::Validators::PreviewValidator;
-use MT::Validators::SharedPreviewAuthValidator;
 use SharedPreview::CMS::Entry;
 use SharedPreview::CMS::ContentData;
 use SharedPreview::CMS::SharedPreview;

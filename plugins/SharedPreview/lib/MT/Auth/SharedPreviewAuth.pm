@@ -6,6 +6,7 @@ use MT;
 use MT::Preview;
 use MT::Serialize;
 use MT::Session;
+use MT::PluginData;
 
 sub need_login {
     my ( $app, $preview_id ) = @_;
@@ -23,8 +24,7 @@ sub need_login {
 
     return unless $plugin_data;
 
-    return 1
-      if $plugin_data->data->{use_password} == MT::Preview::USE_PASSWORD_VALID;
+    return $plugin_data->data->{use_password};
 
 }
 
@@ -41,7 +41,7 @@ sub check_auth {
         }
     );
 
-    return $plugin_data->data->{password} =~ /(\Q{\"value\":\"$parameters->{password}\"}\E)/;
+    return $plugin_data->data->{sp_password} =~ /(\Q{\"value\":\"$parameters->{sp_password}\"}\E)/;
 
 }
 
