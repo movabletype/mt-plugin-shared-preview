@@ -111,27 +111,5 @@ sub _build_preview {
     return \%param;
 }
 
-sub trim_parameter {
-    my ($app) = @_;
-    my $id    = $app->param('id');
-    my $type  = $app->param('_type');
-    my @params;
-
-    return @params = (
-        {   object_name => 'object_id',
-            data_name   => 'id',
-            data_value  => $id,
-        },
-        {   object_name => 'object_type',
-            data_name   => '_type',
-            data_value  => $type,
-        },
-        {   object_name => 'blog_id',
-            data_name   => 'blog_id',
-            data_value  => $app->blog->id,
-        },
-    );
-}
-
 1;
 
