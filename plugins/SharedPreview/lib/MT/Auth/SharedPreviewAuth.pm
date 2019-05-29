@@ -83,4 +83,41 @@ sub get_session_id_from_cookie {
     return $cookie_session[1];
 }
 
+sub make_session {
+    my ( $app, $blog_id, $password ) = @_;
+    my $session = MT::Session->new;
+
+    $session->id( $app->make_magic_token() );
+    $session->kind('SP');
+    $session->start(time);
+    $session->name('shared_preview');
+    $session->set( 'blog_id',  $blog_id );
+    $session->set( 'password', $password );
+    $session->save;
+
+    return $session;
+
+}
+
+sub start_session {
+    my ( $app, $blog_id ) = @_;
+
+    my $make_session = make_session(@_);
+    return $make_session->errstr if $make_session->errstr;
+
+    my %arg = (
+        -name  => 'shared_preview_' . $blog_id,
+        -value => Encode::encode(
+            $app->charset, join( '::', 'shared_preview', $make_session->id )
+        ),
+        -path    => $app->config->CookiePath || $app->mt_path,
+        -expires => '+3M',
+    );
+
+    $app->bake_cookie(%arg);
+
+    return '';
+
+}
+
 1;

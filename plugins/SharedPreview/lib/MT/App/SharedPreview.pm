@@ -8,7 +8,6 @@ use MT;
 use MT::Auth::SharedPreviewAuth;
 use MT::Blog;
 use MT::Preview;
-use MT::Session;
 use MT::Validators::PreviewValidator;
 use SharedPreview::CMS::Entry;
 use SharedPreview::CMS::ContentData;
@@ -53,7 +52,7 @@ sub login {
         unless $check_result;
 
     my $start_session_result
-        = start_session( $app, $preview_data->blog_id, $password );
+        = MT::Auth::SharedPreviewAuth::start_session( $app, $preview_data->blog_id, $password );
     return load_login_form( $app, $spid, $start_session_result )
         if $start_session_result;
 
@@ -63,43 +62,6 @@ sub login {
             args => { spid => $spid },
         )
     );
-
-}
-
-sub make_session {
-    my ( $app, $blog_id, $password ) = @_;
-    my $session = MT::Session->new;
-
-    $session->id( $app->make_magic_token() );
-    $session->kind('SP');
-    $session->start(time);
-    $session->name('shared_preview');
-    $session->set( 'blog_id',  $blog_id );
-    $session->set( 'password', $password );
-    $session->save;
-
-    return $session;
-
-}
-
-sub start_session {
-    my ( $app, $blog_id ) = @_;
-
-    my $make_session = make_session(@_);
-    return $make_session->errstr if $make_session->errstr;
-
-    my %arg = (
-        -name  => 'shared_preview_' . $blog_id,
-        -value => Encode::encode(
-            $app->charset, join( '::', 'shared_preview', $make_session->id )
-        ),
-        -path    => $app->config->CookiePath || $app->mt_path,
-        -expires => '+3M',
-    );
-
-    $app->bake_cookie(%arg);
-
-    return '';
 
 }
 
