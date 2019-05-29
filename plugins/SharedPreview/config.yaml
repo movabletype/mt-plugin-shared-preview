@@ -16,7 +16,7 @@ blog_config_template: shared_preview_setting.tmpl
 settings:
   use_password:
     scope: blog
-  password:
+  sp_password:
     scope: blog
 
 applications:
