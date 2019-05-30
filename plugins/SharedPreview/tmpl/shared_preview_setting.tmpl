@@ -38,11 +38,11 @@
 
 <script type="text/javascript">
 jQuery(function($) {
-    showSharedPreviewPasswordField();
+    switchSharedPreviewPasswordField();
     setPasswordAreaInit();
 
     jQuery('input[name=use_password]').on('change', function(){
-        showSharedPreviewPasswordField();
+        switchSharedPreviewPasswordField();
     });
 
     jQuery('#add_password').on('click', function(){
@@ -129,7 +129,7 @@ jQuery(function($) {
         });
     }
 
-    function showSharedPreviewPasswordField() {
+    function switchSharedPreviewPasswordField() {
         var checkedValue = $('input[name=use_password]:checked').val();
         if (checkedValue == 1) {
             jQuery('#password-field').show();
