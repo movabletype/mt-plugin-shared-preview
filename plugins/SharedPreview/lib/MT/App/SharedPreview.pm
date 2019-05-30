@@ -5,7 +5,7 @@ use warnings;
 use base 'MT::App';
 
 use MT;
-use MT::Auth::SharedPreviewAuth;
+use SharedPreview::Auth;
 use MT::Blog;
 use MT::Preview;
 use MT::Validators::PreviewValidator;
@@ -46,17 +46,17 @@ sub login {
         args => { spid => $spid }
     );
 
-    my $need_login = MT::Auth::SharedPreviewAuth->need_login($preview_data);
+    my $need_login = SharedPreview::Auth->need_login($preview_data);
     return $app->redirect( $app->uri(@uri) ) unless $need_login;
 
     my $check_result
-        = MT::Auth::SharedPreviewAuth->check_auth( $password, $preview_data );
+        = SharedPreview::Auth->check_auth( $password, $preview_data );
     return load_login_form( $app, $preview_data,
         $app->translate('Passwords do not match.') )
         unless $check_result;
 
     my $start_session_result
-        = MT::Auth::SharedPreviewAuth::start_session( $app,
+        = SharedPreview::Auth::start_session( $app,
         $preview_data->blog_id, $password );
     return load_login_form( $app, $preview_data, $start_session_result )
         if $start_session_result;
@@ -72,11 +72,11 @@ sub shared_preview {
     my $preview_id   = $app->param('spid');
     my $preview_data = MT::Preview->load($preview_id);
 
-    my $need_login = MT::Auth::SharedPreviewAuth->need_login($preview_data);
+    my $need_login = SharedPreview::Auth->need_login($preview_data);
 
     if ($need_login) {
         my $check_session_result
-            = MT::Auth::SharedPreviewAuth->check_session( $app,
+            = SharedPreview::Auth->check_session( $app,
             $preview_data->blog_id );
 
         return $app->redirect(
@@ -87,12 +87,12 @@ sub shared_preview {
         ) unless $check_session_result;
 
         my $check_auth_result
-            = MT::Auth::SharedPreviewAuth->check_auth(
+            = SharedPreview::Auth->check_auth(
             $check_session_result->{password},
             $preview_data );
 
         unless ($check_auth_result) {
-            MT::Auth::SharedPreviewAuth->remove_session( $app,
+            SharedPreview::Auth->remove_session( $app,
                 $preview_data->blog_id );
             return $app->redirect(
                 $app->uri(
@@ -166,7 +166,7 @@ sub load_login_form {
                     value => $preview_data->id,
                 },
                 {   name  => '__mode',
-                    value => 'shared_preview_auth',
+                    value => 'shared_preview_login',
                 },
             ],
             site_name => $site_name,

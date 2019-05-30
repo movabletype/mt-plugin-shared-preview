@@ -1,4 +1,4 @@
-package MT::Auth::SharedPreviewAuth;
+package SharedPreview::Auth;
 use strict;
 use warnings;
 
@@ -44,9 +44,9 @@ sub check_session {
     my $session_id     = get_session_id_from_cookie($app, $blog_id);
     my $session = MT::Session->load($session_id);
 
-    return 0 unless $session;
+    return unless $session;
 
-    return 0 if $session->thaw_data->{blog_id} != $blog_id;
+    return if $session->thaw_data->{blog_id} != $blog_id;
 
     return $session->thaw_data;
 
@@ -56,9 +56,7 @@ sub remove_session {
     my ( $class, $app, $blog_id ) = @_;
     my $session_id     = get_session_id_from_cookie($app, $blog_id);
 
-    MT::Session->remove( { id => $session_id, kind => 'SP' } )
-        or return 0;
-    1;
+    MT::Session->remove( { id => $session_id, kind => 'SP' } );
 }
 
 sub get_session_id_from_cookie {
@@ -66,11 +64,11 @@ sub get_session_id_from_cookie {
     my $cookie_name = 'shared_preview_' . $blog_id;
     my $cookies     = $app->cookies;
 
-    return 0 unless $cookies->{$cookie_name};
+    return unless $cookies->{$cookie_name};
 
     my @cookie_session = split '::', $cookies->{$cookie_name}->{value}[0];
 
-    return 0 unless $cookie_session[1];
+    return unless $cookie_session[1];
 
     return $cookie_session[1];
 }
