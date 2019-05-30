@@ -41,7 +41,7 @@ sub check_auth {
 sub check_session {
     my ( $class, $app, $blog_id ) = @_;
 
-    my $session_id     = get_session_id_from_cookie(@_);
+    my $session_id     = get_session_id_from_cookie($app, $blog_id);
     my $session = MT::Session->load($session_id);
 
     return 0 unless $session;
@@ -54,7 +54,7 @@ sub check_session {
 
 sub remove_session {
     my ( $class, $app, $blog_id ) = @_;
-    my $session_id     = get_session_id_from_cookie(@_);
+    my $session_id     = get_session_id_from_cookie($app, $blog_id);
 
     MT::Session->remove( { id => $session_id, kind => 'SP' } )
         or return 0;
@@ -62,7 +62,7 @@ sub remove_session {
 }
 
 sub get_session_id_from_cookie {
-    my ( $class, $app, $blog_id ) = @_;
+    my ( $app, $blog_id ) = @_;
     my $cookie_name = 'shared_preview_' . $blog_id;
     my $cookies     = $app->cookies;
 
