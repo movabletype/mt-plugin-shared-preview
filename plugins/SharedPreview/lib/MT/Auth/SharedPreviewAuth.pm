@@ -9,15 +9,10 @@ use MT::Session;
 use MT::PluginData;
 
 sub need_login {
-    my ( $app, $preview_id ) = @_;
-
-    my $preview_data = MT::Preview->load($preview_id);
-
-    return unless $preview_data;
+    my ( $class, $preview_data ) = @_;
 
     my $plugin_data = MT::PluginData->load(
-        {
-            plugin => 'SharedPreview',
+        {   plugin => 'SharedPreview',
             key    => 'configuration:blog:' . $preview_data->blog_id,
         }
     );
@@ -29,24 +24,22 @@ sub need_login {
 }
 
 sub check_auth {
-    my ( $self, $parameters ) = @_;
-
-    my $preview_data = MT::Preview->load($parameters->{spid});
-    return unless $preview_data;
+    my ( $class, $password, $preview_data ) = @_;
 
     my $plugin_data = MT::PluginData->load(
-        {
-            plugin => 'SharedPreview',
+        {   plugin => 'SharedPreview',
             key    => 'configuration:blog:' . $preview_data->blog_id,
         }
     );
 
-    return $plugin_data->data->{sp_password} =~ /(\Q{\"value\":\"$parameters->{sp_password}\"}\E)/;
+    return unless $plugin_data;
+
+    return $plugin_data->data->{sp_password} =~ /(\Q{\"value\":\"$password\"}\E)/;
 
 }
 
 sub check_session {
-    my ( $self, $app, $blog_id ) = @_;
+    my ( $class, $app, $blog_id ) = @_;
 
     my $session_id     = get_session_id_from_cookie(@_);
     my $session = MT::Session->load($session_id);
@@ -60,8 +53,7 @@ sub check_session {
 }
 
 sub remove_session {
-    my ( $self, $app, $blog_id ) = @_;
-
+    my ( $class, $app, $blog_id ) = @_;
     my $session_id     = get_session_id_from_cookie(@_);
 
     MT::Session->remove( { id => $session_id, kind => 'SP' } )
@@ -70,7 +62,7 @@ sub remove_session {
 }
 
 sub get_session_id_from_cookie {
-    my ( $self, $app, $blog_id ) = @_;
+    my ( $class, $app, $blog_id ) = @_;
     my $cookie_name = 'shared_preview_' . $blog_id;
     my $cookies     = $app->cookies;
 

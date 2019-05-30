@@ -39,20 +39,15 @@ sub login {
     return load_login_form( $app, $spid, $app->translate('no password') )
         unless $password;
 
-    my $plugin_data = MT::PluginData->load(
-        {   plugin => 'SharedPreview',
-            key    => 'configuration:blog:' . $preview_data->blog_id,
-        }
-    );
-
     my $check_result
-        = MT::Auth::SharedPreviewAuth->check_auth( $password, $plugin_data );
+        = MT::Auth::SharedPreviewAuth->check_auth( $password, $preview_data );
     return load_login_form( $app, $spid,
         $app->translate('Passwords do not match.') )
         unless $check_result;
 
     my $start_session_result
-        = MT::Auth::SharedPreviewAuth::start_session( $app, $preview_data->blog_id, $password );
+        = MT::Auth::SharedPreviewAuth::start_session( $app,
+        $preview_data->blog_id, $password );
     return load_login_form( $app, $spid, $start_session_result )
         if $start_session_result;
 
@@ -72,13 +67,7 @@ sub shared_preview {
     my $preview_id   = $app->param('spid');
     my $preview_data = MT::Preview->load($preview_id);
 
-    my $plugin_data = MT::PluginData->load(
-        {   plugin => 'SharedPreview',
-            key    => 'configuration:blog:' . $preview_data->blog_id,
-        }
-    );
-
-    my $need_login = MT::Auth::SharedPreviewAuth->need_login($plugin_data);
+    my $need_login = MT::Auth::SharedPreviewAuth->need_login($preview_data);
 
     if ($need_login) {
         my $check_session_result
@@ -92,8 +81,10 @@ sub shared_preview {
             )
         ) unless $check_session_result;
 
-        my $check_auth_result = MT::Auth::SharedPreviewAuth->check_auth(
-            $check_session_result->{password}, $plugin_data );
+        my $check_auth_result
+            = MT::Auth::SharedPreviewAuth->check_auth(
+            $check_session_result->{password},
+            $preview_data );
 
         unless ($check_auth_result) {
             MT::Auth::SharedPreviewAuth->remove_session( $app,
