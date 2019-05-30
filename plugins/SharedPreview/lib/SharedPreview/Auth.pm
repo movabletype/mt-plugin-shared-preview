@@ -34,9 +34,14 @@ sub check_auth {
 
     return unless $plugin_data;
 
-    return $plugin_data->data->{sp_password}
-        =~ /(\Q{\"value\":\"$password\"}\E)/;
+    require JSON;
+    my $decode_outside
+        = JSON::decode_json( $plugin_data->data->{sp_password} );
+    my $password_list = JSON::decode_json($decode_outside);
 
+    for my $password_config (@$password_list) {
+        return 1 if $password_config->{value} eq $password;
+    }
 }
 
 sub check_session {
