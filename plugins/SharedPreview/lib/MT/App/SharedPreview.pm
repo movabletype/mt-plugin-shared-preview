@@ -39,6 +39,14 @@ sub login {
     return load_login_form( $app, $spid, $app->translate('no password') )
         unless $password;
 
+    my @uri = (
+        mode => 'shared_preview',
+        args => { spid => $spid }
+    );
+
+    my $need_login = MT::Auth::SharedPreviewAuth->need_login($preview_data);
+    return $app->redirect( $app->uri(@uri) ) unless $need_login;
+
     my $check_result
         = MT::Auth::SharedPreviewAuth->check_auth( $password, $preview_data );
     return load_login_form( $app, $spid,
@@ -51,12 +59,7 @@ sub login {
     return load_login_form( $app, $spid, $start_session_result )
         if $start_session_result;
 
-    return $app->redirect(
-        $app->uri(
-            mode => 'shared_preview',
-            args => { spid => $spid },
-        )
-    );
+    return $app->redirect( $app->uri(@uri) );
 
 }
 
