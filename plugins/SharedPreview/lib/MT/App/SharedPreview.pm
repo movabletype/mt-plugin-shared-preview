@@ -33,10 +33,12 @@ sub login {
     return $app->error( $app->translate('not found : shared preview page.') )
         unless $preview_data;
 
-    return load_login_form( $app, $spid ) if $app->request_method eq 'GET';
+    return load_login_form( $app, $preview_data )
+        if $app->request_method eq 'GET';
 
     my $password = $app->param('password');
-    return load_login_form( $app, $spid, $app->translate('no password') )
+    return load_login_form( $app, $preview_data,
+        $app->translate('no password') )
         unless $password;
 
     my @uri = (
@@ -49,14 +51,14 @@ sub login {
 
     my $check_result
         = MT::Auth::SharedPreviewAuth->check_auth( $password, $preview_data );
-    return load_login_form( $app, $spid,
+    return load_login_form( $app, $preview_data,
         $app->translate('Passwords do not match.') )
         unless $check_result;
 
     my $start_session_result
         = MT::Auth::SharedPreviewAuth::start_session( $app,
         $preview_data->blog_id, $password );
-    return load_login_form( $app, $spid, $start_session_result )
+    return load_login_form( $app, $preview_data, $start_session_result )
         if $start_session_result;
 
     return $app->redirect( $app->uri(@uri) );
@@ -147,23 +149,21 @@ sub set_app_parameters {
 }
 
 sub load_login_form {
-    my ( $app, $preview_id, $error ) = @_;
+    my ( $app, $preview_data, $error ) = @_;
     my $site_name;
     my $site_url;
-    if ($preview_id) {
-        my $site;
-        my $preview_data = MT::Preview->load($preview_id);
-        $site = MT::Blog->load( $preview_data->blog_id )
-            if $preview_data->blog_id;
-        $site_name = $site->name     if $site;
-        $site_url  = $site->site_url if $site;
-    }
+    my $site;
+
+    $site = MT::Blog->load( $preview_data->blog_id )
+        if $preview_data->blog_id;
+    $site_name = $site->name     if $site;
+    $site_url  = $site->site_url if $site;
 
     return $app->component('SharedPreview')->load_tmpl(
         'shared_preview_login.tmpl',
         {   query_params => [
                 {   name  => 'spid',
-                    value => $preview_id,
+                    value => $preview_data->id,
                 },
                 {   name  => '__mode',
                     value => 'shared_preview_auth',
