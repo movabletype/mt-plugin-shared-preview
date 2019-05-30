@@ -12,16 +12,16 @@ sub make_shared_preview {
     my $created_id;
 
     my $type = $app->param('_type');
-    return $app->error( $app->translate('no type') ) unless $type;
+    return $app->errtrans('no type') unless $type;
 
     my $id = $app->param('id');
-    return $app->error( $app->translate('no id') ) unless $id;
+    return $app->errtrans('no id') unless $id;
 
     my $blog_id = $app->blog->id;
-    return $app->error( $app->translate('No Blog') ) unless $blog_id;
+    return $app->errtrans('No Blog') unless $blog_id;
 
     my $obj_class = $app->model($type);
-    return $app->error( $app->translate( 'invalid type: [_1]', $type ) )
+    return $app->errtrans( 'invalid type: [_1]', $type )
         unless $obj_class;
 
     my $preview_obj = MT::Preview->new;
@@ -50,7 +50,7 @@ sub make_shared_preview {
         $created_id = $preview_obj->id;
 
         $preview_obj->save
-            or $app->error(
+            or return $app->errtrans(
             "Could not create share preview link : " . $preview_obj->errstr );
 
     }

@@ -25,11 +25,11 @@ sub login {
     my $app = shift;
 
     my $spid = $app->param('spid');
-    return $app->error( $app->translate('no id') )
+    return $app->errtrans('no id')
         unless $spid;
 
     my $preview_data = MT::Preview->load($spid);
-    return $app->error( $app->translate('not found : shared preview page.') )
+    return $app->errtrans('not found : shared preview page.')
         unless $preview_data;
 
     return load_login_form( $app, $preview_data )
@@ -68,10 +68,10 @@ sub shared_preview {
     my $app = shift;
 
     my $preview_id = $app->param('spid');
-    return $app->error( $app->translate('no id') ) unless $preview_id;
+    return $app->errtrans('no id') unless $preview_id;
 
     my $preview_data = MT::Preview->load($preview_id);
-    return $app->error( $app->translate('There is no shared preview') )
+    return $app->errtrans('There is no shared preview')
         unless $preview_data;
 
     my $need_login = SharedPreview::Auth->need_login($preview_data);
