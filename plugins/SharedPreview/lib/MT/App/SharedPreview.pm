@@ -8,7 +8,6 @@ use MT;
 use SharedPreview::Auth;
 use MT::Blog;
 use MT::Preview;
-use MT::Validators::PreviewValidator;
 use SharedPreview::CMS::Entry;
 use SharedPreview::CMS::ContentData;
 use SharedPreview::CMS::SharedPreview;
@@ -66,11 +65,14 @@ sub login {
 }
 
 sub shared_preview {
-    my $app    = shift;
-    my $result = MT::Validators::PreviewValidator->view_validator($app);
-    return $app->error($result) if defined $result;
-    my $preview_id   = $app->param('spid');
+    my $app = shift;
+
+    my $preview_id = $app->param('spid');
+    return $app->error( $app->translate('no id') ) unless $preview_id;
+
     my $preview_data = MT::Preview->load($preview_id);
+    return $app->error( $app->translate('There is no shared preview') )
+        unless $preview_data;
 
     my $need_login = SharedPreview::Auth->need_login($preview_data);
 

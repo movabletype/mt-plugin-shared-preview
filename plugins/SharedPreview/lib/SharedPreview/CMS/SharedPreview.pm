@@ -4,20 +4,25 @@ use warnings;
 
 use MT::App::SharedPreview;
 use MT::Preview;
-use MT::Validators::PreviewValidator;
 use SharedPreview::CMS::Entry;
 use SharedPreview::CMS::ContentData;
 
 sub make_shared_preview {
     my $app = shift;
-    my @params;
-    my $result = MT::Validators::PreviewValidator->make_validator($app);
-    return $app->error($result) if defined $result;
-
-    my $type    = $app->param('_type');
-    my $id      = $app->param('id');
-    my $blog_id = $app->blog->id;
     my $created_id;
+
+    my $type = $app->param('_type');
+    return $app->error( $app->translate('no type') ) unless $type;
+
+    my $id = $app->param('id');
+    return $app->error( $app->translate('no id') ) unless $id;
+
+    my $blog_id = $app->blog->id;
+    return $app->error( $app->translate('No Blog') ) unless $blog_id;
+
+    my $obj_class = $app->model($type);
+    return $app->error( $app->translate( 'invalid type: [_1]', $type ) )
+        unless $obj_class;
 
     my $preview_obj = MT::Preview->new;
 
