@@ -35,7 +35,7 @@ sub post_save_entry {
     my $id   = $app->param('id');
     my $type = $app->param('_type');
 
-    return 1 if $obj->status != MT::Entry::RELEASE;
+    return if $obj->status != MT::Entry::RELEASE;
 
     if (my $preview = MT::Preview->load(
             {   blog_id     => $app->blog->id,

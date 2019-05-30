@@ -37,7 +37,7 @@ sub post_save_content_data {
     my $id   = $app->param('id');
     my $type = $app->param('_type');
 
-    return 1 if $obj->status != MT::ContentStatus::RELEASE;
+    return if $obj->status != MT::ContentStatus::RELEASE;
 
     if (my $preview = MT::Preview->load(
             {   blog_id     => $app->blog->id,

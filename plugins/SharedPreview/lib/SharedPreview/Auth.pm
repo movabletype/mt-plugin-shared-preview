@@ -34,16 +34,18 @@ sub check_auth {
 
     return unless $plugin_data;
 
-    return $plugin_data->data->{sp_password} =~ /(\Q{\"value\":\"$password\"}\E)/;
+    return $plugin_data->data->{sp_password}
+        =~ /(\Q{\"value\":\"$password\"}\E)/;
 
 }
 
 sub check_session {
     my ( $class, $app, $blog_id ) = @_;
 
-    my $session_id     = get_session_id_from_cookie($app, $blog_id);
-    my $session = MT::Session->load($session_id);
+    my $session_id = get_session_id_from_cookie( $app, $blog_id );
+    return unless $session_id;
 
+    my $session = MT::Session->load($session_id);
     return unless $session;
 
     return if $session->thaw_data->{blog_id} != $blog_id;
@@ -54,7 +56,8 @@ sub check_session {
 
 sub remove_session {
     my ( $class, $app, $blog_id ) = @_;
-    my $session_id     = get_session_id_from_cookie($app, $blog_id);
+    my $session_id = get_session_id_from_cookie( $app, $blog_id );
+    return unless $session_id;
 
     MT::Session->remove( { id => $session_id, kind => 'SP' } );
 }
@@ -65,12 +68,9 @@ sub get_session_id_from_cookie {
     my $cookies     = $app->cookies;
 
     return unless $cookies->{$cookie_name};
+    return unless $cookies->{$cookie_name}->{value}[0];
 
-    my @cookie_session = split '::', $cookies->{$cookie_name}->{value}[0];
-
-    return unless $cookie_session[1];
-
-    return $cookie_session[1];
+    return $cookies->{$cookie_name}->{value}[0];
 }
 
 sub make_session {
@@ -90,16 +90,14 @@ sub make_session {
 }
 
 sub start_session {
-    my ( $app, $blog_id ) = @_;
+    my ( $app, $blog_id, $password ) = @_;
 
-    my $make_session = make_session(@_);
+    my $make_session = make_session( $app, $blog_id, $password );
     return $make_session->errstr if $make_session->errstr;
 
     my %arg = (
-        -name  => 'shared_preview_' . $blog_id,
-        -value => Encode::encode(
-            $app->charset, join( '::', 'shared_preview', $make_session->id )
-        ),
+        -name    => 'shared_preview_' . $blog_id,
+        -value   => $make_session->id,
         -path    => $app->config->CookiePath || $app->mt_path,
         -expires => '+3M',
     );
