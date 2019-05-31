@@ -121,6 +121,8 @@ sub purge {
 sub shared_preview_link {
     my ( $type, $href ) = @_;
 
+    $type = 'entry' if $type eq 'page';
+
     return <<"__JS__";
 jQuery('button[name=preview_$type]').after('<div id="shared_preview" class="text-right"><a href="$href">Shared Preview</a></div>');
 __JS__
