@@ -104,7 +104,7 @@ sub shared_preview {
 
     if ($need_login) {
         my $check_session_result
-            = SharedPreview::Auth->check_session( $app,
+            = SharedPreview::Auth::check_session( $app,
             $preview_data->blog_id );
 
         return $app->redirect(
@@ -119,7 +119,7 @@ sub shared_preview {
             $check_session_result->{password}, $plugin_data );
 
         unless ($check_auth_result) {
-            SharedPreview::Auth->remove_session( $app,
+            SharedPreview::Auth::remove_session( $app,
                 $preview_data->blog_id );
             return $app->redirect(
                 $app->uri(
@@ -148,15 +148,11 @@ sub shared_preview {
         = $app->app_path
         . MT->config->AdminScript
         . $param->{edit_uri_params};
-    $param->{spid} = $preview_id;
+    $param->{spid}      = $preview_id;
+    $param->{site_name} = $site->name;
+    $param->{site_url}  = $site->site_url;
 
-    my $site;
-    $site = MT::Blog->load( $preview_data->blog_id )
-        if $preview_data->blog_id;
 
-    if ($site) {
-        $param->{site_name} = $site->name     if $site;
-        $param->{site_url}  = $site->site_url if $site;
     }
 
     return $app->component('SharedPreview')

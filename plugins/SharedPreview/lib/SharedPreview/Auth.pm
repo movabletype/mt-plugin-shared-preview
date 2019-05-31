@@ -22,9 +22,10 @@ sub check_auth {
     return unless $plugin_data;
 
     require JSON;
-    my $decode_outside
-        = JSON::decode_json( $plugin_data->data->{sp_password} );
-    my $password_list = JSON::decode_json($decode_outside);
+    my $sp_password = $plugin_data->data->{sp_password};
+
+    my $decode_outside = JSON::decode_json($sp_password);
+    my $password_list  = JSON::decode_json($decode_outside);
 
     for my $password_config (@$password_list) {
         return 1 if $password_config->{value} eq $password;
@@ -32,24 +33,45 @@ sub check_auth {
 }
 
 sub check_session {
-    my ( $class, $app, $blog_id ) = @_;
+    my ( $app, $blog_id ) = @_;
 
     my $session_id = get_session_id_from_cookie( $app, $blog_id );
     return unless $session_id;
 
     my $session = MT::Session->load($session_id);
-    return unless $session;
+    unless ($session) {
+        my %arg = (
+            -name    => 'shared_preview_' . $blog_id,
+            -value   => '',
+            -path    => $app->config->CookiePath || $app->mt_path,
+            -expires => '-1y',
+        );
+        $app->bake_cookie(%arg);
+        return;
+    }
 
-    return if $session->thaw_data->{blog_id} != $blog_id;
+    if ( $session->thaw_data->{blog_id} != $blog_id ) {
+        remove_session( $app, $blog_id );
+        return;
+    }
 
     return $session->thaw_data;
 
 }
 
 sub remove_session {
-    my ( $class, $app, $blog_id ) = @_;
+    my ( $app, $blog_id ) = @_;
     my $session_id = get_session_id_from_cookie( $app, $blog_id );
     return unless $session_id;
+
+    my %arg = (
+        -name    => 'shared_preview_' . $blog_id,
+        -value   => '',
+        -path    => $app->config->CookiePath || $app->mt_path,
+        -expires => '-1y',
+    );
+
+    $app->bake_cookie(%arg);
 
     MT::Session->remove( { id => $session_id, kind => 'SP' } );
 }
