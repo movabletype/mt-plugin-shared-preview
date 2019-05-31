@@ -4,6 +4,7 @@ use warnings;
 
 use MT::ContentStatus;
 use MT::Preview;
+use MT::Template;
 
 sub on_template_param_edit {
     my ( $cb, $app, $param ) = @_;
