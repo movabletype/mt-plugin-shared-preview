@@ -207,7 +207,6 @@
       jQuery('iframe').on("load", function(e){
           jQuery(this).contents().find("html").on('click', function(){
             checkPopover(event);
-            return TC.stopEvent(event);
           });
       });
 
