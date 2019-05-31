@@ -40,7 +40,7 @@ sub login {
     $app->response_code(401) if $is_redirect;
 
     return load_login_form( $app, $preview_data, $site )
-        if $app->request_method eq 'GET';
+        if $app->request_method ne 'POST';
 
     my $password = $app->param('password');
     return load_login_form( $app, $preview_data, $site,
