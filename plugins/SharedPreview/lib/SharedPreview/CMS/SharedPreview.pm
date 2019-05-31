@@ -9,7 +9,7 @@ use SharedPreview::CMS::ContentData;
 
 sub make_shared_preview {
     my $app = shift;
-    my $created_id;
+    my $preview_id;
 
     my $type = $app->param('_type');
     return $app->errtrans('no type') unless $type;
@@ -24,41 +24,38 @@ sub make_shared_preview {
     return $app->errtrans( 'invalid type: [_1]', $type )
         unless $obj_class;
 
-    if (my $preview = MT::Preview->load(
-            {   blog_id     => $blog_id,
-                object_type => $type,
-                object_id   => $id,
-            }
-        )
-        )
-    {
-        $created_id = $preview->id;
-    }
-    else {
-        my $preview_obj = MT::Preview->new;
-        if ( $type eq 'content_data' ) {
-            my $content_type_id = $app->param('content_type_id');
-            $preview_obj->content_type_id($content_type_id);
+    my $preview = MT::Preview->load(
+        {   blog_id     => $blog_id,
+            object_type => $type,
+            object_id   => $id,
         }
+    );
 
-        $preview_obj->blog_id($blog_id);
-        $preview_obj->object_id($id);
-        $preview_obj->object_type($type);
-        $preview_obj->id( $preview_obj->make_unique_id );
-        $created_id = $preview_obj->id;
-
-        $preview_obj->save
-            or return $app->errtrans(
-            "Could not create share preview link : " . $preview_obj->errstr );
-
+    if ( !$preview ) {
+        $preview = MT::Preview->new;
     }
+
+    if ( $type eq 'content_data' ) {
+        my $content_type_id = $app->param('content_type_id');
+        $preview->content_type_id($content_type_id);
+    }
+
+    $preview->blog_id($blog_id);
+    $preview->object_id($id);
+    $preview->object_type($type);
+    $preview->id( $preview->make_unique_id );
+    $preview_id = $preview->id;
+
+    $preview->save
+        or return $app->errtrans(
+        "Could not create share preview link : " . $preview->errstr );
 
     return $app->redirect(
               $app->app_path
             . $app->config->SharedPreviewScript
             . $app->uri_params(
             mode => 'shared_preview',
-            args => { spid => $created_id },
+            args => { spid => $preview_id },
             )
     );
 }
