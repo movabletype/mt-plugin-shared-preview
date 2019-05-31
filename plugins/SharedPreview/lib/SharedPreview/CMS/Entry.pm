@@ -24,7 +24,7 @@ sub on_template_param_edit {
         );
 
     my $add_link = '';
-    $add_link = MT::Preview->add_shared_preview_link( $type, $href )
+    $add_link = MT::Preview::shared_preview_link( $type, $href )
         if $param->{status} != MT::Entry::RELEASE;
 
     ( $param->{jq_js_include} ||= '' ) .= $add_link;
