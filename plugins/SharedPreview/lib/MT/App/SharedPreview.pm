@@ -124,7 +124,7 @@ sub shared_preview {
             return $app->redirect(
                 $app->uri(
                     mode => 'shared_preview_login',
-                    args => { spid => $preview_id },
+                    args => { spid => $preview_id, r => 1 },
                 )
             );
         }
