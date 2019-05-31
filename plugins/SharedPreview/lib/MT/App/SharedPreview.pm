@@ -25,12 +25,16 @@ sub login {
     my $app = shift;
 
     my $spid = $app->param('spid');
-    return $app->errtrans('no id')
-        unless $spid;
+    my $preview_data;
+    $preview_data = MT::Preview->load($spid) if $spid;
 
-    my $preview_data = MT::Preview->load($spid);
-    return $app->errtrans('not found : shared preview page.')
-        unless $preview_data;
+    unless ($preview_data) {
+        $app->response_code(404);
+        return $app->error( $app->translate('Page Not Found') );
+    }
+
+    my $is_redirect = $app->param('r');
+    $app->response_code(401) if $is_redirect;
 
     return load_login_form( $app, $preview_data )
         if $app->request_method eq 'GET';
@@ -74,11 +78,14 @@ sub shared_preview {
     my $app = shift;
 
     my $preview_id = $app->param('spid');
-    return $app->errtrans('no id') unless $preview_id;
+    my $preview_data;
 
-    my $preview_data = MT::Preview->load($preview_id);
-    return $app->errtrans('There is no shared preview')
-        unless $preview_data;
+    $preview_data = MT::Preview->load($preview_id) if $preview_id;
+
+    unless ($preview_data) {
+        $app->response_code(404);
+        return $app->error( $app->translate('Page Not Found') );
+    }
 
     my $plugin_data = MT::PluginData->load(
         {   plugin => 'SharedPreview',
@@ -166,6 +173,8 @@ sub load_login_form {
     my $site_name;
     my $site_url;
     my $site;
+
+    $app->response_code(401) if $error;
 
     $site = MT::Blog->load( $preview_data->blog_id )
         if $preview_data->blog_id;
