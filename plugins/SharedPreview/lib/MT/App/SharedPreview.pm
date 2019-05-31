@@ -28,7 +28,10 @@ sub login {
     my $preview_data;
     $preview_data = MT::Preview->load($spid) if $spid;
 
-    unless ($preview_data) {
+    my $site = MT::Blog->load( $preview_data->blog_id )
+        if $preview_data->blog_id;
+
+    unless ($site) {
         $app->response_code(404);
         return $app->error( $app->translate('Page Not Found') );
     }
@@ -36,11 +39,11 @@ sub login {
     my $is_redirect = $app->param('r');
     $app->response_code(401) if $is_redirect;
 
-    return load_login_form( $app, $preview_data )
+    return load_login_form( $app, $preview_data, $site )
         if $app->request_method eq 'GET';
 
     my $password = $app->param('password');
-    return load_login_form( $app, $preview_data,
+    return load_login_form( $app, $preview_data, $site,
         $app->translate('no password') )
         unless $password;
 
@@ -60,14 +63,15 @@ sub login {
 
     my $check_result
         = SharedPreview::Auth::check_auth( $password, $plugin_data );
-    return load_login_form( $app, $preview_data,
+    return load_login_form( $app, $preview_data, $site,
         $app->translate('Passwords do not match.') )
         unless $check_result;
 
     my $start_session_result
         = SharedPreview::Auth::start_session( $app,
         $preview_data->blog_id, $password );
-    return load_login_form( $app, $preview_data, $start_session_result )
+    return load_login_form( $app, $preview_data, $site,
+        $start_session_result )
         if $start_session_result;
 
     return $app->redirect( $app->uri(@uri) );
@@ -82,7 +86,10 @@ sub shared_preview {
 
     $preview_data = MT::Preview->load($preview_id) if $preview_id;
 
-    unless ($preview_data) {
+    my $site = MT::Blog->load( $preview_data->blog_id )
+        if $preview_data;
+
+    unless ($site) {
         $app->response_code(404);
         return $app->error( $app->translate('Page Not Found') );
     }
@@ -169,17 +176,11 @@ sub set_app_parameters {
 }
 
 sub load_login_form {
-    my ( $app, $preview_data, $error ) = @_;
+    my ( $app, $preview_data, $site, $error ) = @_;
     my $site_name;
     my $site_url;
-    my $site;
 
     $app->response_code(401) if $error;
-
-    $site = MT::Blog->load( $preview_data->blog_id )
-        if $preview_data->blog_id;
-    $site_name = $site->name     if $site;
-    $site_url  = $site->site_url if $site;
 
     return $app->component('SharedPreview')->load_tmpl(
         'shared_preview_login.tmpl',
@@ -191,8 +192,8 @@ sub load_login_form {
                     value => 'shared_preview_login',
                 },
             ],
-            site_name => $site_name,
-            site_url  => $site_url,
+            site_name => $site->name,
+            site_url  => $site->site_url,
             error     => $error
         }
     );
