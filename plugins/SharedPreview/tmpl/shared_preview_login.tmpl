@@ -1,8 +1,8 @@
 <mt:setvar name="page_title" value="<__trans phrase="Shared Preview">">
 <mt:setvar name="no_page_header" value="1">
 <mt:setvar name="complete" value="1">
-<mt:setvar name="screen_id" value="shared_preview">
-<mt:setvar name="screen_class" value="shared_preview">
+<mt:setvar name="screen_id" value="sign-in">
+<mt:setvar name="screen_class" value="sign-in">
 <mt:setvarblock name="html_head" append="1">  <meta name='robots' content='noindex,nofollow' /></mt:setvarblock>
 
 <mt:setvarblock name="page_content">
@@ -20,19 +20,19 @@
   </mtapp:statusmsg>
 </mt:if>
 </div>
-<mtapp:setting
-     id="password"
-     label="<__trans phrase="Password">"
-     label_for="password"
-     label_class="top-label">
-    <p>
+<p>
     <mt:if name="site_name">
       <__trans phrase="In order to view shared preview of [_1], password is required." params="<a href="<mt:var name="site_url">"><mt:var name="site_name" escape="html"></a>" >
     <mt:else>
       <__trans phrase="password is required to display this share preview." >
     </mt:if>
     </p>
-    <input type="password" name="password" id="password" class="form-control text password w-50" value="" />
+<mtapp:setting
+     id="password"
+     label="<__trans phrase="Password">"
+     label_for="password"
+     label_class="top-label">
+    <input type="password" name="password" id="password" class="form-control text password full" value="" />
     <p><__trans phrase="This password is different from your login password.."></p>
   </mtapp:setting>
 
