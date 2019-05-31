@@ -3,14 +3,8 @@
    label="<__trans phrase="Use Password">">
   <ul class="list-unstyled">
     <li>
-      <div class="custom-control custom-radio">
-        <input type="radio" name="use_password" id="not_use" class="custom-control-input" value="0"<mt:unless name="use_password"> checked="checked"</mt:unless> />
-        <label class="custom-control-label" for="not_use"><__trans phrase="Do not use password"></label>
-      </div>
-    </li>
-    <li>
-      <div class="custom-control custom-radio">
-        <input type="radio" name="use_password" id="use" class="custom-control-input" value="1"<mt:if name="use_password"> checked="checked"</mt:if> />
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" name="use_password" id="use" class="custom-control-input" value="1"<mt:if name="use_password"> checked="checked"</mt:if> />
         <label class="custom-control-label" for="use"><__trans phrase="Use password"></label>
       </div>
     </li>
