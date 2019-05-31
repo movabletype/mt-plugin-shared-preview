@@ -9,28 +9,15 @@ use MT::Session;
 use MT::PluginData;
 
 sub need_login {
-    my ( $preview_data ) = @_;
-
-    my $plugin_data = MT::PluginData->load(
-        {   plugin => 'SharedPreview',
-            key    => 'configuration:blog:' . $preview_data->blog_id,
-        }
-    );
+    my ($plugin_data) = @_;
 
     return unless $plugin_data;
 
     return $plugin_data->data->{use_password};
-
 }
 
 sub check_auth {
-    my ( $password, $preview_data ) = @_;
-
-    my $plugin_data = MT::PluginData->load(
-        {   plugin => 'SharedPreview',
-            key    => 'configuration:blog:' . $preview_data->blog_id,
-        }
-    );
+    my ( $password, $plugin_data ) = @_;
 
     return unless $plugin_data;
 

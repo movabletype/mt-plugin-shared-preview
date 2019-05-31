@@ -45,11 +45,17 @@ sub login {
         args => { spid => $spid }
     );
 
-    my $need_login = SharedPreview::Auth::need_login($preview_data);
+    my $plugin_data = MT::PluginData->load(
+        {   plugin => 'SharedPreview',
+            key    => 'configuration:blog:' . $preview_data->blog_id,
+        }
+    );
+
+    my $need_login = SharedPreview::Auth::need_login($plugin_data);
     return $app->redirect( $app->uri(@uri) ) unless $need_login;
 
     my $check_result
-        = SharedPreview::Auth::check_auth( $password, $preview_data );
+        = SharedPreview::Auth::check_auth( $password, $plugin_data );
     return load_login_form( $app, $preview_data,
         $app->translate('Passwords do not match.') )
         unless $check_result;
@@ -74,7 +80,13 @@ sub shared_preview {
     return $app->errtrans('There is no shared preview')
         unless $preview_data;
 
-    my $need_login = SharedPreview::Auth::need_login($preview_data);
+    my $plugin_data = MT::PluginData->load(
+        {   plugin => 'SharedPreview',
+            key    => 'configuration:blog:' . $preview_data->blog_id,
+        }
+    );
+
+    my $need_login = SharedPreview::Auth::need_login($plugin_data);
 
     if ($need_login) {
         my $check_session_result
@@ -90,8 +102,7 @@ sub shared_preview {
 
         my $check_auth_result
             = SharedPreview::Auth::check_auth(
-            $check_session_result->{password},
-            $preview_data );
+            $check_session_result->{password}, $plugin_data );
 
         unless ($check_auth_result) {
             SharedPreview::Auth->remove_session( $app,
