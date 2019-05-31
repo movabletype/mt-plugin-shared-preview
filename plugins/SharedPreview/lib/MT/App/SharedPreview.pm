@@ -45,11 +45,11 @@ sub login {
         args => { spid => $spid }
     );
 
-    my $need_login = SharedPreview::Auth->need_login($preview_data);
+    my $need_login = SharedPreview::Auth::need_login($preview_data);
     return $app->redirect( $app->uri(@uri) ) unless $need_login;
 
     my $check_result
-        = SharedPreview::Auth->check_auth( $password, $preview_data );
+        = SharedPreview::Auth::check_auth( $password, $preview_data );
     return load_login_form( $app, $preview_data,
         $app->translate('Passwords do not match.') )
         unless $check_result;
@@ -74,7 +74,7 @@ sub shared_preview {
     return $app->errtrans('There is no shared preview')
         unless $preview_data;
 
-    my $need_login = SharedPreview::Auth->need_login($preview_data);
+    my $need_login = SharedPreview::Auth::need_login($preview_data);
 
     if ($need_login) {
         my $check_session_result
@@ -89,7 +89,7 @@ sub shared_preview {
         ) unless $check_session_result;
 
         my $check_auth_result
-            = SharedPreview::Auth->check_auth(
+            = SharedPreview::Auth::check_auth(
             $check_session_result->{password},
             $preview_data );
 

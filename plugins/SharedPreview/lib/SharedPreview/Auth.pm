@@ -9,7 +9,7 @@ use MT::Session;
 use MT::PluginData;
 
 sub need_login {
-    my ( $class, $preview_data ) = @_;
+    my ( $preview_data ) = @_;
 
     my $plugin_data = MT::PluginData->load(
         {   plugin => 'SharedPreview',
@@ -24,7 +24,7 @@ sub need_login {
 }
 
 sub check_auth {
-    my ( $class, $password, $preview_data ) = @_;
+    my ( $password, $preview_data ) = @_;
 
     my $plugin_data = MT::PluginData->load(
         {   plugin => 'SharedPreview',
