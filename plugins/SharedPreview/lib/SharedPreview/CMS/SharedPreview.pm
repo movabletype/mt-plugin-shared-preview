@@ -24,8 +24,6 @@ sub make_shared_preview {
     return $app->errtrans( 'invalid type: [_1]', $type )
         unless $obj_class;
 
-    my $preview_obj = MT::Preview->new;
-
     if (my $preview = MT::Preview->load(
             {   blog_id     => $blog_id,
                 object_type => $type,
@@ -37,7 +35,7 @@ sub make_shared_preview {
         $created_id = $preview->id;
     }
     else {
-
+        my $preview_obj = MT::Preview->new;
         if ( $type eq 'content_data' ) {
             my $content_type_id = $app->param('content_type_id');
             $preview_obj->content_type_id($content_type_id);
