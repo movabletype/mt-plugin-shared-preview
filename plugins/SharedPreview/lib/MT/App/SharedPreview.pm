@@ -152,9 +152,6 @@ sub shared_preview {
     $param->{site_name} = $site->name;
     $param->{site_url}  = $site->site_url;
 
-
-    }
-
     return $app->component('SharedPreview')
         ->load_tmpl( 'shared_preview_strip.tmpl', $param );
 
