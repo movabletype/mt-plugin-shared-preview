@@ -124,5 +124,36 @@ jQuery('button[name=preview_$type]').after('<div id="shared_preview" class="text
 __JS__
 }
 
+sub shared_preview_message {
+    my ( $app, $href ) = @_;
+    my $message = $app->translate('Open share preview');
+    my $type = $app->param('_type');
+
+    my $action_flag = $app->param('saved_added');
+
+    if ($action_flag) {
+        if ($type eq 'content_data') {
+            return <<"__JS__";
+jQuery('#saved-added').after('<div id="saved-shared-preview" class="alert alert-success alert-dismissable first-child"><button type="button" class="close first-child" data-dismiss="alert" aria-label="Close"><span aria-hidden="true" class="first-child last-child">&times;</span></button><a href="$href" class="last-child">$message</a></div>');
+__JS__
+        }
+
+        return <<"__JS__";
+    jQuery('#saved-added').append('<a href="$href" class="last-child">$message</a>');
+__JS__
+
+    }
+    
+    $action_flag = $app->param('saved_changes');
+
+    return unless $action_flag;
+
+    return <<"__JS__";
+    jQuery('#saved-changes').append('<a href="$href" class="last-child">$message</a>');
+__JS__
+
+
+}
+
 1;
 

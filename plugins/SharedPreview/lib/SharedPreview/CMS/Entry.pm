@@ -11,6 +11,10 @@ sub on_template_param_edit {
 
     my $id   = $app->param('id');
     my $type = $app->param('_type');
+
+    return unless $id;
+    return if $param->{status} == MT::Entry::RELEASE;
+
     my $href
         = $app->app_path
         . $app->config->AdminScript
@@ -23,11 +27,11 @@ sub on_template_param_edit {
         },
         );
 
-    my $add_link = '';
-    $add_link = MT::Preview::shared_preview_link( 'entry', $href )
-        if $param->{status} != MT::Entry::RELEASE;
+    my $script = MT::Preview::shared_preview_link( 'entry', $href );
+    $script .= MT::Preview::shared_preview_message( $app, $href );
 
-    ( $param->{jq_js_include} ||= '' ) .= $add_link;
+    ( $param->{jq_js_include} ||= '' ) .= $script;
+
 }
 
 sub post_save_entry {

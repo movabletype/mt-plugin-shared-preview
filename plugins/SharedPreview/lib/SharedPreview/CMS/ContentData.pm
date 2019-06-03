@@ -13,6 +13,9 @@ sub on_template_param_edit {
     my $type            = $app->param('_type');
     my $content_type_id = $app->param('content_type_id');
 
+    return unless $id;
+    return if $param->{status} == MT::ContentStatus::RELEASE;
+
     my $href
         = $app->app_path
         . $app->config->AdminScript
@@ -26,11 +29,13 @@ sub on_template_param_edit {
         },
         );
 
-    my $add_link = '';
-    $add_link = MT::Preview::shared_preview_link( $type, $href )
-        if $param->{status} != MT::ContentStatus::RELEASE;
 
-    ( $param->{jq_js_include} ||= '' ) .= $add_link;
+    my $script = MT::Preview::shared_preview_link( $type, $href );
+
+
+    $script .= MT::Preview::shared_preview_message( $app, $href );
+
+    ( $param->{jq_js_include} ||= '' ) .= $script;
 }
 
 sub post_save_content_data {
