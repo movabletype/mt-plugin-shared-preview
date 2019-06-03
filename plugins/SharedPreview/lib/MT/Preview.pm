@@ -33,8 +33,6 @@ __PACKAGE__->install_properties(
     }
 );
 
-sub USE_PASSWORD_VALID {1}
-
 sub class_label {
     return MT->translate("Preview");
 }
