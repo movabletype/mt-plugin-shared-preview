@@ -28,7 +28,7 @@ sub login {
     return page_not_found($app) unless $spid;
 
     my $preview_data = MT::Preview->load($spid);
-    return page_not_found($app) unless $preview_data->blog_id;
+    return page_not_found($app) unless $preview_data;
 
     my $site = MT::Blog->load( $preview_data->blog_id );
     return page_not_found($app) unless $site;
@@ -81,7 +81,7 @@ sub shared_preview {
     return page_not_found($app) unless $preview_id;
 
     my $preview_data = MT::Preview->load($preview_id);
-    return page_not_found($app) unless $preview_data->blog_id;
+    return page_not_found($app) unless $preview_data;
 
     my $site = MT::Blog->load( $preview_data->blog_id );
     return page_not_found($app) unless $preview_data->blog_id;
