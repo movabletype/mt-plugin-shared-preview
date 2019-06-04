@@ -36,8 +36,7 @@ sub login {
         return $app->error( $app->translate('Page Not Found') );
     }
 
-    my $is_redirect = $app->param('r');
-    $app->response_code(401) if $is_redirect;
+    $app->response_code(401);
 
     return load_login_form( $app, $preview_data, $site )
         if $app->request_method ne 'POST';
@@ -124,7 +123,7 @@ sub shared_preview {
             return $app->redirect(
                 $app->uri(
                     mode => 'shared_preview_login',
-                    args => { spid => $preview_id, r => 1 },
+                    args => { spid => $preview_id },
                 )
             );
         }
