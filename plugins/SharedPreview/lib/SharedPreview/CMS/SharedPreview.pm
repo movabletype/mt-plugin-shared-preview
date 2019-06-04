@@ -33,22 +33,23 @@ sub make_shared_preview {
 
     if ( !$preview ) {
         $preview = MT::Preview->new;
+        if ( $type eq 'content_data' ) {
+            my $content_type_id = $app->param('content_type_id');
+            $preview->content_type_id($content_type_id);
+        }
+
+        $preview->blog_id($blog_id);
+        $preview->object_id($id);
+        $preview->object_type($type);
+        $preview->id( $preview->make_unique_id );
+        $preview_id = $preview->id;
+
+        $preview->save
+            or return $app->errtrans(
+            "Could not create share preview link : " . $preview->errstr );
     }
 
-    if ( $type eq 'content_data' ) {
-        my $content_type_id = $app->param('content_type_id');
-        $preview->content_type_id($content_type_id);
-    }
-
-    $preview->blog_id($blog_id);
-    $preview->object_id($id);
-    $preview->object_type($type);
-    $preview->id( $preview->make_unique_id );
     $preview_id = $preview->id;
-
-    $preview->save
-        or return $app->errtrans(
-        "Could not create share preview link : " . $preview->errstr );
 
     return $app->redirect(
               $app->app_path
