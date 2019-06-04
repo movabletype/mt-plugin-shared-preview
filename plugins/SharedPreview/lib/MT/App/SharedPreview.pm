@@ -25,16 +25,13 @@ sub login {
     my $app = shift;
 
     my $spid = $app->param('spid');
-    my $preview_data;
-    $preview_data = MT::Preview->load($spid) if $spid;
+    return page_not_found($app) unless $spid;
 
-    my $site = MT::Blog->load( $preview_data->blog_id )
-        if $preview_data->blog_id;
+    my $preview_data = MT::Preview->load($spid);
+    return page_not_found($app) unless $preview_data->blog_id;
 
-    unless ($site) {
-        $app->response_code(404);
-        return $app->error( $app->translate('Page Not Found') );
-    }
+    my $site = MT::Blog->load( $preview_data->blog_id );
+    return page_not_found($app) unless $site;
 
     $app->response_code(401);
 
@@ -81,17 +78,13 @@ sub shared_preview {
     my $app = shift;
 
     my $preview_id = $app->param('spid');
-    my $preview_data;
+    return page_not_found($app) unless $preview_id;
 
-    $preview_data = MT::Preview->load($preview_id) if $preview_id;
+    my $preview_data = MT::Preview->load($preview_id);
+    return page_not_found($app) unless $preview_data->blog_id;
 
-    my $site = MT::Blog->load( $preview_data->blog_id )
-        if $preview_data;
-
-    unless ($site) {
-        $app->response_code(404);
-        return $app->error( $app->translate('Page Not Found') );
-    }
+    my $site = MT::Blog->load( $preview_data->blog_id );
+    return page_not_found($app) unless $preview_data->blog_id;
 
     my $plugin_data = MT::PluginData->load(
         {   plugin => 'SharedPreview',
@@ -169,10 +162,6 @@ sub set_app_parameters {
 
 sub load_login_form {
     my ( $app, $preview_data, $site, $error ) = @_;
-    my $site_name;
-    my $site_url;
-
-    $app->response_code(401) if $error;
 
     return $app->component('SharedPreview')->load_tmpl(
         'shared_preview_login.tmpl',
@@ -189,6 +178,12 @@ sub load_login_form {
             error     => $error
         }
     );
+}
+
+sub page_not_found {
+    my $app = shift;
+    $app->response_code(404);
+    return $app->error( $app->translate('Page Not Found') );
 }
 
 1;
