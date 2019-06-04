@@ -84,7 +84,7 @@ sub shared_preview {
     return page_not_found($app) unless $preview_data;
 
     my $site = MT::Blog->load( $preview_data->blog_id );
-    return page_not_found($app) unless $preview_data->blog_id;
+    return page_not_found($app) unless $site;
 
     my $plugin_data = MT::PluginData->load(
         {   plugin => 'SharedPreview',
