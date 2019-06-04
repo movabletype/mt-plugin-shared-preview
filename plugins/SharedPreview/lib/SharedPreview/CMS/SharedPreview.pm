@@ -42,7 +42,6 @@ sub make_shared_preview {
         $preview->object_id($id);
         $preview->object_type($type);
         $preview->id( $preview->make_unique_id );
-        $preview_id = $preview->id;
 
         $preview->save
             or return $app->errtrans(
