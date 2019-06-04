@@ -40,13 +40,7 @@ sub check_session {
 
     my $session = MT::Session->load($session_id);
     unless ($session) {
-        my %arg = (
-            -name    => 'shared_preview_' . $blog_id,
-            -value   => '',
-            -path    => $app->config->CookiePath || $app->mt_path,
-            -expires => '-1y',
-        );
-        $app->bake_cookie(%arg);
+        remove_cookie( $app, $blog_id );
         return;
     }
 
@@ -64,14 +58,7 @@ sub remove_session {
     my $session_id = get_session_id_from_cookie( $app, $blog_id );
     return unless $session_id;
 
-    my %arg = (
-        -name    => 'shared_preview_' . $blog_id,
-        -value   => '',
-        -path    => $app->config->CookiePath || $app->mt_path,
-        -expires => '-1y',
-    );
-
-    $app->bake_cookie(%arg);
+    remove_cookie( $app, $blog_id );
 
     MT::Session->remove( { id => $session_id, kind => 'SP' } );
 }
@@ -120,6 +107,19 @@ sub start_session {
 
     return '';
 
+}
+
+sub remove_cookie {
+    my ( $app, $blog_id ) = @_;
+
+    my %arg = (
+        -name    => 'shared_preview_' . $blog_id,
+        -value   => '',
+        -path    => $app->config->CookiePath || $app->mt_path,
+        -expires => '-1y',
+    );
+
+    $app->bake_cookie(%arg);
 }
 
 1;
