@@ -77,12 +77,16 @@ jQuery(function($) {
         }
     }
 
-    function setPasswordArea(value = '') {
+    function setPasswordArea(value) {
         var copy = jQuery('ul[id^=password]').last().clone();
         var count = jQuery('input[name^="password-"]').length;
         var counter = parseInt(copy.find('input').attr('data-index')) + 1;
         var newId = 'password' + counter;
         var target = '#' + copy.attr('id');
+
+        if (typeof value === 'undefined') {
+            value = '';
+        }
 
         if (copy.find('input').val() == '' && value != '' && count == 1) {
             jQuery(target).find('input').val(value);
