@@ -14,24 +14,28 @@
     id="password"
     label="<__trans phrase="Password">"
     show_hint="1">
-  <ul id="password1" class="list-inline">
+  <mt:loop name="sp_password[]">
+  <ul id="sp_password_block<mt:var name="__counter__" escape="html">" class="list-inline">
     <li class="list-inline-item w-25">
-      <input type="text" name="password-1" class="form-control" value="" data-index="1" />
+      <input type="text" name="sp_password[]" class="form-control" value="<mt:var name="__value__" escape="html">" data-index="<mt:var name="__counter__" escape="html">" />
     </li>
     <li class="list-inline-item delete-password-btn" style="display: none;">
-      <button type="button" class="btn btn-default btn-sm delete-password" data-target="#password1"><svg title="削除" role="img" class="mt-icon mt-icon--sm"><use xlink:href="<$mt:var name="static_uri"$>images/sprite.svg#ic_trash"></use></svg><__trans phrase="Delete"></button>
+      <button type="button" class="btn btn-default btn-sm delete-password" data-target="#sp_password_block<mt:var name="__counter__" escape="html">"><svg title="削除" role="img" class="mt-icon mt-icon--sm"><use xlink:href="<$mt:var name="static_uri"$>images/sprite.svg#ic_trash"></use></svg><__trans phrase="Delete"></button>
     </li>
   </ul>
+  </mt:loop>
   <div>
     <a href="javascript:void(0);" id="add_password" ><__trans phrase="Add Password."></a>
-    <input type="hidden" name="sp_password" value=<mt:var name="sp_password" escape="html"> />
   </div>
-
 </mtapp:setting>
 
 <script type="text/javascript">
 jQuery(function($) {
     switchSharedPreviewPasswordField();
+    jQuery('button.delete-password').on('click', function () {
+        clickDeletePassword(this)
+    });
+
     setPasswordAreaInit();
 
     jQuery('input[name=use_password]').on('change', function(){
@@ -42,32 +46,8 @@ jQuery(function($) {
         setPasswordArea();
     });
 
-    jQuery('form').on('submit', function(){
-        if (jQuery(this).find('input[name="plugin_sig"]').val() != 'SharedPreview') return;
-
-        var data = [];
-        jQuery(this).find('input[name^="password-"]').each(function(index) {
-            if (jQuery(this).val() != '') {
-                data.push({value : jQuery(this).val()});
-            }
-        });
-
-        jQuery(this).find('input[name="sp_password"]').val(JSON.stringify(data));
-
-    });
-
     function setPasswordAreaInit() {
-        var parameter = <mt:var name="sp_password"><mt:unless name="sp_password">''</mt:unless>;
-        if (parameter != '') {
-          try {
-            var data = JSON.parse(parameter);
-            jQuery.each(data, function(key){
-              setPasswordArea(this.value);
-            });
-          } catch (e) {}
-        };
-
-        var count = jQuery('input[name^="password-"]').length;
+        var count = jQuery('input[name="sp_password[]"]').length;
         var limit = 5;
 
         if (count < limit) {
@@ -75,55 +55,36 @@ jQuery(function($) {
                 setPasswordArea();
             }
         }
+
+        jQuery('ul[id^=sp_password_block]').each(function(index){
+            if (index == 0) {
+                return true;
+            }
+
+            jQuery(this).find('.delete-password-btn').css('display','');
+
+        });
+
     }
 
-    function setPasswordArea(value) {
-        var copy = jQuery('ul[id^=password]').last().clone();
-        var count = jQuery('input[name^="password-"]').length;
+    function setPasswordArea() {
+        var copy = jQuery('ul[id^=sp_password_block]').last().clone();
+        var count = jQuery('input[name="sp_password[]"]').length;
         var counter = parseInt(copy.find('input').attr('data-index')) + 1;
-        var newId = 'password' + counter;
+        var newId = 'sp_password_block' + counter;
         var target = '#' + copy.attr('id');
-
-        if (typeof value === 'undefined') {
-            value = '';
-        }
-
-        if (copy.find('input').val() == '' && value != '' && count == 1) {
-            jQuery(target).find('input').val(value);
-            jQuery(target).find('.delete-password-btn').css('display','none');
-            return;
-        }
 
         copy.attr('id', newId)
         .find('input')
-        .attr('name', 'password-' + counter)
+        .attr('name', 'sp_password[]')
         .attr('data-index', counter)
-        .val(value);
+        .val('');
 
-        copy.find('.delete-password').attr('data-target', '#' + newId);
-
-        if (copy.find('.delete-password-btn').is(':visible') == false) {
-           copy.find('.delete-password-btn').css('display','');
-        }
-
-        if (jQuery(target).find('.delete-password-btn').is(':visible') == false) {
-           jQuery(target).find('.delete-password-btn').css('display','');
-        }
-
-        jQuery(target).after(copy);
-
-        jQuery('button.delete-password').on('click', function(){
-            var target = jQuery(this).attr('data-target');
-            var inputName = 'input[name^="password-"]';
-
-            if (jQuery('input[name^="password-"]').length > 1) {
-               jQuery(target).remove();
-               if (jQuery(inputName).length <= 1) {
-                   jQuery(inputName).parent().next().css('display','none');
-               }
-            }
-
+        copy.find('.delete-password').attr('data-target', '#' + newId)
+        .on('click', function () {
+            clickDeletePassword(this)
         });
+        jQuery(target).after(copy);
     }
 
     function switchSharedPreviewPasswordField() {
@@ -132,6 +93,18 @@ jQuery(function($) {
             jQuery('#password-field').show();
         } else {
             jQuery('#password-field').hide();
+        }
+    }
+
+    function clickDeletePassword(event) {
+        var target = jQuery(event).attr('data-target');
+        var inputName = 'input[name="sp_password[]"]';
+
+        if (jQuery('input[name="sp_password[]"]').length > 1) {
+           jQuery(target).remove();
+           if (jQuery(inputName).length <= 1) {
+               jQuery(inputName).parent().next().css('display','none');
+           }
         }
     }
 
