@@ -33,8 +33,6 @@ sub login {
     my $site = MT::Blog->load( $preview_data->blog_id );
     return page_not_found($app) unless $site;
 
-    $app->response_code(401);
-
     return load_login_form( $app, $preview_data, $site )
         if $app->request_method ne 'POST';
 
@@ -162,6 +160,8 @@ sub set_app_parameters {
 
 sub load_login_form {
     my ( $app, $preview_data, $site, $error ) = @_;
+
+    $app->response_code(401);
 
     return $app->component('SharedPreview')->load_tmpl(
         'shared_preview_login.tmpl',
