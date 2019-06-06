@@ -24,10 +24,10 @@ sub init_request {
 sub login {
     my $app = shift;
 
-    my $spid = $app->param('spid');
-    return page_not_found($app) unless $spid;
+    my $preview_id = $app->param('spid');
+    return page_not_found($app) unless $preview_id || $preview_id =~ /\A[a-zA-Z0-9]{40}\z/;
 
-    my $preview_data = MT::Preview->load($spid);
+    my $preview_data = MT::Preview->load($preview_id);
     return page_not_found($app) unless $preview_data;
 
     my $site = MT::Blog->load( $preview_data->blog_id );
