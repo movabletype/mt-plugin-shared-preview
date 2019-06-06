@@ -143,15 +143,14 @@ __JS__
 __JS__
 
     }
-    
+
     $action_flag = $app->param('saved_changes');
 
-    return unless $action_flag;
+    return '' unless $action_flag;
 
     return <<"__JS__";
     jQuery('#saved-changes').append('<a href="$href" class="last-child">$message</a>');
 __JS__
-
 
 }
 
