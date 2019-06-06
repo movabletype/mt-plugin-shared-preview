@@ -36,24 +36,24 @@ sub login {
     return load_login_form( $app, $preview_data, $site )
         if $app->request_method ne 'POST';
 
-    my $password = $app->param('password');
-    return load_login_form( $app, $preview_data, $site,
-        $app->translate('no password') )
-        unless $password;
-
-    my @uri = (
-        mode => 'shared_preview',
-        args => { spid => $spid }
-    );
-
     my $plugin_data = MT::PluginData->load(
         {   plugin => 'SharedPreview',
             key    => 'configuration:blog:' . $preview_data->blog_id,
         }
     );
 
+    my @uri = (
+        mode => 'shared_preview',
+        args => { spid => $preview_id }
+    );
+
     my $need_login = SharedPreview::Auth::need_login($plugin_data);
     return $app->redirect( $app->uri(@uri) ) unless $need_login;
+
+    my $password = $app->param('password');
+    return load_login_form( $app, $preview_data, $site,
+        $app->translate('no password') )
+        unless $password;
 
     my $check_result
         = SharedPreview::Auth::check_auth( $password, $plugin_data );
