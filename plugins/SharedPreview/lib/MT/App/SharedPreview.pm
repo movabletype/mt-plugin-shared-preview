@@ -25,7 +25,7 @@ sub login {
     my $app = shift;
 
     my $preview_id = $app->param('spid');
-    return page_not_found($app) unless $preview_id || $preview_id =~ /\A[a-zA-Z0-9]{40}\z/;
+    return page_not_found($app) unless $preview_id && $preview_id =~ /\A[a-zA-Z0-9]{40}\z/;
 
     my $preview_data = MT::Preview->load($preview_id);
     return page_not_found($app) unless $preview_data;
@@ -76,7 +76,8 @@ sub shared_preview {
     my $app = shift;
 
     my $preview_id = $app->param('spid');
-    return page_not_found($app) unless $preview_id;
+
+    return page_not_found($app) unless $preview_id && $preview_id =~ /\A[a-zA-Z0-9]{40}\z/;
 
     my $preview_data = MT::Preview->load($preview_id);
     return page_not_found($app) unless $preview_data;
