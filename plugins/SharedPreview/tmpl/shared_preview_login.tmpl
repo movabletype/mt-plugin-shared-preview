@@ -3,11 +3,11 @@
 <mt:setvar name="complete" value="1">
 <mt:setvar name="screen_id" value="sign-in">
 <mt:setvar name="screen_class" value="sign-in">
-<mt:setvarblock name="html_head" append="1">  <meta name='robots' content='noindex,nofollow' /></mt:setvarblock>
+<mt:setvarblock name="html_head" append="1" escape="none">  <meta name='robots' content='noindex,nofollow' /></mt:setvarblock>
 
 <mt:setvarblock name="page_content">
-<form method="post" action="<mt:var name="script_url">">
-<mt:loop name="query_params">
+<form method="post" action="<mt:var name="script_url" escape="html">">
+<mt:loop name="shared_preview_params">
   <input type="hidden" name="<mt:var name="name" escape="html">" value="<mt:var name="value" escape="html">" />
 </mt:loop>
 <div id="msg-block">
@@ -22,7 +22,7 @@
 </div>
 <p>
     <mt:if name="site_name">
-      <__trans phrase="In order to view shared preview of [_1], password is required." params="<a href="<mt:var name="site_url">"><mt:var name="site_name" escape="html"></a>" >
+      <__trans phrase="In order to view shared preview of [_1], password is required." params="<a href="<mt:var name="site_url" escape="html">"><mt:var name="site_name" escape="html"></a>" >
     <mt:else>
       <__trans phrase="password is required to display this share preview." >
     </mt:if>
@@ -51,7 +51,7 @@
 </form>
 </mt:setvarblock>
 
-<mt:setvarblock name="js_include" append="1">
+<mt:setvarblock name="js_include" append="1" escape="none">
 <script type="text/javascript">
 /* <![CDATA[ */
 
@@ -60,4 +60,4 @@
 </mt:setvarblock>
 
 <mt:include name="layout/chromeless.tmpl">
-<mt:var name="layout">
+<mt:var name="layout" escape="none">

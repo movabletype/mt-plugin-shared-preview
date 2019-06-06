@@ -5,79 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="<$mt:var name="language_encoding" escape="html"$>" />
     <title><__trans phrase="Preview"> | <$mt:var name="mt_product_name" escape="html"$></title>
-    <link rel="icon" href="<$mt:var name="static_uri"$>images/favicon.ico" type="image/ico" />
+    <link rel="icon" href="<$mt:var name="static_uri" escape="html"$>images/favicon.ico" type="image/ico" />
 <mt:if name="feed_url">
     <link type="application/atom+xml" rel="alternate" <mt:if name="feed_name">title="<mt:var name="feed_name" escape="html">" </mt:if>href="<mt:var name="feed_url" escape="html">" />
 </mt:if>
 <mt:unless name="optimize_ui">
-    <link rel="stylesheet" href="<$mt:var name="static_uri"$>styles.css?v=<mt:var name="mt_version_id" escape="url">" type="text/css" />
-    <link rel="stylesheet" href="<$mt:var name="static_uri"$>css/mt.css?v=<mt:var name="mt_version_id" escape="url">" type="text/css" />
+    <link rel="stylesheet" href="<$mt:var name="static_uri" escape="html"$>styles.css?v=<mt:var name="mt_version_id" escape="html" escape="url">" type="text/css" />
+    <link rel="stylesheet" href="<$mt:var name="static_uri" escape="html"$>css/mt.css?v=<mt:var name="mt_version_id" escape="html" escape="url">" type="text/css" />
 <mt:else>
-    <link rel="stylesheet" href="<$mt:var name="static_uri"$>css/main.css?v=<mt:var name="mt_version_id" escape="url">" type="text/css" />
-    <link rel="stylesheet" href="<$mt:var name="static_uri"$>css/mt.min.css?v=<mt:var name="mt_version_id" escape="url">" type="text/css" />
+    <link rel="stylesheet" href="<$mt:var name="static_uri" escape="html"$>css/main.css?v=<mt:var name="mt_version_id" escape="html" escape="url">" type="text/css" />
+    <link rel="stylesheet" href="<$mt:var name="static_uri" escape="html"$>css/mt.min.css?v=<mt:var name="mt_version_id" escape="html" escape="url">" type="text/css" />
 </mt:unless>
     <!--[if IE]>
-    <link rel="stylesheet" href="<$mt:var name="static_uri"$>css/hacks/ie.css?v=<mt:var name="mt_version_id" escape="url">" type="text/css" />
+    <link rel="stylesheet" href="<$mt:var name="static_uri" escape="html"$>css/hacks/ie.css?v=<mt:var name="mt_version_id" escape="html" escape="url">" type="text/css" />
     <![endif]-->
 <mt:if name="local_lang_id" ne="en-us">
-    <link rel="stylesheet" href="<$mt:var name="static_uri"$>styles_<$mt:var name="local_lang_id" escape="html"$>.css?v=<mt:var name="mt_version_id" escape="url">" />
+    <link rel="stylesheet" href="<$mt:var name="static_uri" escape="html"$>styles_<$mt:var name="local_lang_id" escape="html"$>.css?v=<mt:var name="mt_version_id" escape="html" escape="url">" />
 </mt:if>
     <script type="text/javascript">
       /* <![CDATA[ */
-      CMSScriptURI = '<$mt:var name="mt_url" escape="html"$>';
-      ScriptURI = '<$mt:var name="script_url" escape="html"$>';
-      ScriptBaseURI = '<$mt:var name="script_base_url" escape="html"$>';
-      StaticURI = '<$mt:var name="static_uri" escape="html"$>';
-      HelpBaseURI = '<$mt:var name="help_url" escape="html"$>';
+      CMSScriptURI = '<$mt:var name="mt_url" escape="html" escape="javascript"$>';
+      ScriptURI = '<$mt:var name="script_url" escape="html" escape="javascript"$>';
+      ScriptBaseURI = '<$mt:var name="script_base_url" escape="html" escape="javascript"$>';
+      StaticURI = '<$mt:var name="static_uri" escape="html" escape="javascript"$>';
+      HelpBaseURI = '<$mt:var name="help_url" escape="html" escape="javascript"$>';
       /* ]]> */
     </script>
 <mt:unless name="optimize_ui">
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery-migrate.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Core.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/JSON.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Timer.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Cookie.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/DOM.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Devel.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Observable.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Autolayout.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Component.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/List.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/App.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Cache.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Client.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Template.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/tc.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/tc/tableselect.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.validate.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.json.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jqueryui/jquery-ui.js?v=<$mt:var name="mt_version_id" escape="url"$>"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>svg4everybody/svg4everybody.js?v=<$mt:var name="mt_version_id" escape="url"$>"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery-migrate.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Core.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/JSON.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Timer.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Cookie.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/DOM.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Devel.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Observable.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Autolayout.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Component.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/List.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/App.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Cache.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Client.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Template.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/tc.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/tc/tableselect.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.validate.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.json.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jqueryui/jquery-ui.js?v=<$mt:var name="mt_version_id" escape="html" escape="url"$>"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>svg4everybody/svg4everybody.js?v=<$mt:var name="mt_version_id" escape="html" escape="url"$>"></script>
 <mt:else>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.min.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery-migrate.min.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/mt_core_compact.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.validate.min.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.json.min.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jqueryui/jquery-ui.min.js?v=<$mt:var name="mt_version_id" escape="url"$>"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>svg4everybody/svg4everybody.min.js?v=<$mt:var name="mt_version_id" escape="url"$>"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.min.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery-migrate.min.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/mt_core_compact.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.validate.min.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.json.min.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jqueryui/jquery-ui.min.js?v=<$mt:var name="mt_version_id" escape="html" escape="url"$>"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>svg4everybody/svg4everybody.min.js?v=<$mt:var name="mt_version_id" escape="html" escape="url"$>"></script>
 </mt:unless>
-<mt:var name="html_head" escape="html">
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>mt.js?v=<mt:var name="mt_version_id" escape="url">"></script>
+<mt:var name="html_head" escape="none">
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>mt.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
 <mt:if name="local_lang_id" eq="en-us">
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>mt_en_us.js?v=<mt:var name="mt_version_id" escape="url">" charset="utf-8"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>mt_en_us.js?v=<mt:var name="mt_version_id" escape="html" escape="url">" charset="utf-8"></script>
 <mt:else>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>mt_<$mt:var name="local_lang_id"$>.js?v=<mt:var name="mt_version_id" escape="url">" charset="utf-8"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>mt_<$mt:var name="local_lang_id"$>.js?v=<mt:var name="mt_version_id" escape="html" escape="url">" charset="utf-8"></script>
 </mt:if>
 <mt:unless name="optimize_ui">
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.mt.js?v=<mt:var name="mt_version_id" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.mt.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
 <mt:else>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.mt.min.js?v=<mt:var name="mt_version_id" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.mt.min.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
 </mt:unless>
-<mt:var name="js_include" escape="javascript" escape="html">
-    <script type="text/javascript" src="<mt:var name="static_uri">popper/popper.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>bootstrap/js/bootstrap.js?v=<$mt:var name="mt_version_id" escape="url"$>"></script>
+<mt:var name="js_include" escape="none">
+    <script type="text/javascript" src="<mt:var name="static_uri" escape="html">popper/popper.js?v=<mt:var name="mt_version_id" escape="html" escape="url">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>bootstrap/js/bootstrap.js?v=<$mt:var name="mt_version_id" escape="html" escape="url"$>"></script>
 <style>
 .mt-navbar-arrow {
     background: #fff;
@@ -119,7 +119,7 @@
       <div class="navbar-header">
         <a>
           <span>
-            <img src="<$mt:var name="static_uri"$>images/logo-mark-mono.svg" alt="Movable Type" width="32" height="32" class="first-child">
+            <img src="<$mt:var name="static_uri" escape="html"$>images/logo-mark-mono.svg" alt="Movable Type" width="32" height="32" class="first-child">
           </span>
         </a>
       </div>
@@ -127,27 +127,27 @@
       <ul class="nav navbar-nav">
         <li id="current-site" class="scope">
           <!-- <b class="mt-navbar-arrow"></b> -->
-          <a class="reset" href="<mt:var name="script_url" escape="html">?__mode=shared_preview&spid=<mt:var name="spid" escape="html">"><span class="current-site-name"><__trans phrase="Preview">: <mt:var name="title" escape="html"> </span></a>
+          <a class="reset" href="<mt:var name="script_url" escape="html">?__mode=shared_preview&spid=<mt:var name="spid" escape="html" escape="url">"><span class="current-site-name"><__trans phrase="Preview">: <mt:var name="title" escape="html"> </span></a>
         </li>
       </ul>
       <ul class="nav navbar-nav">
         <li>
           <a class="btn btn-link" id="edit" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Move to edit screen">" href="<mt:var name="back_edit" escape="html">" >
               <svg title="Edit" class="mt-icon--inverse mt-icon" >
-                <use xlink:href="<$mt:var name="static_uri"$>images/sprite.svg#ic_edit">
+                <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_edit">
               </svg>
           </a>
         </li>
-          <a class="btn btn-link copy-popover" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Show shared preview link.">"  href="javascript:void(0);" data-href="<mt:var name="script_full_url" escape="html">?__mode=shared_preview&spid=<mt:var name="spid" escape="url">" >
+          <a class="btn btn-link copy-popover" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Show shared preview link.">"  href="javascript:void(0);" data-href="<mt:var name="script_full_url" escape="html">?__mode=shared_preview&spid=<mt:var name="spid" escape="html" escape="url">" >
               <svg title="Preview" class="mt-icon--inverse mt-icon">
-                <use xlink:href="<$mt:var name="static_uri"$>images/sprite.svg#ic_preview">
+                <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_preview">
               </svg>
           </a>
         </li>
         <li>
           <a class="btn btn-link copy-popover" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Show public links on this page.">" href="javascript:void(0);" data-href="<mt:var name="permalink" escape="html">" >
               <svg title="Permalink" class="mt-icon--inverse mt-icon">
-                <use xlink:href="<$mt:var name="static_uri"$>images/sprite.svg#ic_permalink">
+                <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_permalink">
               </svg>
           </a>
         </li>
@@ -221,7 +221,6 @@
           || jQuery(event.target).parent().hasClass('popover')) return;
 
         jQuery('.copy-popover').popover('hide');
-
       }
 
       function linkCopy () {

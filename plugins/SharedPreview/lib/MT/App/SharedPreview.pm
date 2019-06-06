@@ -166,7 +166,7 @@ sub load_login_form {
 
     return $app->component('SharedPreview')->load_tmpl(
         'shared_preview_login.tmpl',
-        {   query_params => [
+        {   shared_preview_params => [
                 {   name  => 'spid',
                     value => $preview_data->id,
                 },
