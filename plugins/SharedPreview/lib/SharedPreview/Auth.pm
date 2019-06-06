@@ -67,7 +67,7 @@ sub get_session_id_from_cookie {
 
     my $session_id = $cookies->{$cookie_name}->{value}[0];
 
-    unless ($session_id && $session_id =~ /\A[a-zA-Z0-9]{40}\z/) {
+    unless ( $session_id && $session_id =~ /\A[a-zA-Z0-9]{40}\z/ ) {
         remove_cookie( $app, $blog_id );
         return;
     }
