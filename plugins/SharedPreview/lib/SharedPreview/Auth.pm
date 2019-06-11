@@ -23,7 +23,7 @@ sub check_auth {
 
     my $sp_password = $plugin_data->data->{'sp_password[]'};
 
-    if (ref $sp_password eq 'ARRAY') {
+    if ( ref $sp_password eq 'ARRAY' ) {
         return grep { $_ eq $password } @$sp_password;
     }
 
@@ -37,7 +37,7 @@ sub check_session {
     my $cookie = get_session_from_cookie( $app, $blog_id );
     return unless $cookie;
 
-    my $session = MT::Session->load(@$cookie[0]);
+    my $session = MT::Session->load( @$cookie[0] );
     unless ($session) {
         remove_cookie( $app, $blog_id );
         return;
@@ -71,16 +71,16 @@ sub get_session_from_cookie {
 
     return unless $cookies->{$cookie_name};
 
-    my $session_id = $cookies->{$cookie_name}->{value}[0];
+    my $session_id          = $cookies->{$cookie_name}->{value}[0];
     my $validate_session_id = validate_session_id($session_id);
-    unless ( $validate_session_id ) {
+    unless ($validate_session_id) {
         remove_cookie( $app, $blog_id );
         return;
     }
 
     my $remember = $cookies->{$cookie_name}->{value}[1];
 
-    return [$session_id, $remember];
+    return [ $session_id, $remember ];
 }
 
 sub make_session {
@@ -100,7 +100,7 @@ sub make_session {
 }
 
 sub start_session {
-    my ( $app, $blog_id, $password, $remember) = @_;
+    my ( $app, $blog_id, $password, $remember ) = @_;
 
     my $make_session = make_session( $app, $blog_id, $password );
     return $make_session->errstr if $make_session->errstr;
@@ -109,7 +109,7 @@ sub start_session {
 
     my %arg = (
         -name    => 'shared_preview_' . $blog_id,
-        -value   => [$make_session->id, $remember],
+        -value   => [ $make_session->id, $remember ],
         -path    => $app->config->CookiePath || $app->mt_path,
         -expires => "+$expires",
     );
@@ -134,7 +134,7 @@ sub remove_cookie {
 }
 
 sub validate_session_id {
-    my ( $session_id ) = @_;
+    my ($session_id) = @_;
     return $session_id && $session_id =~ /\A[0-9a-zA-Z]{40}\z/;
 }
 

@@ -24,7 +24,7 @@ sub init_request {
 sub login {
     my $app = shift;
 
-    my $preview_id = $app->param('spid');
+    my $preview_id        = $app->param('spid');
     my $preview_id_result = MT::Preview::validate_preview_id($preview_id);
     return page_not_found($app) unless $preview_id_result;
 
@@ -66,7 +66,7 @@ sub login {
 
     my $start_session_result
         = SharedPreview::Auth::start_session( $app,
-        $preview_data->blog_id, $password, $remember);
+        $preview_data->blog_id, $password, $remember );
     return load_login_form( $app, $preview_data, $site,
         $start_session_result )
         if $start_session_result;
@@ -78,7 +78,7 @@ sub login {
 sub shared_preview {
     my $app = shift;
 
-    my $preview_id = $app->param('spid');
+    my $preview_id        = $app->param('spid');
     my $preview_id_result = MT::Preview::validate_preview_id($preview_id);
     return page_not_found($app) unless $preview_id_result;
 

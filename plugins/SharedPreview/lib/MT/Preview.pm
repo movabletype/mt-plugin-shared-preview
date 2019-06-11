@@ -117,7 +117,7 @@ sub purge {
 }
 
 sub validate_preview_id {
-    my ( $preview_id ) = @_;
+    my ($preview_id) = @_;
     return $preview_id && $preview_id =~ /\A[0-9a-f]{40}\z/;
 }
 
@@ -132,12 +132,12 @@ __JS__
 sub shared_preview_message {
     my ( $app, $href ) = @_;
     my $message = $app->translate('Open share preview');
-    my $type = $app->param('_type');
+    my $type    = $app->param('_type');
 
     my $action_flag = $app->param('saved_added');
 
     if ($action_flag) {
-        if ($type eq 'content_data') {
+        if ( $type eq 'content_data' ) {
             return <<"__JS__";
 jQuery('#saved-added').after('<div id="saved-shared-preview" class="alert alert-success alert-dismissable first-child"><button type="button" class="close first-child" data-dismiss="alert" aria-label="Close"><span aria-hidden="true" class="first-child last-child">&times;</span></button><a href="$href" class="last-child">$message</a></div>');
 __JS__
