@@ -116,6 +116,11 @@ sub purge {
     }
 }
 
+sub validate_preview_id {
+    my ( $preview_id ) = @_;
+    return $preview_id && $preview_id =~ /\A[0-9a-f]{40}\z/;
+}
+
 sub shared_preview_link {
     my ( $type, $href ) = @_;
 
