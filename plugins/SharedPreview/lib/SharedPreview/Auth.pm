@@ -34,10 +34,10 @@ sub check_auth {
 sub check_session {
     my ( $app, $blog_id ) = @_;
 
-    my $cookie = get_session_from_cookie( $app, $blog_id );
-    return unless $cookie;
+    my $session_id = get_session_id_from_cookie( $app, $blog_id );
+    return unless $session_id;
 
-    my $session = MT::Session->load( @$cookie[0] );
+    my $session = MT::Session->load($session_id);
     unless ($session) {
         remove_cookie( $app, $blog_id );
         return;
@@ -48,15 +48,13 @@ sub check_session {
         return;
     }
 
-    remove_session( $app, $blog_id ) unless @$cookie[1];
-
     return $session->thaw_data;
 
 }
 
 sub remove_session {
     my ( $app, $blog_id ) = @_;
-    my $session_id = get_session_from_cookie( $app, $blog_id );
+    my $session_id = get_session_id_from_cookie( $app, $blog_id );
     return unless $session_id;
 
     remove_cookie( $app, $blog_id );
@@ -64,7 +62,7 @@ sub remove_session {
     MT::Session->remove( { id => $session_id, kind => 'SP' } );
 }
 
-sub get_session_from_cookie {
+sub get_session_id_from_cookie {
     my ( $app, $blog_id ) = @_;
     my $cookie_name = 'shared_preview_' . $blog_id;
     my $cookies     = $app->cookies;
@@ -72,14 +70,11 @@ sub get_session_from_cookie {
     return unless $cookies->{$cookie_name};
 
     my $session_id = $cookies->{$cookie_name}->{value}[0];
-    unless ( validate_session_id($session_id) ) {
-        remove_cookie( $app, $blog_id );
-        return;
-    }
 
-    my $remember = $cookies->{$cookie_name}->{value}[1];
+    return $session_id if validate_session_id($session_id);
 
-    return [ $session_id, $remember ];
+    remove_cookie( $app, $blog_id );
+
 }
 
 sub make_session {
@@ -104,13 +99,13 @@ sub start_session {
     my $make_session = make_session( $app, $blog_id, $password );
     return $make_session->errstr if $make_session->errstr;
 
-    my $expires = $remember ? '3M' : '1m';
+    my $expires = $remember ? '+3M' : '';
 
     my %arg = (
         -name    => 'shared_preview_' . $blog_id,
-        -value   => [ $make_session->id, $remember ],
+        -value   => $make_session->id,
         -path    => $app->config->CookiePath || $app->mt_path,
-        -expires => "+$expires",
+        -expires => "$expires",
     );
 
     $app->bake_cookie(%arg);
