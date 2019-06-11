@@ -173,8 +173,13 @@
       App.bootstrapInline( false );
     </mt:unless>
       jQuery('#frame').load( function() {
+        if (jQuery(this.contentDocument.body).html() == '') {
+          jQuery(this.contentDocument.body).html(jQuery(this).attr('srcdoc'));
+        }
+
         jQuery(this).height( jQuery(window).height() - jQuery('#entry-preview-control-strip').height() );
       });
+
       jQuery(window).resize( function() {
         jQuery('#frame').height( jQuery(window).height() - jQuery('#entry-preview-control-strip').height() );
       });
@@ -183,10 +188,10 @@
         if (typeof document.body.style.maxHeight == "undefined") {
           jQuery('#brand span').pngfix();
         }
+
         jQuery('[data-toggle="tooltip"]').tooltip();
 
         jQuery('.copy-popover').popover({
-          //container: '.container-fluid',
           html: true,
           trigger: 'manual',
           tabindex: 0,
@@ -205,7 +210,7 @@
       });
 
       jQuery('iframe').on("load", function(e){
-          jQuery(this).contents().find("html").on('click', function(){
+          jQuery(this).contents().find("html").on('click', function(event){
             checkPopover(event);
           });
       });
