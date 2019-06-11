@@ -66,8 +66,8 @@ sub get_session_id_from_cookie {
     return unless $cookies->{$cookie_name};
 
     my $session_id = $cookies->{$cookie_name}->{value}[0];
-
-    unless ( $session_id && $session_id =~ /\A[a-zA-Z0-9]{40}\z/ ) {
+    my $validate_session_id = validate_session_id($session_id);
+    unless ( $validate_session_id ) {
         remove_cookie( $app, $blog_id );
         return;
     }
@@ -121,6 +121,11 @@ sub remove_cookie {
     );
 
     $app->bake_cookie(%arg);
+}
+
+sub validate_session_id {
+    my ( $session_id ) = @_;
+    return $session_id && $session_id =~ /\A[0-9a-zA-Z]{40}\z/;
 }
 
 1;
