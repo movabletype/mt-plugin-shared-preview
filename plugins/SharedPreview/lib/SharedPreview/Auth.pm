@@ -71,8 +71,8 @@ sub get_session_from_cookie {
 
     return unless $cookies->{$cookie_name};
 
-    my $session_id          = $cookies->{$cookie_name}->{value}[0];
-    unless (validate_session_id($session_id)) {
+    my $session_id = $cookies->{$cookie_name}->{value}[0];
+    unless ( validate_session_id($session_id) ) {
         remove_cookie( $app, $blog_id );
         return;
     }
