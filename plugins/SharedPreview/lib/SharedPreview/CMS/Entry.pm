@@ -80,10 +80,9 @@ sub build_preview {
     }
     else {
         # TODO
-        $fullscreen = 1;
+        # $fullscreen = 1;
+
     }
-    return $app->errtrans('Cannot load template.')
-        unless $tmpl;
 
     my $ctx  = $tmpl->context;
     my $blog = $app->blog;
