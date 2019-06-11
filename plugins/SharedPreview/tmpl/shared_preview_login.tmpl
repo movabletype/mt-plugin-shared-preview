@@ -27,7 +27,7 @@
       <__trans phrase="password is required to display this share preview." >
     </mt:if>
     </p>
-<mtapp:setting
+  <mtapp:setting
      id="password"
      label="<__trans phrase="Password">"
      label_for="password"
@@ -35,7 +35,12 @@
     <input type="password" name="password" id="password" class="form-control text password full" value="" />
     <p><__trans phrase="This password is different from your login password."></p>
   </mtapp:setting>
-
+    <div id="remember-me" class="checkbox mb-4">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" name="sp_remember" id="sp_remember" class="custom-control-input" value="1" accesskey="r" />
+        <label class="custom-control-label" for="sp_remember"><__trans phrase="Remember me?"></label>
+      </div>
+    </div>
     <div class="row align-items-center actions-bar actions-bar-login">
       <div class="col-12 col-md-auto order-first order-md-last mb-4 mb-md-0 ml-auto text-right">
         <button

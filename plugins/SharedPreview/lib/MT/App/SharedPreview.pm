@@ -62,9 +62,11 @@ sub login {
         $app->translate('Passwords do not match.') )
         unless $check_result;
 
+    my $remember = $app->param('sp_remember');
+
     my $start_session_result
         = SharedPreview::Auth::start_session( $app,
-        $preview_data->blog_id, $password );
+        $preview_data->blog_id, $password, $remember);
     return load_login_form( $app, $preview_data, $site,
         $start_session_result )
         if $start_session_result;

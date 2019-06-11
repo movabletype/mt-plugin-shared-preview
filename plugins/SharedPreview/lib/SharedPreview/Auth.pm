@@ -23,17 +23,21 @@ sub check_auth {
 
     my $sp_password = $plugin_data->data->{'sp_password[]'};
 
-    return grep { $_ eq $password } @$sp_password;
+    if (ref $sp_password eq 'ARRAY') {
+        return grep { $_ eq $password } @$sp_password;
+    }
+
+    return $sp_password eq $password;
 
 }
 
 sub check_session {
     my ( $app, $blog_id ) = @_;
 
-    my $session_id = get_session_id_from_cookie( $app, $blog_id );
-    return unless $session_id;
+    my $cookie = get_session_from_cookie( $app, $blog_id );
+    return unless $cookie;
 
-    my $session = MT::Session->load($session_id);
+    my $session = MT::Session->load(@$cookie[0]);
     unless ($session) {
         remove_cookie( $app, $blog_id );
         return;
@@ -44,13 +48,15 @@ sub check_session {
         return;
     }
 
+    remove_session( $app, $blog_id ) unless @$cookie[1];
+
     return $session->thaw_data;
 
 }
 
 sub remove_session {
     my ( $app, $blog_id ) = @_;
-    my $session_id = get_session_id_from_cookie( $app, $blog_id );
+    my $session_id = get_session_from_cookie( $app, $blog_id );
     return unless $session_id;
 
     remove_cookie( $app, $blog_id );
@@ -58,7 +64,7 @@ sub remove_session {
     MT::Session->remove( { id => $session_id, kind => 'SP' } );
 }
 
-sub get_session_id_from_cookie {
+sub get_session_from_cookie {
     my ( $app, $blog_id ) = @_;
     my $cookie_name = 'shared_preview_' . $blog_id;
     my $cookies     = $app->cookies;
@@ -72,7 +78,9 @@ sub get_session_id_from_cookie {
         return;
     }
 
-    return $session_id;
+    my $remember = $cookies->{$cookie_name}->{value}[1];
+
+    return [$session_id, $remember];
 }
 
 sub make_session {
@@ -92,16 +100,18 @@ sub make_session {
 }
 
 sub start_session {
-    my ( $app, $blog_id, $password ) = @_;
+    my ( $app, $blog_id, $password, $remember) = @_;
 
     my $make_session = make_session( $app, $blog_id, $password );
     return $make_session->errstr if $make_session->errstr;
 
+    my $expires = $remember ? '3M' : '1m';
+
     my %arg = (
         -name    => 'shared_preview_' . $blog_id,
-        -value   => $make_session->id,
+        -value   => [$make_session->id, $remember],
         -path    => $app->config->CookiePath || $app->mt_path,
-        -expires => '+3M',
+        -expires => "+$expires",
     );
 
     $app->bake_cookie(%arg);
