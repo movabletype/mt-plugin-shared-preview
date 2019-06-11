@@ -11,7 +11,8 @@ l10n_class: SharedPreview::L10N
 object_types:
   preview: MT::Preview
 
-blog_config_template: shared_preview_setting.tmpl
+blog_config_template:
+  code: $SharedPreview::SharedPreview::CMS::SharedPreview::config_template
 
 settings:
   use_password:

@@ -60,4 +60,17 @@ sub make_shared_preview {
     );
 }
 
+sub config_template {
+    my ( $plugin, $param, $scope ) = @_;
+
+    if ( !$param->{'sp_password[]'} ) {
+        $param->{'sp_password[]'} = [""];
+    }
+    elsif ( !ref $param->{'sp_password[]'} ) {
+        $param->{'sp_password[]'} = [ $param->{'sp_password[]'} ];
+    }
+
+    $plugin->load_tmpl( 'shared_preview_setting.tmpl', $param );
+}
+
 1;

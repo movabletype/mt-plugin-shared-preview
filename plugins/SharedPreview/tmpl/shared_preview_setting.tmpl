@@ -14,7 +14,6 @@
     id="password"
     label="<__trans phrase="Password">"
     show_hint="1">
-  <mt:setvar name="is_loop" value="">
   <mt:loop name="sp_password[]">
   <mt:setvar name="is_loop" value="1">
   <ul id="sp_password_block<mt:var name="__counter__" escape="html">" class="list-inline">
@@ -26,16 +25,6 @@
     </li>
   </ul>
   </mt:loop>
-  <mt:if name="is_loop" ne="1">
-      <ul id="sp_password_block1" class="list-inline">
-        <li class="list-inline-item w-25">
-          <input type="text" name="sp_password[]" class="form-control" value="<mt:if name="sp_password[]"><mt:var name="sp_password[]" escape="html"></mt:if>" data-index="1" required />
-        </li>
-        <li class="list-inline-item delete-password-btn" style="display: none;">
-          <button type="button" class="btn btn-default btn-sm delete-password" data-target="#sp_password_block1"><svg title="<__trans phrase="Delete">" role="img" class="mt-icon mt-icon--sm"><use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_trash"></use></svg><__trans phrase="Delete"></button>
-        </li>
-      </ul>
-  </mt:if>
   <div>
     <a href="javascript:void(0);" id="add_password" ><__trans phrase="Add Password."></a>
   </div>
