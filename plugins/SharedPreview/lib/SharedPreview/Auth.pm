@@ -99,14 +99,13 @@ sub start_session {
     my $make_session = make_session( $app, $blog_id, $password );
     return $make_session->errstr if $make_session->errstr;
 
-    my $expires = $remember ? '+3M' : '';
-
     my %arg = (
         -name    => 'shared_preview_' . $blog_id,
         -value   => $make_session->id,
         -path    => $app->config->CookiePath || $app->mt_path,
-        -expires => "$expires",
     );
+
+    $arg{-expires} = '+3M' if $remember;
 
     $app->bake_cookie(%arg);
 
