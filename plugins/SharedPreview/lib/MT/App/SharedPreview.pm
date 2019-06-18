@@ -34,9 +34,6 @@ sub login {
     my $site = MT::Blog->load( $preview_data->blog_id );
     return page_not_found($app) unless $site;
 
-    return load_login_form( $app, $preview_data, $site )
-        if $app->request_method ne 'POST';
-
     my $plugin_data = MT::PluginData->load(
         {   plugin => 'SharedPreview',
             key    => 'configuration:blog:' . $preview_data->blog_id,
@@ -50,6 +47,9 @@ sub login {
 
     my $need_login = SharedPreview::Auth::need_login($plugin_data);
     return $app->redirect( $app->uri(@uri) ) unless $need_login;
+
+    return load_login_form( $app, $preview_data, $site )
+        if $app->request_method ne 'POST';
 
     my $password = $app->param('password');
     return load_login_form( $app, $preview_data, $site,
