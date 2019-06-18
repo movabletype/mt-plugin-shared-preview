@@ -36,7 +36,7 @@ sub on_template_param_edit {
         },
         );
 
-    my $script = MT::Preview::shared_preview_link( $type, $href );
+    my $script = MT::Preview::shared_preview_link( $app, $type, $href );
 
     $script .= MT::Preview::shared_preview_message( $app, $href );
 

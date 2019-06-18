@@ -162,8 +162,8 @@ sub validate_preview_id {
 }
 
 sub shared_preview_link {
-    my ( $type, $href ) = @_;
-    $link_name = $app->translate('Shared Preview');
+    my ( $app, $type, $href ) = @_;
+    my $link_name = $app->translate('Shared Preview');
     return <<"__JS__";
 jQuery('button[name=preview_$type]').after('<div id="shared_preview" class="text-right"><a href="$href">$link_name</a></div>');
 __JS__

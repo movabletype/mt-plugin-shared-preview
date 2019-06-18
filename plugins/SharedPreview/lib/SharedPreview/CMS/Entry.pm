@@ -32,7 +32,7 @@ sub on_template_param_edit {
         },
         );
 
-    my $script = MT::Preview::shared_preview_link( 'entry', $href );
+    my $script = MT::Preview::shared_preview_link( $app, 'entry', $href );
     $script .= MT::Preview::shared_preview_message( $app, $href );
 
     ( $param->{jq_js_include} ||= '' ) .= $script;
