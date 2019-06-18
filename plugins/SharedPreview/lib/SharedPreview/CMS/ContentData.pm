@@ -5,6 +5,7 @@ use warnings;
 use MT::ContentStatus;
 use MT::Preview;
 use MT::Template;
+eval { use IPC::Run3 'run3' };
 
 sub on_template_param_edit {
     my ( $cb, $app, $param ) = @_;
@@ -138,6 +139,17 @@ sub build_preview {
 
     return unless defined $html;
 
+    my $script_result;
+    my $error;
+    my $script = $tmpl->text;
+    my $has_php = &has_php;
+
+    if ($has_php) {
+        run3 [ 'php', '-q' ], \$script, \$script_result, $error;
+    }
+
+    $html = $script_result unless $error;
+
     my %param = (
         preview_content => $html,
         title           => $content_data->label,
@@ -155,4 +167,17 @@ sub build_preview {
 
     return \%param;
 }
+
+sub has_php {
+    my $HasPHP;
+    my $php_version_string = `php --version 2>&1` or return $HasPHP = 0;
+    my ($php_version) = $php_version_string =~ /^PHP (\d+\.\d+)/i;
+    $HasPHP = ( $php_version and $php_version >= 5 ) ? 1 : 0;
+    if (MT->config->ObjectDriver =~ /u?mssqlserver/i) {
+        my $phpinfo = `php -i 2>&1` or return $HasPHP = 0;
+        $HasPHP = 0 if $phpinfo =~ /\-\-without\-(?:pdo\-)?mssql/;
+    }
+    $HasPHP;
+}
+
 1;
