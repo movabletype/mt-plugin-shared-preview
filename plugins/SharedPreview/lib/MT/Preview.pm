@@ -163,15 +163,15 @@ sub validate_preview_id {
 
 sub shared_preview_link {
     my ( $type, $href ) = @_;
-
+    $link_name = $app->translate('Shared Preview');
     return <<"__JS__";
-jQuery('button[name=preview_$type]').after('<div id="shared_preview" class="text-right"><a href="$href">Shared Preview</a></div>');
+jQuery('button[name=preview_$type]').after('<div id="shared_preview" class="text-right"><a href="$href">$link_name</a></div>');
 __JS__
 }
 
 sub shared_preview_message {
     my ( $app, $href ) = @_;
-    my $message = $app->translate('Open share preview');
+    my $message = $app->translate('Open the shared preview');
     my $type    = $app->param('_type');
 
     my $action_flag = $app->param('saved_added');

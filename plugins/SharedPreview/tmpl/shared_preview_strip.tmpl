@@ -132,20 +132,20 @@
       </ul>
       <ul class="nav navbar-nav">
         <li>
-          <a class="btn btn-link" id="edit" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Move to edit screen">" href="<mt:var name="back_edit" escape="html">" >
+          <a class="btn btn-link" id="edit" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Go to the edit page">" href="<mt:var name="back_edit" escape="html">" >
               <svg title="Edit" class="mt-icon--inverse mt-icon" >
                 <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_edit">
               </svg>
           </a>
         </li>
-          <a class="btn btn-link copy-popover" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Show shared preview link.">"  href="javascript:void(0);" data-href="<mt:var name="script_full_url" escape="html">?__mode=shared_preview&spid=<mt:var name="spid" escape="url" escape="html">" >
+          <a class="btn btn-link copy-popover" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Show the shared preview link">"  href="javascript:void(0);" data-href="<mt:var name="script_full_url" escape="html">?__mode=shared_preview&spid=<mt:var name="spid" escape="url" escape="html">" >
               <svg title="Preview" class="mt-icon--inverse mt-icon">
                 <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_preview">
               </svg>
           </a>
         </li>
         <li>
-          <a class="btn btn-link copy-popover" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Show public links on this page.">" href="javascript:void(0);" data-href="<mt:var name="permalink" escape="html">" >
+          <a class="btn btn-link copy-popover" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Show permalink at publication">" href="javascript:void(0);" data-href="<mt:var name="permalink" escape="html">" >
               <svg title="Permalink" class="mt-icon--inverse mt-icon">
                 <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_permalink">
               </svg>
@@ -230,9 +230,9 @@
 
       function linkCopy () {
         jQuery('input[name="target_link"]').select();
-        var message = "<__trans phrase="Could not copy to clipboard.">";
+        var message = "<__trans phrase="Could not copy to the clip board.">";
         if (document.execCommand("Copy")) {
-          message = "<__trans phrase="Could copy to clipboard.">"
+          message = "<__trans phrase="Copied to the clip board.">"
         };
 
         jQuery('button[name="copy"]').tooltip({

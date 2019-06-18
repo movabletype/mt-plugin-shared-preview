@@ -66,7 +66,7 @@ sub build_preview {
     my $type = $app->param('_type');
 
     my $entry = $app->model($type)->load($id);
-    return $app->errtrans( 'invalid id: [_1]', $id ) unless $entry;
+    return $app->errtrans('Invalid request') unless $entry;
 
     # build entry
     my $at       = $entry->class eq 'page' ? 'Page' : 'Individual';

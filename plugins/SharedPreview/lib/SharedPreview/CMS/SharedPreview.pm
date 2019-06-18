@@ -12,13 +12,13 @@ sub make_shared_preview {
     my $preview_id;
 
     my $type = $app->param('_type');
-    return $app->errtrans('no type') unless $type;
+    return $app->errtrans('Invalid request') unless $type;
 
     my $id = $app->param('id');
-    return $app->errtrans('no id') unless $id;
+    return $app->errtrans('Invalid request') unless $id;
 
     my $blog_id = $app->blog->id;
-    return $app->errtrans('No Blog') unless $blog_id;
+    return $app->errtrans('Invalid request') unless $blog_id;
 
     my $obj_class = $app->model($type);
     return $app->errtrans( 'invalid type: [_1]', $type )
@@ -51,7 +51,7 @@ sub make_shared_preview {
 
         $preview->save
             or return $app->errtrans(
-            "Could not create share preview link : " . $preview->errstr );
+            "Could not create shared preview link : " . $preview->errstr );
     }
 
     $preview_id = $preview->id;

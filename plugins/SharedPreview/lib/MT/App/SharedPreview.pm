@@ -53,7 +53,7 @@ sub login {
 
     my $password = $app->param('password');
     return load_login_form( $app, $preview_data, $site,
-        $app->translate('no password') )
+        $app->translate('You must supply a password.') )
         unless $password;
 
     my $check_result
