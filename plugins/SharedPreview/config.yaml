@@ -38,7 +38,20 @@ applications:
       shared_preview: $SharedPreview::MT::App::SharedPreview::shared_preview
       shared_preview_login: $SharedPreview::MT::App::SharedPreview::login
 
-
 config_settings:
   SharedPreviewScript:
     default: mt-shared-preview.cgi
+
+permissions:
+  blog.edit_all_posts:
+    permitted_action:
+      create_new_entry_shared_preview: 1
+  blog.manage_pages:
+    permitted_action:
+      create_new_page_shared_preview: 1
+  blog.manage_content_data:
+    permitted_action:
+      create_new_content_data_shared_preview: 1
+  system.manage_content_data:
+    permitted_action:
+      create_new_content_data_shared_preview: 1

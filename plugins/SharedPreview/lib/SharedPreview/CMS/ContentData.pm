@@ -14,7 +14,14 @@ sub on_template_param_edit {
     my $content_type_id = $app->param('content_type_id');
 
     return unless $id;
-    return if $param->{status} == MT::ContentStatus::RELEASE;
+    return
+        if $param->{status}
+        == MT::ContentStatus::RELEASE;    #content_type_unique_id
+
+    my $permission_result
+        = MT::Preview->can_create_shared_preview( $app, $app->blog->id,
+        $type, $id );
+    return '' unless $permission_result;
 
     my $href
         = $app->app_path
@@ -29,9 +36,7 @@ sub on_template_param_edit {
         },
         );
 
-
     my $script = MT::Preview::shared_preview_link( $type, $href );
-
 
     $script .= MT::Preview::shared_preview_message( $app, $href );
 
@@ -150,5 +155,4 @@ sub build_preview {
 
     return \%param;
 }
-
 1;

@@ -24,6 +24,12 @@ sub make_shared_preview {
     return $app->errtrans( 'invalid type: [_1]', $type )
         unless $obj_class;
 
+    my $permission_result
+        = MT::Preview->can_create_shared_preview( $app, $blog_id, $type,
+        $id );
+
+    return $app->permission_denied unless $permission_result;
+
     my $preview = MT::Preview->load(
         {   blog_id     => $blog_id,
             object_type => $type,

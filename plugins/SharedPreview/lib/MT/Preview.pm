@@ -33,6 +33,46 @@ __PACKAGE__->install_properties(
     }
 );
 
+sub can_create_shared_preview {
+    my $self = shift;
+    my ( $app, $blog_id, $type, $id ) = @_;
+    if ( $type eq 'content_data' ) {
+        my $allowed;
+        my $content_data = $app->model('content_data')->load($id);
+        my $content_type_unique_id
+            = $content_data->content_type
+            ? $content_data->content_type->unique_id
+            : '';
+        my $iter = $app->model('permission')->load_iter(
+            {   author_id => $app->user->id,
+                blog_id   => $blog_id,
+            }
+        );
+
+        while ( my $p = $iter->() ) {
+            $allowed = 1, last
+                if $p->has("create_content_data:$content_type_unique_id")
+                || $p->has("edit_all_content_data:$content_type_unique_id");
+        }
+
+        return $allowed
+            || $app->permissions->can_do("create_new_${type}_shared_preview");
+
+    }
+    else {
+        my $entry = $app->model('entry')->load($id);
+        my $can_post;
+        $can_post
+            = (    $app->permissions->can_create_post
+                && $entry->author_id == $app->user->id )
+            if $entry;
+
+        return $can_post
+            || $app->permissions->can_do("create_new_${type}_shared_preview");
+    }
+
+}
+
 sub class_label {
     return MT->translate("Preview");
 }

@@ -15,6 +15,11 @@ sub on_template_param_edit {
     return unless $id;
     return if $param->{status} == MT::Entry::RELEASE;
 
+    my $permission_result
+        = MT::Preview->can_create_shared_preview( $app, $app->blog->id,
+        $type, $id );
+    return '' unless $permission_result;
+
     my $href
         = $app->app_path
         . $app->config->AdminScript
