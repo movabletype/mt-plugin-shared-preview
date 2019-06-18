@@ -72,18 +72,16 @@ sub build_preview {
         }
     );
 
-    my $fullscreen;
     my $tmpl;
+    my $has_template;
     if ($tmpl_map) {
         $tmpl = $tmpl_map->template;
         $app->request( 'build_template', $tmpl );
+        $has_template = 1;
     }
     else {
-        # TODO
-        $fullscreen = 1;
+        $tmpl = $app->load_tmpl('preview_entry_content.tmpl');
     }
-    return $app->errtrans('Cannot load template.')
-        unless $tmpl;
 
     my $ctx  = $tmpl->context;
     my $blog = $app->blog;
@@ -102,6 +100,12 @@ sub build_preview {
     }
 
     my $html = $tmpl->output;
+
+    unless ($has_template) {
+        $html = $tmpl->text( $app->translate_templatized($html) ) if $html;
+    }
+
+    return unless defined $html;
 
     my %param = (
         preview_content => $html,

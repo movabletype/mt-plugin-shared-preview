@@ -65,6 +65,7 @@ sub build_preview {
     my $content_type_id = $app->param('content_type_id');
     my $id              = $app->param('id');
     my $type            = $app->param('_type');
+    $app->{component} = 'Core';
 
     my $content_data = $app->model($type)->load($id);
 
@@ -84,23 +85,25 @@ sub build_preview {
         },
     );
 
-    my $fullscreen;
+    my $has_template;
     my $tmpl;
     if ($tmpl_map) {
         $tmpl = $tmpl_map->template;
         $app->request( 'build_template', $tmpl );
+        $has_template = 1;
     }
     else {
-        # TODO
-        $fullscreen = 1;
+        $tmpl = $app->load_tmpl('preview_content_data_content.tmpl');
     }
+
     return $app->errtrans('Cannot load template.')
         unless $tmpl;
 
     my $ctx  = $tmpl->context;
     my $blog = $app->blog;
-    $ctx->stash( 'content_data', $content_data );
-    $ctx->stash( 'blog',         $blog );
+
+    $ctx->stash( 'blog',    $blog );
+    $ctx->stash( 'blog_id', $blog->id );
 
     my $ao_ts = $content_data->authored_on;
     $ao_ts =~ s/\D//g;
@@ -108,12 +111,26 @@ sub build_preview {
     $ctx->{current_archive_type} = $at;
     $ctx->var( 'preview_template', 1 );
 
+    if ($has_template) {
+        $ctx->stash( 'content_data', $content_data );
+    }
+    else {
+        $ctx->stash( 'content',      $content_data );
+        $ctx->stash( 'content_type', $content_data->content_type );
+    }
+
     my $archiver = $app->publisher->archiver($at);
     if ( my $params = $archiver->template_params ) {
         $ctx->var( $_, $params->{$_} ) for keys %$params;
     }
 
-    my $html = $tmpl->output;
+    my $html;
+    $html = $tmpl->output;
+
+    unless ($has_template) {
+        $html = $tmpl->text( $app->translate_templatized($html) ) if $html;
+    }
+
     return unless defined $html;
 
     my %param = (
