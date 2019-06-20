@@ -88,6 +88,8 @@ sub shared_preview {
     my $site = MT::Blog->load( $preview_data->blog_id );
     return page_not_found($app) unless $site;
 
+    $app->set_language( $site->language );
+
     my $plugin_data = MT::PluginData->load(
         {   plugin => 'SharedPreview',
             key    => 'configuration:blog:' . $preview_data->blog_id,
@@ -165,6 +167,7 @@ sub set_app_parameters {
 sub load_login_form {
     my ( $app, $preview_data, $site, $error ) = @_;
 
+    $app->set_language( $site->language );
     $app->response_code(401);
 
     return $app->component('SharedPreview')->load_tmpl(

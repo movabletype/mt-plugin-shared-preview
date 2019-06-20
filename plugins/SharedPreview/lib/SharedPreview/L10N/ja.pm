@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use base 'SharedPreview::L10N';
+use utf8;
 
 our %Lexicon = (
     'Open the share preview'                                         => '共有プレビューを開く',
