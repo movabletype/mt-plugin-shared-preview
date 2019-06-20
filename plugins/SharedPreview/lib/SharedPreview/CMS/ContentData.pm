@@ -145,10 +145,11 @@ sub build_preview {
     my $has_php = &has_php;
 
     if ($has_php) {
-        run3 [ 'php', '-q' ], \$script, \$script_result, $error;
+        run3 [ 'php', '-q'], \$script, \$script_result, $error;
+        $script_result =~ s/^(\r\n|\r|\n|\s)+|(\r\n|\r|\n|\s)+\z//g;
+        $script_result = Encode::decode_utf8($script_result);
+        $html = $script_result unless $error;
     }
-
-    $html = $script_result unless $error;
 
     my %param = (
         preview_content => $html,
