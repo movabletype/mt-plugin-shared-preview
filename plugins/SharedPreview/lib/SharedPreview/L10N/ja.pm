@@ -20,6 +20,7 @@ our %Lexicon = (
     'Use password'                                                   => 'パスワードを使用',
     'password is required to display this share preview.'            => '共有プレビューの表示にはパスワードが必要です。',
     'Could not create shared preview link : '                        => '共有プレビューの作成ができませんでした。',
+    'Use basic Latin characters only.'                                                               => '半角英数字のみ利用できます。'
 );
 
 1;
