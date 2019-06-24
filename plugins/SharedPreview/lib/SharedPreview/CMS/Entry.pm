@@ -110,7 +110,7 @@ sub build_preview {
     my $html = $tmpl->output;
 
     unless ($has_template) {
-        $html = $tmpl->text( $app->translate_templatized($html) ) if $html;
+        $html = $tmpl->text;
     }
 
     my $preview_error;
@@ -123,9 +123,6 @@ sub build_preview {
         defined($html)
             or return $app->error(
             $app->translate( "Publish error: [_1]", $tmpl->errstr ) );
-
-        $html = $app->translate_templatized($html);
-
     }
 
     my %param = (
