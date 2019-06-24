@@ -123,8 +123,7 @@ sub build_preview {
         $ctx->var( $_, $params->{$_} ) for keys %$params;
     }
 
-    my $html;
-    $html = $tmpl->output;
+    my $html = $tmpl->output;
 
     unless ($has_template) {
         $html = $tmpl->text( $app->translate_templatized($html) ) if $html;
