@@ -74,7 +74,6 @@ sub build_preview {
 
     my $content_data = $app->model($type)->load($id);
 
-    # build entry
     my $tmpl_map = $app->model('templatemap')->load(
         {   archive_type => $at,
             blog_id      => $app->blog->id,
@@ -90,12 +89,10 @@ sub build_preview {
         },
     );
 
-    my $has_template;
     my $tmpl;
     if ($tmpl_map) {
         $tmpl = $tmpl_map->template;
         $app->request( 'build_template', $tmpl );
-        $has_template = 1;
     }
     else {
         $tmpl = $app->load_tmpl('preview_content_data_content.tmpl');
@@ -125,10 +122,6 @@ sub build_preview {
 
     my $html = $tmpl->output;
 
-    unless ($has_template) {
-        $html = $tmpl->text( $app->translate_templatized($html) ) if $html;
-    }
-
     my $preview_error;
 
     unless ( defined $html ) {
@@ -141,8 +134,6 @@ sub build_preview {
         defined($html)
             or return $app->error(
             $app->translate( "Publish error: [_1]", $tmpl->errstr ) );
-
-        $html = $app->translate_templatized($html);
     }
 
     my %param = (
