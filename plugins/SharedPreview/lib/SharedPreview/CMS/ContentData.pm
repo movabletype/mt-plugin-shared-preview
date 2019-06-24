@@ -115,14 +115,8 @@ sub build_preview {
     $ctx->{current_timestamp}    = $ao_ts;
     $ctx->{current_archive_type} = $at;
     $ctx->var( 'preview_template', 1 );
-
-    if ($has_template) {
-        $ctx->stash( 'content_data', $content_data );
-    }
-    else {
-        $ctx->stash( 'content',      $content_data );
-        $ctx->stash( 'content_type', $content_data->content_type );
-    }
+    $ctx->stash( 'content',      $content_data );
+    $ctx->stash( 'content_type', $content_data->content_type );
 
     my $archiver = $app->publisher->archiver($at);
     if ( my $params = $archiver->template_params ) {
@@ -136,12 +130,27 @@ sub build_preview {
         $html = $tmpl->text( $app->translate_templatized($html) ) if $html;
     }
 
-    return unless defined $html;
+    my $preview_error;
+
+    unless ( defined $html ) {
+        $preview_error = $app->translate( "Publish error: [_1]",
+            MT::Util::encode_html( $tmpl->errstr ) );
+        my $tmpl_plain = $app->load_tmpl('preview_content_data_content.tmpl');
+        $tmpl->text( $tmpl_plain->text );
+        $html = $tmpl->output;
+
+        defined($html)
+            or return $app->error(
+            $app->translate( "Publish error: [_1]", $tmpl->errstr ) );
+
+        $html = $app->translate_templatized($html);
+    }
 
     my %param = (
-        preview_content => $html,
         title           => $content_data->label,
         permalink       => MT::Util::encode_html( $content_data->permalink ),
+        preview_content => $html,
+        preview_error   => $preview_error,
         edit_uri_params => $app->uri_params(
             mode => 'view',
             args => {

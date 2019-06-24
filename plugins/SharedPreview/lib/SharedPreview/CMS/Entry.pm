@@ -88,6 +88,9 @@ sub build_preview {
         $tmpl = $app->load_tmpl('preview_entry_content.tmpl');
     }
 
+    return $app->errtrans('Cannot load template.')
+        unless $tmpl;
+
     my $ctx  = $tmpl->context;
     my $blog = $app->blog;
     $ctx->stash( 'entry',    $entry );
@@ -110,12 +113,26 @@ sub build_preview {
         $html = $tmpl->text( $app->translate_templatized($html) ) if $html;
     }
 
-    return unless defined $html;
+    my $preview_error;
+    unless ( defined($html) ) {
+        $preview_error = $app->translate( "Publish error: [_1]",
+            MT::Util::encode_html( $tmpl->errstr ) );
+        my $tmpl_plain = $app->load_tmpl('preview_entry_content.tmpl');
+        $tmpl->text( $tmpl_plain->text );
+        $html = $tmpl->output;
+        defined($html)
+            or return $app->error(
+            $app->translate( "Publish error: [_1]", $tmpl->errstr ) );
+
+        $html = $app->translate_templatized($html);
+
+    }
 
     my %param = (
-        preview_content => $html,
         title           => $entry->title,
         permalink       => MT::Util::encode_html( $entry->permalink ),
+        preview_content => $html,
+        preview_error   => $preview_error,
         edit_uri_params => $app->uri_params(
             mode => 'view',
             args => { blog_id => $app->blog->id, _type => $type, id => $id },

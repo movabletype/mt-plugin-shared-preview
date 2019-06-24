@@ -154,7 +154,17 @@
       </ul>
     </div>
     </nav>
-
+<mt:setvarblock name="system_msg">
+<mtapp:statusmsg
+   id="preview-build-error"
+   class="error"
+   can_close="0">
+  <mt:var name="preview_error">
+</mtapp:statusmsg>
+</mt:setvarblock>
+<mt:if name="preview_error">
+<mt:var name="system_msg">
+</mt:if>
     <table id="entry-preview-layout" class="preview-layout">
     <tr>
       <td id="entry-preview-content" class="preview-content">
