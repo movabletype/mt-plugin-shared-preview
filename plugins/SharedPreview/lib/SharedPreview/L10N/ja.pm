@@ -6,7 +6,7 @@ use base 'SharedPreview::L10N';
 use utf8;
 
 our %Lexicon = (
-    'Open the share preview'                                         => '共有プレビューを開く',
+    'Open the shared preview'                                        => '共有プレビューを開く',
     'Add Password.'                                                  => 'パスワードを追加',
     'Copy'                                                           => 'コピー',
     'Copied to the clip board.'                                      => 'クリップボードへコピーしました',
