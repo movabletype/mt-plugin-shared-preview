@@ -33,19 +33,9 @@
 
 <script type="text/javascript">
 jQuery(function($) {
-    jQuery('input[name="sp_password[]"]').each(function(){
-        jQuery(this).on('invalid', function(e) {
-            var message = "";
-            if (this.validity.patternMismatch) {
-                message = "<__trans phrase="Use basic Latin characters only.">";
-            }
-            e.target.setCustomValidity(message);
-        });
-    });
-
     switchSharedPreviewPasswordField();
     jQuery('button.delete-password').on('click', function () {
-        clickDeletePassword(this)
+        clickDeletePassword(this);
     });
 
     jQuery('input[name=use_password]').on('change', function(){
@@ -54,6 +44,7 @@ jQuery(function($) {
 
     jQuery('#add_password').on('click', function(){
         setPasswordArea();
+        setSpValidate();
     });
 
     jQuery('form').on('submit', function(){
@@ -62,6 +53,11 @@ jQuery(function($) {
         }
 
         if (jQuery(this).find('input[name="sp_password[]"]').length < 1) {
+            return;
+        }
+
+        if (jQuery(this).find('input[name="use_password"]').prop('checked') === false) {
+            jQuery(this).find('input[name="sp_password[]"]').remove();
             return;
         }
 
@@ -112,6 +108,7 @@ jQuery(function($) {
         var checkedValue = $('input[name=use_password]:checked').val();
         if (checkedValue == 1) {
             jQuery('#password-field').show();
+            setSpValidate();
         } else {
             jQuery('#password-field').hide();
         }
@@ -129,5 +126,27 @@ jQuery(function($) {
         }
     }
 
+    function setSpValidate() {
+        jQuery('input[name="sp_password[]"]').off('invalid');
+        jQuery('input[name="sp_password[]"]').on('invalid', function(e) {
+            var target = e.target;
+            var message = '';
+
+            if (target.validity.patternMismatch) {
+                message = "<__trans phrase="Use basic Latin characters only.">";
+                target.setCustomValidity(message);
+            } else {
+                target.setCustomValidity('');
+            }
+
+            if (target.validity.customError === false
+                && target.validity.patternMismatch === false
+                && target.validity.valueMissing === false)
+            {
+                e.preventDefault();
+            }
+
+        });
+    }
 });
 </script>
