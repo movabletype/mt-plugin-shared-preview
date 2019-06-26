@@ -105,8 +105,7 @@ jQuery(function($) {
     }
 
     function switchSharedPreviewPasswordField() {
-        var checkedValue = $('input[name=use_password]:checked').val();
-        if (checkedValue == 1) {
+        if ($('input[name=use_password]').prop('checked')) {
             jQuery('#password-field').show();
             setSpValidate();
         } else {
