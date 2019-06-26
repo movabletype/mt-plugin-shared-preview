@@ -100,9 +100,9 @@ sub start_session {
     return $make_session->errstr if $make_session->errstr;
 
     my %arg = (
-        -name    => 'shared_preview_' . $blog_id,
-        -value   => $make_session->id,
-        -path    => $app->config->CookiePath || $app->mt_path,
+        -name  => 'shared_preview_' . $blog_id,
+        -value => $make_session->id,
+        -path  => $app->config->CookiePath || $app->mt_path,
     );
 
     $arg{-expires} = '+3M' if $remember;

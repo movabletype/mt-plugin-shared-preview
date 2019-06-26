@@ -147,7 +147,8 @@ sub shared_preview {
     $param->{spid}      = $preview_id;
     $param->{site_name} = $site->name;
     $param->{site_url}  = $site->site_url;
-    $param->{preview_content} =  $app->translate_templatized($param->{preview_content});
+    $param->{preview_content}
+        = $app->translate_templatized( $param->{preview_content} );
 
     return $app->component('SharedPreview')
         ->load_tmpl( 'shared_preview_strip.tmpl', $param );
