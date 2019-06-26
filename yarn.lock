@@ -32,7 +32,7 @@ isstream@0.1.x:
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
   integrity sha1-R+Y/evVa+m+S4VAOaQ64uFKcCZo=
 
-"mt7-style-guide@git+ssh://git@github.com:movabletype/mt7-style-guide.git#5abccab6036fe7d4b99d9c08d51f64c16771b990":
+"mt7-style-guide@git+ssh://git@github.com:movabletype/mt7-style-guide.git":
   version "1.0.0"
   resolved "git+ssh://git@github.com:movabletype/mt7-style-guide.git#5abccab6036fe7d4b99d9c08d51f64c16771b990"
   dependencies:
