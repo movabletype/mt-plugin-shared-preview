@@ -134,7 +134,11 @@ jQuery(function($) {
             if (target.validity.patternMismatch) {
                 message = "<__trans phrase="Use basic Latin characters only.">";
                 target.setCustomValidity(message);
-            } else {
+            } else if (target.validity.valueMissing) {
+                message = "<__trans phrase="Please fill out this field.">";
+                target.setCustomValidity(message);
+            }
+            else {
                 target.setCustomValidity('');
             }
 
