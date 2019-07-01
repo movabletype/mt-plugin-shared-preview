@@ -164,8 +164,10 @@ sub validate_preview_id {
 sub shared_preview_link {
     my ( $app, $type, $href ) = @_;
     my $link_name = $app->translate('Shared Preview');
+    my $link_title = $app->translate('Open the shared preview');;
+    my $widget = '<div id="content-data-status-widget" class="mt-widget status-widget d-none d-md-flex"><h2 class="mt-widget__title">'.$link_name.'</h2><div class="mt-widget__content"><div><a href="'. $href .'" class="btn btn-default w-100 text-dark" role="button">'.$link_title.'</a></div></div></div>';
     return <<"__JS__";
-jQuery('button[name=preview_$type]').after('<div id="shared_preview" class="text-right"><a href="$href">$link_name</a></div>');
+    jQuery('#entry-publishing-widget').before('$widget');
 __JS__
 }
 
