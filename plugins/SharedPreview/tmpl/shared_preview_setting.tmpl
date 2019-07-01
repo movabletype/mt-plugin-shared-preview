@@ -34,6 +34,8 @@
 <script type="text/javascript">
 jQuery(function($) {
     switchSharedPreviewPasswordField();
+    jQuery('#use_password-field').parents('form').find('.reset').remove();
+
     jQuery('button.delete-password').on('click', function () {
         clickDeletePassword(this);
     });
