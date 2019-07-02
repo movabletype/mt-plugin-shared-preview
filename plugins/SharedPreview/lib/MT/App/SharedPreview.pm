@@ -149,6 +149,7 @@ sub shared_preview {
     $param->{site_url}  = $site->site_url;
     $param->{preview_content}
         = $app->translate_templatized( $param->{preview_content} );
+    $param->{mt_static_shared_preview} = $app->static_path . 'plugins/SharedPreview/';
 
     return $app->component('SharedPreview')
         ->load_tmpl( 'shared_preview_strip.tmpl', $param );
