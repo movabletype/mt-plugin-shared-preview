@@ -1,5 +1,7 @@
 # SharedPreview プラグイン for Movable Type
 
+[![CircleCI](https://circleci.com/gh/movabletype/mt-plugin-shared-preview.svg?style=svg)](https://circleci.com/gh/movabletype/mt-plugin-shared-preview)
+
 ## ダウンロード
 
 [更新履歴](https://github.com/movabletype/mt-plugin-jp-shared-preview/releases)
