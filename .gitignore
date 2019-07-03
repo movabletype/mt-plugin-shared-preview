@@ -36,3 +36,5 @@ inc/
 
 *.sw?
 
+node_modules/
+
