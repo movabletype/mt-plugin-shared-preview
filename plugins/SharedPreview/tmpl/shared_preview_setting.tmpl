@@ -17,16 +17,16 @@
   <p><__trans phrase="Use basic Latin characters only."></p>
   <mt:loop name="sp_password[]">
   <mt:setvar name="is_loop" value="1">
-  <ul id="sp_password_block<mt:var name="__counter__" escape="html">" class="list-inline mb-0">
-    <li class="list-inline-item w-25">
+  <ul id="sp_password_block<mt:var name="__counter__" escape="html">" class="list-inline mb-0" style="clear: both;">
+    <li class="list-inline-item w-25 float-left">
       <input type="text" name="sp_password[]" class="form-control" value="<mt:var name="__value__" escape="html">" data-index="<mt:var name="__counter__" escape="html">" maxlength="20" />
     </li>
     <li class="list-inline-item delete-password-btn" <mt:if name="__counter__" eq="1">style="display: none;"</mt:if>>
-      <button type="button" class="btn btn-default btn-sm delete-password" data-target="#sp_password_block<mt:var name="__counter__" escape="html">"><svg title="<__trans phrase="Delete">" role="img" class="mt-icon mt-icon--sm"><use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_trash"></use></svg><__trans phrase="Delete"></button>
+        <button type="button" class="btn btn-default btn-sm delete-password" data-target="#sp_password_block<mt:var name="__counter__" escape="html">" style="margin-top: 3px;"><svg title="<__trans phrase="Delete">" role="img" class="mt-icon mt-icon--sm"><use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_trash"></use></svg><__trans phrase="Delete"></button>
     </li>
   </ul>
   </mt:loop>
-  <div>
+  <div style="clear: both;">
     <a href="javascript:void(0);" id="add_password" ><__trans phrase="Add Password."></a>
   </div>
 </mtapp:setting>
