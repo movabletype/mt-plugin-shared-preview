@@ -111,8 +111,12 @@
         margin: 0;
         width: 18px;
       }
-      </style>
 
+      .item-link {
+          padding:0px;
+      }
+
+      </style>
       <nav class="mt-sharedPreviewNav">
         <a class="mt-sharedPreviewNav__logo">
           <img src="<$mt:var name="static_uri" escape="html"$>images/logo-mark-mono.svg" alt="Movable Type">
@@ -130,23 +134,23 @@
         </ul>
         <ul class="mt-sharedPreviewNav__rightNav">
           <li class="mt-sharedPreviewNav__item">
-            <a href="<mt:var name="back_edit" escape="html">" id="edit" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Go to the edit page">">
+            <a class="btn item-link" href="<mt:var name="back_edit" escape="html">" id="edit" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Go to the edit page">">
               <svg title="Edit" class="mt-icon--inverse mt-icon">
-                <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_edit">
+                <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_edit"></use>
               </svg>
             </a>
           </li>
           <li class="mt-sharedPreviewNav__item">
-            <a href="javascript:void(0);" id="show-preview-url" class="copy-popover" data-toggle="tooltip" data-placement="bottom" data-href="<mt:var name="script_full_url" escape="html">" title="<__trans phrase="Show the shared preview link">">
+            <a class="btn item-link copy-popover" href="javascript:void(0);" id="show-preview-url" class="copy-popover" data-toggle="tooltip" data-placement="bottom" data-href="<mt:var name="script_full_url" escape="html">?__mode=shared_preview&spid=<mt:var name="spid" escape="url" escape="html">" title="<__trans phrase="Show the shared preview link">">
               <svg title="Preview" class="mt-icon--inverse mt-icon">
-                <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_preview">
+                <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_preview"></use>
               </svg>
             </a>
           </li>
           <li class="mt-sharedPreviewNav__item">
-            <a href="javascript:void(0);" id="show-permalink" class="copy-popover" data-toggle="tooltip" data-placement="bottom" data-href="<mt:var name="permalink" escape="html">" title="<__trans phrase="Show permalink at publication">">
+            <a class="btn item-link copy-popover" href="javascript:void(0);" id="show-permalink" class="copy-popover" data-toggle="tooltip" data-placement="bottom" data-href="<mt:var name="permalink" escape="html">" title="<__trans phrase="Show permalink at publication">">
               <svg title="Permalink" class="mt-icon--inverse mt-icon">
-                <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_permalink">
+                <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_permalink"></use>
               </svg>
             </a>
           </li>
@@ -176,6 +180,7 @@
         </tr>
       </table>
       <script type="text/javascript">
+      /* <![CDATA[ */
         svg4everybody();
 
       <mt:unless name="delayed_bootstrap">
@@ -244,7 +249,7 @@
                 content = '<div><span><__trans phrase="No permalink at publication"></span></div>';
               }
               jQuery(event.target).attr('data-content', content);
-              console.log(jQuery(event.target));
+
               jQuery('.copy-popover').popover('hide');
               jQuery('[data-toggle=tooltip]').tooltip('hide');
             }).on('shown.bs.popover', function (event) {
@@ -261,6 +266,7 @@
             checkPopover(event);
           });
         });
+        /* ]]> */
       </script>
   </body>
 </html>
