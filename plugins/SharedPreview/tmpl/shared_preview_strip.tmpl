@@ -78,45 +78,45 @@
 <mt:var name="js_include" escape="none">
     <script type="text/javascript" src="<mt:var name="static_uri" escape="html">popper/popper.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>bootstrap/js/bootstrap.js?v=<$mt:var name="mt_version_id" escape="url" escape="html"$>"></script>
-  </head>
-  <body class="<mt:if name="scope_type" eq="user">user system <mt:else><mt:var name="scope_type" escape="html"> </mt:if>main-screen preview-screen">
-      <style type="text/css">
-      .popover {
-        margin-top: 20px;
-      }
+    <style type="text/css">
+        .popover {
+          margin-top: 20px;
+        }
 
-      .popover-header {
-        background-color: #fff;
-        border-bottom: 0;
-        margin-top: 0;
-        padding: 13px 15px 9px 15px;
-      }
+        .popover-header {
+          background-color: #fff;
+          border-bottom: 0;
+          margin-top: 0;
+          padding: 13px 15px 9px 15px;
+        }
 
-      .popover-body {
-        background-color: #fff;
-        padding: 0 15px 10px 15px;
-      }
+        .popover-body {
+          background-color: #fff;
+          padding: 0 15px 10px 15px;
+        }
 
-      .popover-body input[name=target_link] {
-        background-color: #fff!important;
-        padding: 6px 12px 6px 12px;
-      }
-      .popover-body .input-group-text {
-        padding-left: 8px;
-        padding-right: 8px;
-      }
+        .popover-body input[name=target_link] {
+          background-color: #fff!important;
+          padding: 6px 12px 6px 12px;
+        }
+        .popover-body .input-group-text {
+          padding-left: 8px;
+          padding-right: 8px;
+        }
 
-      .popover-body svg {
-        height: 18px;
-        margin: 0;
-        width: 18px;
-      }
+        .popover-body svg {
+          height: 18px;
+          margin: 0;
+          width: 18px;
+        }
 
-      .item-link {
-          padding:0px;
-      }
+        .item-link {
+            padding:0px;
+        }
 
       </style>
+  </head>
+  <body class="<mt:if name="scope_type" eq="user">user system <mt:else><mt:var name="scope_type" escape="html"> </mt:if>main-screen preview-screen">
       <nav class="mt-sharedPreviewNav">
         <a class="mt-sharedPreviewNav__logo">
           <img src="<$mt:var name="static_uri" escape="html"$>images/logo-mark-mono.svg" alt="Movable Type">
