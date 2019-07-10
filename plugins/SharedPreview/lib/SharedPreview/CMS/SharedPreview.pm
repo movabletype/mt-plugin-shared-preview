@@ -21,7 +21,7 @@ sub make_shared_preview {
     return $app->errtrans('Invalid request') unless $blog_id;
 
     my $obj_class = $app->model($type);
-    return $app->errtrans( 'invalid type: [_1]', $type )
+    return $app->errtrans( 'Invalid type: [_1]', $type )
         unless $obj_class;
 
     my $permission_result
@@ -51,7 +51,8 @@ sub make_shared_preview {
 
         $preview->save
             or return $app->errtrans(
-            "Could not create shared preview link : " . $preview->errstr );
+            "Could not create shared preview link: [_1]",
+            $preview->errstr );
     }
 
     $preview_id = $preview->id;

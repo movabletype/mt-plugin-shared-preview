@@ -48,12 +48,14 @@ sub login {
     my $need_login = SharedPreview::Auth::need_login($plugin_data);
     return $app->redirect( $app->uri(@uri) ) unless $need_login;
 
+    $app->set_language( $site->language );
+
     return load_login_form( $app, $preview_data, $site )
         if $app->request_method ne 'POST';
 
     my $password = $app->param('password');
-    return load_login_form( $app, $preview_data, $site,
-        $app->translate('You must supply a password.') )
+    return load_login_form( $app, $preview_data,
+        $site, $app->translate('You must supply a password.') )
         unless $password;
 
     my $check_result
@@ -149,7 +151,8 @@ sub shared_preview {
     $param->{site_url}  = $site->site_url;
     $param->{preview_content}
         = $app->translate_templatized( $param->{preview_content} );
-    $param->{mt_static_shared_preview} = $app->static_path . 'plugins/SharedPreview/';
+    $param->{mt_static_shared_preview}
+        = $app->static_path . 'plugins/SharedPreview/';
 
     return $app->component('SharedPreview')
         ->load_tmpl( 'shared_preview_strip.tmpl', $param );
@@ -169,8 +172,6 @@ sub set_app_parameters {
 
 sub load_login_form {
     my ( $app, $preview_data, $site, $error ) = @_;
-
-    $app->set_language( $site->language );
     $app->response_code(401);
 
     return $app->component('SharedPreview')->load_tmpl(

@@ -19,11 +19,11 @@ our %Lexicon = (
     'Show the shared preview link'                                   => '共有プレビューリンクを取得',
     'This password is different from your login password.'           => 'アカウントのログイン用パスワードとは異なります。',
     'Use password'                                                   => 'パスワードを使用',
-    'password is required to display this share preview.'            => '共有プレビューの表示にはパスワードが必要です。',
-    'Could not create shared preview link : '                        => '共有プレビューの作成ができませんでした。',
+    'Password is required to display this shared preview.'           => '共有プレビューの表示にはパスワードが必要です。',
+    'Could not create shared preview link: [_1]'                     => '共有プレビューの作成ができませんでした。: [_1]',
     'Use basic Latin characters only.'                               => '半角英数字のみ利用できます。',
     'Please fill out this field.'                                    => 'このフィールドを入力してください。',
-    'No permalink at publication'                                    => '公開時のパーマリンクがありません。'
+    'No permalink at publication'                                    => '公開時のパーマリンクがありません。',
 );
 
 1;
