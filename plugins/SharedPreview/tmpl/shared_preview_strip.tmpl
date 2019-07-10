@@ -189,7 +189,8 @@
 
         jQuery('#frame').load( function() {
           if (jQuery(this.contentDocument.body).html() == '') {
-            jQuery(this.contentDocument.body).html(jQuery(this).attr('srcdoc'));
+            var html = jQuery(this).attr('srcdoc');
+            this.contentWindow.document.write(html);
           }
 
           frameResize();
