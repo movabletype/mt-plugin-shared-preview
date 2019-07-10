@@ -163,40 +163,53 @@ sub validate_preview_id {
 
 sub shared_preview_link {
     my ( $app, $type, $href ) = @_;
-    my $link_name = $app->translate('Shared Preview');
-    my $link_title = $app->translate('Open the shared preview');;
-    my $widget = '<div id="content-data-status-widget" class="mt-widget status-widget d-none d-md-flex"><h2 class="mt-widget__title">'.$link_name.'</h2><div class="mt-widget__content"><div><a href="'. $href .'" class="btn btn-default w-100 text-dark" role="button">'.$link_title.'</a></div></div></div>';
+
+    my $tmpl = $app->component('SharedPreview')
+        ->load_tmpl( 'shared_preview_widget.tmpl', { 'href' => $href } );
+
+    return '' unless $tmpl;
+
+    my $output = $app->translate_templatized( $tmpl->output )
+        if $tmpl->output;
+    $output =~ s/\r|\r\n|\n//g if $output;
+
     return <<"__JS__";
-    jQuery('#entry-publishing-widget').before('$widget');
+    jQuery('#entry-publishing-widget').before('$output');
 __JS__
 }
 
 sub shared_preview_message {
     my ( $app, $href ) = @_;
-    my $message = $app->translate('Open the shared preview');
-    my $type    = $app->param('_type');
-
+    my $type        = $app->param('_type');
+    my $action_type = '';
     my $action_flag = $app->param('saved_added');
+    $action_type = 'saved-added' if $action_flag;
 
-    if ($action_flag) {
-        if ( $type eq 'content_data' ) {
-            return <<"__JS__";
-jQuery('#saved-added').after('<div id="saved-shared-preview" class="alert alert-success alert-dismissable first-child"><button type="button" class="close first-child" data-dismiss="alert" aria-label="Close"><span aria-hidden="true" class="first-child last-child">&times;</span></button><a href="$href" class="last-child">$message</a></div>');
-__JS__
-        }
+    $action_flag = $app->param('saved_changes') unless $action_type;
+    $action_type = 'saved-changes' if $action_flag && !$action_type;
 
-        return <<"__JS__";
-    jQuery('#saved-added').append('<a href="$href" class="last-child">$message</a>');
-__JS__
+    return '' unless $action_type;
 
-    }
+    my $tmpl
+        = $app->component('SharedPreview')
+        ->load_tmpl( 'shared_preview_message.tmpl',
+        { 'href' => $href, 'action_type' => $action_type, 'type' => $type } );
 
-    $action_flag = $app->param('saved_changes');
+    return '' unless $tmpl;
+    my $output = $tmpl->output;
 
-    return '' unless $action_flag;
+    $output = $app->translate_templatized($output)
+        if $output;
+    $output =~ s/\r|\r\n|\n//g if $output;
+
+    return '' unless $output;
+
+    my $method = 'append';
+    $method = 'after'
+        if ( $action_type eq 'saved-added' && $type eq 'content_data' );
 
     return <<"__JS__";
-    jQuery('#saved-changes').append('<a href="$href" class="last-child">$message</a>');
+jQuery('#$action_type').$method('$output');
 __JS__
 
 }
