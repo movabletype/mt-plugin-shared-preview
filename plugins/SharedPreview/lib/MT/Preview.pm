@@ -10,7 +10,7 @@ use warnings;
 
 use MT::Object;
 use MT::Serialize;
-use MT::Util qw( perl_sha1_digest_hex );
+use MT::Util qw( perl_sha1_digest_hex encode_js);
 
 @MT::Preview::ISA = qw(MT::Object);
 
@@ -169,9 +169,12 @@ sub shared_preview_link {
 
     return '' unless $tmpl;
 
-    my $output = $app->translate_templatized( $tmpl->output )
-        if $tmpl->output;
+    my $output = $tmpl->output or return '';
+
+    $output = $app->translate_templatized($output)
+        if $output;
     $output =~ s/\r|\r\n|\n//g if $output;
+    $output = encode_js($output);
 
     return <<"__JS__";
     jQuery('#entry-publishing-widget').before('$output');
@@ -180,33 +183,36 @@ __JS__
 
 sub shared_preview_message {
     my ( $app, $href ) = @_;
-    my $type        = $app->param('_type');
-    my $action_type = '';
-    my $action_flag = $app->param('saved_added');
-    $action_type = 'saved-added' if $action_flag;
+    my $type   = $app->param('_type');
+    my $method = 'append';
+    my $add_content_data;
+    my $action_type;
 
-    $action_flag = $app->param('saved_changes') unless $action_type;
-    $action_type = 'saved-changes' if $action_flag && !$action_type;
+    if ( $app->param('saved_added') ) {
+        $action_type = 'saved-added';
+        if ( $type eq 'content_data' ) {
+            $add_content_data = '1';
+            $method           = 'after';
+        }
+    }
+    elsif ( $app->param('saved_changes') ) {
+        $action_type = 'saved-changes';
+    }
 
     return '' unless $action_type;
 
     my $tmpl
         = $app->component('SharedPreview')
         ->load_tmpl( 'shared_preview_message.tmpl',
-        { 'href' => $href, 'action_type' => $action_type, 'type' => $type } );
+        { 'href' => $href, 'add_content_data' => $add_content_data } );
 
     return '' unless $tmpl;
-    my $output = $tmpl->output;
+    my $output = $tmpl->output or return '';
 
     $output = $app->translate_templatized($output)
         if $output;
     $output =~ s/\r|\r\n|\n//g if $output;
-
-    return '' unless $output;
-
-    my $method = 'append';
-    $method = 'after'
-        if ( $action_type eq 'saved-added' && $type eq 'content_data' );
+    $output = encode_js($output);
 
     return <<"__JS__";
 jQuery('#$action_type').$method('$output');
