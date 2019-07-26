@@ -1,14 +1,3 @@
-<mtapp:setting
-   id="use_password">
-  <ul class="list-unstyled">
-    <li>
-      <div class="custom-control custom-checkbox">
-        <input type="checkbox" name="use_password" id="use" class="custom-control-input" value="1"<mt:if name="use_password"> checked="checked"</mt:if> />
-        <label class="custom-control-label" for="use"><__trans phrase="Use password"></label>
-      </div>
-    </li>
-  </ul>
-</mtapp:setting>
 
 <mtapp:setting
     id="password"
@@ -33,15 +22,9 @@
 
 <script type="text/javascript">
 jQuery(function($) {
-    switchSharedPreviewPasswordField();
-    jQuery('#use_password-field').parents('form').find('.reset').remove();
 
     jQuery('button.delete-password').on('click', function () {
         clickDeletePassword(this);
-    });
-
-    jQuery('input[name=use_password]').on('change', function(){
-        switchSharedPreviewPasswordField();
     });
 
     jQuery('#add_password').on('click', function(){
@@ -55,11 +38,6 @@ jQuery(function($) {
         }
 
         if (jQuery(this).find('input[name="sp_password[]"]').length < 1) {
-            return;
-        }
-
-        if (jQuery(this).find('input[name="use_password"]').prop('checked') === false) {
-            jQuery(this).find('input[name="sp_password[]"]').remove();
             return;
         }
 
@@ -104,17 +82,6 @@ jQuery(function($) {
         });
 
         jQuery(target).after(copy);
-    }
-
-    function switchSharedPreviewPasswordField() {
-        if ($('input[name=use_password]').prop('checked')) {
-            jQuery('#password-field').show();
-            setSpValidate();
-        } else {
-            jQuery('input[name="sp_password[]"]').off('invalid');
-            jQuery('input[name="sp_password[]"]').removeAttr('required').removeAttr('pattern');
-            jQuery('#password-field').hide();
-        }
     }
 
     function clickDeletePassword(event) {
