@@ -1,167 +1,289 @@
-<mt:setvar name="edit_button_value" value="<__trans phrase="Return to the compose screen">">
-<mt:setvar name="edit_button_title" value="<__trans phrase="Return to the compose screen (e)">">
-<mt:if name="object_type" eq="entry">
-  <mt:if name="status" eq="2">
-    <mt:setvar name="save_button_value" value="<__trans phrase="Publish this entry">">
-    <mt:setvar name="save_button_title" value="<__trans phrase="Publish this entry (s)">">
-  <mt:else>
-    <mt:setvar name="save_button_value" value="<__trans phrase="Save this entry">">
-    <mt:setvar name="save_button_title" value="<__trans phrase="Save this entry (s)">">
-  </mt:if>
-    <mt:setvar name="edit_button_value" value="<__trans phrase="Re-Edit this entry">">
-    <mt:setvar name="edit_button_title" value="<__trans phrase="Re-Edit this entry (e)">">
-<mt:else>
-  <mt:if name="status" eq="2">
-    <mt:setvar name="save_button_value" value="<__trans phrase="Publish this page">">
-    <mt:setvar name="save_button_title" value="<__trans phrase="Publish this page (s)">">
-  <mt:else>
-    <mt:setvar name="save_button_value" value="<__trans phrase="Save this page">">
-    <mt:setvar name="save_button_title" value="<__trans phrase="Save this page (s)">">
-  </mt:if>
-    <mt:setvar name="edit_button_value" value="<__trans phrase="Re-Edit this page">">
-    <mt:setvar name="edit_button_title" value="<__trans phrase="Re-Edit this page (e)">">
-</mt:if>
-
 <!DOCTYPE html>
-<html lang="<$mt:var name="language_tag"$>">
+<html lang="<$mt:var name="language_tag" escape="html" $>">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta charset="<$mt:var name="language_encoding"$>" />
-    <title><__trans phrase="Preview"> | <$mt:var name="mt_product_name"$></title>
-    <link rel="icon" href="<$mt:var name="static_uri"$>images/favicon.ico" type="image/ico" />
+    <meta charset="<$mt:var name="language_encoding" escape="html"$>" />
+    <title><__trans phrase="Preview"> | <$mt:var name="mt_product_name" escape="html"$></title>
+    <link rel="icon" href="<$mt:var name="static_uri" escape="html"$>images/favicon.ico" type="image/ico" />
 <mt:if name="feed_url">
     <link type="application/atom+xml" rel="alternate" <mt:if name="feed_name">title="<mt:var name="feed_name" escape="html">" </mt:if>href="<mt:var name="feed_url" escape="html">" />
 </mt:if>
 <mt:unless name="optimize_ui">
-    <link rel="stylesheet" href="<$mt:var name="static_uri"$>styles.css?v=<mt:var name="mt_version_id" escape="url">" type="text/css" />
-    <link rel="stylesheet" href="<$mt:var name="static_uri"$>css/mt.css?v=<mt:var name="mt_version_id" escape="url">" type="text/css" />
+    <link rel="stylesheet" href="<$mt:var name="static_uri" escape="html"$>styles.css?v=<mt:var name="mt_version_id" escape="url" escape="html">" type="text/css" />
+    <link rel="stylesheet" href="<$mt:var name="mt_static_shared_preview" escape="html"$>css/mt.css?v=<mt:var name="mt_version_id" escape="url" escape="html">" type="text/css" />
 <mt:else>
-    <link rel="stylesheet" href="<$mt:var name="static_uri"$>css/main.css?v=<mt:var name="mt_version_id" escape="url">" type="text/css" />
-    <link rel="stylesheet" href="<$mt:var name="static_uri"$>css/mt.min.css?v=<mt:var name="mt_version_id" escape="url">" type="text/css" />
+    <link rel="stylesheet" href="<$mt:var name="static_uri" escape="html"$>css/main.css?v=<mt:var name="mt_version_id" escape="url" escape="html">" type="text/css" />
+    <link rel="stylesheet" href="<$mt:var name="mt_static_shared_preview" escape="html"$>css/mt.min.css?v=<mt:var name="mt_version_id" escape="url" escape="html">" type="text/css" />
 </mt:unless>
     <!--[if IE]>
-    <link rel="stylesheet" href="<$mt:var name="static_uri"$>css/hacks/ie.css?v=<mt:var name="mt_version_id" escape="url">" type="text/css" />
+    <link rel="stylesheet" href="<$mt:var name="static_uri" escape="html"$>css/hacks/ie.css?v=<mt:var name="mt_version_id" escape="url" escape="html">" type="text/css" />
     <![endif]-->
 <mt:if name="local_lang_id" ne="en-us">
-    <link rel="stylesheet" href="<$mt:var name="static_uri"$>styles_<$mt:var name="local_lang_id"$>.css?v=<mt:var name="mt_version_id" escape="url">" />
+    <link rel="stylesheet" href="<$mt:var name="static_uri" escape="html"$>styles_<$mt:var name="local_lang_id" escape="html"$>.css?v=<mt:var name="mt_version_id" escape="url" escape="html">" />
 </mt:if>
     <script type="text/javascript">
       /* <![CDATA[ */
-      CMSScriptURI = '<$mt:var name="mt_url"$>';
-      ScriptURI = '<$mt:var name="script_url"$>';
-      ScriptBaseURI = '<$mt:var name="script_base_url"$>';
-      StaticURI = '<$mt:var name="static_uri"$>';
-      HelpBaseURI = '<$mt:var name="help_url"$>';
+      CMSScriptURI = '<$mt:var name="mt_url" escape="javascript" escape="html"$>';
+      ScriptURI = '<$mt:var name="script_url" escape="javascript" escape="html"$>';
+      ScriptBaseURI = '<$mt:var name="script_base_url" escape="javascript" escape="html"$>';
+      StaticURI = '<$mt:var name="static_uri" escape="javascript" escape="html"$>';
+      HelpBaseURI = '<$mt:var name="help_url" escape="javascript" escape="html"$>';
       /* ]]> */
     </script>
 <mt:unless name="optimize_ui">
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery-migrate.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Core.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/JSON.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Timer.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Cookie.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/DOM.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Devel.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Observable.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Autolayout.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Component.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/List.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/App.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Cache.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Client.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/common/Template.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/tc.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/tc/tableselect.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.validate.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.json.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jqueryui/jquery-ui.js?v=<$mt:var name="mt_version_id" escape="url"$>"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>svg4everybody/svg4everybody.js?v=<$mt:var name="mt_version_id" escape="url"$>"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery-migrate.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Core.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/JSON.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Timer.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Cookie.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/DOM.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Devel.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Observable.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Autolayout.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Component.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/List.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/App.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Cache.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Client.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Template.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/tc.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/tc/tableselect.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.validate.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.json.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jqueryui/jquery-ui.js?v=<$mt:var name="mt_version_id" escape="url" escape="html"$>"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>svg4everybody/svg4everybody.js?v=<$mt:var name="mt_version_id" escape="url" escape="html"$>"></script>
 <mt:else>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.min.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery-migrate.min.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>js/mt_core_compact.js?v=<mt:var name="mt_version_id" escape="url">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.validate.min.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.json.min.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jqueryui/jquery-ui.min.js?v=<$mt:var name="mt_version_id" escape="url"$>"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>svg4everybody/svg4everybody.min.js?v=<$mt:var name="mt_version_id" escape="url"$>"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery-migrate.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/mt_core_compact.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.validate.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.json.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jqueryui/jquery-ui.min.js?v=<$mt:var name="mt_version_id" escape="url" escape="html"$>"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>svg4everybody/svg4everybody.min.js?v=<$mt:var name="mt_version_id" escape="url" escape="html"$>"></script>
 </mt:unless>
-<mt:var name="html_head">
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>mt.js?v=<mt:var name="mt_version_id" escape="url">"></script>
+<mt:var name="html_head" escape="none">
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>mt.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
 <mt:if name="local_lang_id" eq="en-us">
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>mt_en_us.js?v=<mt:var name="mt_version_id" escape="URL">" charset="utf-8"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>mt_en_us.js?v=<mt:var name="mt_version_id" escape="url" escape="html">" charset="utf-8"></script>
 <mt:else>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>mt_<$mt:var name="local_lang_id"$>.js?v=<mt:var name="mt_version_id" escape="URL">" charset="utf-8"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>mt_<$mt:var name="local_lang_id"$>.js?v=<mt:var name="mt_version_id" escape="url" escape="html">" charset="utf-8"></script>
 </mt:if>
 <mt:unless name="optimize_ui">
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.mt.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.mt.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
 <mt:else>
-    <script type="text/javascript" src="<$mt:var name="static_uri"$>jquery/jquery.mt.min.js?v=<mt:var name="mt_version_id" escape="URL">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.mt.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
 </mt:unless>
-<mt:var name="js_include">
-  </head>
-  <body class="<mt:if name="scope_type" eq="user">user system <mt:else><mt:var name="scope_type"> </mt:if>main-screen preview-screen">
-    <div id="brand">
-      <span><img alt="<$mt:var name="mt_product_name"$>" src="<$mt:var name="static_uri"$>images/logo/movable-type-logo.png" /></span>
-    </div>
-    <table id="entry-preview-layout" class="preview-layout">
-      <tr>
-        <td id="entry-preview-control-strip" class="preview-control-strip">
-          <p id="entry-preview-label" class="preview-label"><mt:if name="object_type" eq="entry"><__trans phrase="You are previewing the entry entitled &ldquo;[_1]&rdquo;" params="<$mt:var name="title" remove_html="1" escape="html"$>"><mt:else><__trans phrase="You are previewing the page entitled &ldquo;[_1]&rdquo;" params="<$mt:var name="title" remove_html="1" escape="html"$>"></mt:if></p>
-          <form method="post" action="<$mt:var name="script_url"$>" mt:once="1">
-            <input type="hidden" name="__mode" value="save_entry" />
-            <input type="hidden" name="_type" value="<$mt:var name="object_type"$>" />
-            <input type="hidden" name="magic_token" value="<$mt:var name="magic_token"$>" />
-            <input type="hidden" name="_preview_file" value="<$mt:var name="preview_file" escape="html"$>" />
-            <input type="hidden" name="dirty" value="1" />
-<mt:loop name="entry_loop">
-            <input type="hidden" name="<$mt:var name="data_name" escape="html"$>" value="<$mt:var name="data_value" escape="html"$>" />
-</mt:loop>        
-<mt:setvarblock name="action_buttons">
-  <button
-     mt:mode="view"
-     type="submit"
-     name="reedit"
-     value="reedit"
-     accesskey="e"
-     title="<$mt:var name="edit_button_title"$>"
-     class="btn btn-default action">
-    <mt:var name="edit_button_value">
-  </button>
-</mt:setvarblock>
-<mt:include name="include/actions_bar.tmpl" bar_position="bottom" hide_pager="1" settings_bar="1">
-          </form>
-        </td>
-      </tr>
-      <tr>
-        <td id="entry-preview-content" class="preview-content">
-          <iframe id="frame" frameborder="0" scrolling="auto" srcdoc='<$mt:var name="preview_content"$>' onclick="return TC.stopEvent(event);"></iframe>
-        </td>
-      </tr>
-    </table>
-
-    <div id="bootstrapper" class="hidden"></div>
-
-    <script type="text/javascript">
-      /* <![CDATA[ */
-      svg4everybody();
-
-<mt:unless name="delayed_bootstrap">
-      App.bootstrapInline( false );
-</mt:unless>
-      jQuery(function() {
-        if (typeof document.body.style.maxHeight == "undefined") {
-          jQuery('#brand span').pngfix();
+<mt:var name="js_include" escape="none">
+    <script type="text/javascript" src="<mt:var name="static_uri" escape="html">popper/popper.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>bootstrap/js/bootstrap.js?v=<$mt:var name="mt_version_id" escape="url" escape="html"$>"></script>
+    <style type="text/css">
+        .popover {
+          margin-top: 20px;
         }
-      });
-      jQuery('#frame').load( function() {
-        jQuery(this).height( jQuery(window).height() - jQuery('#entry-preview-control-strip').height() );
-      });
-      jQuery(window).resize( function() {
-        jQuery('#frame').height( jQuery(window).height() - jQuery('#entry-preview-control-strip').height() );
-      });
-      /* ]]> */
-    </script>
+
+        .popover-header {
+          background-color: #fff;
+          border-bottom: 0;
+          margin-top: 0;
+          padding: 13px 15px 9px 15px;
+        }
+
+        .popover-body {
+          background-color: #fff;
+          padding: 0 15px 10px 15px;
+        }
+
+        .popover-body input[name=target_link] {
+          background-color: #fff!important;
+          padding: 6px 12px 6px 12px;
+        }
+        .popover-body .input-group-text {
+          padding-left: 8px;
+          padding-right: 8px;
+        }
+
+        .popover-body svg {
+          height: 18px;
+          margin: 0;
+          width: 18px;
+        }
+
+        .tooltip-inner {
+          max-width:100%
+        }
+
+        .item-link {
+            padding:0px;
+        }
+
+      </style>
+  </head>
+  <body class="<mt:if name="scope_type" eq="user">user system <mt:else><mt:var name="scope_type" escape="html"> </mt:if>main-screen preview-screen">
+      <nav class="mt-sharedPreviewNav">
+        <a class="mt-sharedPreviewNav__logo">
+          <img src="<$mt:var name="static_uri" escape="html"$>images/logo-mark-mono.svg" alt="Movable Type">
+        </a>
+        <ul class="mt-sharedPreviewNav__leftNav">
+          <li class="mb-0">
+            <b class="mt-sharedPreviewNav__arrow">
+            </b>
+            <a class="text-light font-weight-bold ml-5" href="#">
+              <span class="ml-3">
+                <__trans phrase="Preview">: <mt:var name="title" escape="html">
+              </span>
+            </a>
+          </li>
+        </ul>
+        <ul class="mt-sharedPreviewNav__rightNav">
+          <li class="mt-sharedPreviewNav__item">
+            <a class="btn item-link" href="<mt:var name="back_edit" escape="html">" id="edit" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Go to the edit page">">
+              <svg title="Edit" class="mt-icon--inverse mt-icon">
+                <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_edit"></use>
+              </svg>
+            </a>
+          </li>
+          <li class="mt-sharedPreviewNav__item">
+            <a class="btn item-link copy-popover" href="javascript:void(0);" id="show-preview-url" data-toggle="tooltip" data-placement="bottom" data-href="<mt:var name="script_full_url" escape="html">?__mode=shared_preview&spid=<mt:var name="spid" escape="url" escape="html">" title="<__trans phrase="Show the shared preview link">">
+              <svg title="Preview" class="mt-icon--inverse mt-icon">
+                <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_preview"></use>
+              </svg>
+            </a>
+          </li>
+          <li class="mt-sharedPreviewNav__item">
+            <a class="btn item-link copy-popover" href="javascript:void(0);" id="show-permalink" data-toggle="tooltip" data-placement="bottom" data-href="<mt:var name="permalink" escape="html">" title="<__trans phrase="Show permalink at publication">">
+              <svg title="Permalink" class="mt-icon--inverse mt-icon">
+                <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_permalink"></use>
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </nav>
+<mt:setvarblock name="system_msg">
+<mtapp:statusmsg
+   id="preview-build-error"
+   class="error"
+   can_close="0">
+  <mt:var name="preview_error">
+</mtapp:statusmsg>
+</mt:setvarblock>
+<mt:if name="preview_error">
+<mt:var name="system_msg">
+</mt:if>
+      <table id="entry-preview-layout" class="preview-layout">
+        <tr>
+          <td id="entry-preview-content" class="preview-content">
+            <iframe id="frame" frameborder="0" scrolling="auto" srcdoc='<$mt:var name="preview_content" escape="html"$>' ></iframe>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span>&nbsp;</span>
+          </td>
+        </tr>
+      </table>
+      <div id="bootstrapper" class="hidden"></div>
+      <script type="text/javascript">
+      /* <![CDATA[ */
+        svg4everybody();
+
+      <mt:unless name="delayed_bootstrap">
+        App.bootstrapInline( false );
+      </mt:unless>
+
+        jQuery('#frame').load( function() {
+          if (jQuery(this.contentDocument.body).html() == '') {
+            var html = jQuery(this).attr('srcdoc');
+            this.contentWindow.document.write(html);
+          }
+
+          frameResize();
+          jQuery(this).contents().find("html").on('click', function(event){
+             checkPopover(event);
+          });
+
+        });
+
+        jQuery(window).resize(function() {
+            frameResize();
+        });
+
+        function frameResize() {
+          jQuery('#frame').height(jQuery(window).height() - jQuery('.mt-sharedPreviewNav').height());
+        }
+
+        function linkCopy(span) {
+          jQuery(span).parents('.input-group').find('input[name="target_link"]').select();
+          var message = "<__trans phrase="Could not copy to the clip board.">";
+          if (document.execCommand("Copy")) {
+            message = "<__trans phrase="Copied to the clip board.">";
+          };
+          jQuery(span).tooltip({
+            title: message,
+            placement: 'bottom',
+            trigger: 'manual',
+          }).on('shown.bs.tooltip', function(){
+            setTimeout((function(){
+              jQuery(this).tooltip('dispose');
+            }).bind(this), 1000);
+          }).tooltip('show');
+        }
+
+        function checkPopover(event) {
+          var $target = jQuery(event.target);
+          if ($target.hasClass('copy-popover')) {
+            $target.popover('toggle');
+          } else if (!$target.hasClass('popover') && $target.parents('.popover').length == 0) {
+            jQuery('.copy-popover').popover('hide');
+          }
+        }
+
+        jQuery(function () {
+
+          jQuery('[data-toggle="tooltip"]').tooltip();
+
+          jQuery('.copy-popover')
+            .popover({
+              container: 'body',
+              html: true,
+              placement: 'bottom',
+              trigger: 'manual',
+            })
+            .on('show.bs.popover', function (event) {
+              jQuery('.copy-popover').popover('hide');
+              jQuery('[data-toggle=tooltip]').tooltip('hide');
+
+              var content = '<div class="input-group"><input type="text" name="target_link" readonly="readonly" class="form-control popover-item" /><div class="input-group-append"><span onclick="linkCopy(this)" class="btn input-group-text popover-item"><svg title="Copy" role="img" class="mt-icon mt-icon--sm"><use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_duplicate"></svg></span></div>';
+              if (!jQuery(event.target).attr('data-href')) {
+                content = '<div><span><__trans phrase="No permalink at publication"></span></div>';
+              }
+              jQuery(event.target).attr('data-content', content);
+
+            }).on('shown.bs.popover', function (event) {
+              var link = "";
+              if (jQuery(event.target).attr('data-href')) {
+                link = jQuery(event.target).attr('data-href');
+              }
+
+              jQuery('.popover :text')
+                .val(link)
+                .focus()
+                .select()
+                .tooltip({
+                  container: 'body',
+                  html: true,
+                  title: link,
+                  placement: 'bottom',
+                   trigger: 'hover',
+                   boundary: 'window'
+                })
+            });
+          jQuery(document).on('click', function (event) {
+            checkPopover(event);
+          });
+        });
+        /* ]]> */
+      </script>
   </body>
 </html>

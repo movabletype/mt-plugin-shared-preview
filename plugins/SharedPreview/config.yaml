@@ -1,15 +1,55 @@
 name: SharedPreview
-version: 0.001000
+id: SharedPreview
+key: SharedPreview
+version: 0.01
+schema_version: 0.03
+description: <__trans phrase="Enable to share preview of entry, page and content data.">
+author_name: Six Apart, Ltd.
+author_link: https://www.movabletype.org/
+l10n_class: SharedPreview::L10N
+
+object_types:
+  preview: MT::Preview
+
+blog_config_template:
+  code: $SharedPreview::SharedPreview::CMS::SharedPreview::config_template
+
+settings:
+  sp_password[]:
+    scope: blog
 
 applications:
   cms:
+    methods:
+      make_shared_preview: $SharedPreview::SharedPreview::CMS::SharedPreview::make_shared_preview
+
     callbacks:
-      template_param.edit_entry: $SharedPreview::SharedPreview::CMS::Entry::on_template_param_edit_entry
+      template_param.edit_entry: $SharedPreview::SharedPreview::CMS::Entry::on_template_param_edit
+      template_param.edit_content_data: $SharedPreview::SharedPreview::CMS::ContentData::on_template_param_edit
+      cms_post_save.content_data: $SharedPreview::SharedPreview::CMS::ContentData::post_save_content_data
+      cms_post_save.entry: $SharedPreview::SharedPreview::CMS::Entry::post_save_entry
+
   shared_preview:
+    script: '$SharedPreview::MT::App::SharedPreview::script_name'
     handler: MT::App::SharedPreview
-    script: $SharedPreview::MT::App::SharedPreview::script_name
+    methods:
+      shared_preview: $SharedPreview::MT::App::SharedPreview::shared_preview
+      shared_preview_login: $SharedPreview::MT::App::SharedPreview::login
 
 config_settings:
   SharedPreviewScript:
     default: mt-shared-preview.cgi
 
+permissions:
+  blog.edit_all_posts:
+    permitted_action:
+      create_new_entry_shared_preview: 1
+  blog.manage_pages:
+    permitted_action:
+      create_new_page_shared_preview: 1
+  blog.manage_content_data:
+    permitted_action:
+      create_new_content_data_shared_preview: 1
+  system.manage_content_data:
+    permitted_action:
+      create_new_content_data_shared_preview: 1

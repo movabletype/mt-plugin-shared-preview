@@ -12,8 +12,7 @@ sub need_login {
     my ($plugin_data) = @_;
 
     return unless $plugin_data;
-
-    return $plugin_data->data->{use_password};
+    return $plugin_data->data->{'sp_password[]'};
 }
 
 sub check_auth {
