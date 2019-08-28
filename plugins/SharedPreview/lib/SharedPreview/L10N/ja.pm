@@ -26,5 +26,6 @@ our %Lexicon = (
     'No permalink at publication'                                    => '公開時のパーマリンクがありません。',
 );
 
+
 1;
 

@@ -7,7 +7,6 @@ use lib Cwd::realpath("./t/lib");
 use Test::More;
 use MT::Test::Env;
 
-
 our $test_env;
 
 BEGIN {
@@ -89,8 +88,9 @@ my $edit_all_posts_role = MT::Test::Permission->make_role(
 );
 
 my $no_permission_role = MT::Test::Permission->make_role(
-    name        => 'Can not Make Shared Preview',
-    permissions => "'create_site', 'edit_assets', 'edit_categories', 'edit_config', 'edit_notifications', 'edit_tags', 'manage_category_set', 'manage_member_blogs', 'manage_pages', 'manage_plugins', 'manage_themes', 'manage_users', 'manage_users_groups', 'publish_post', 'rebuild', 'send_notifications', 'set_publish_paths', 'sign_in_cms', 'sign_in_data_api', 'send_notifications', 'upload', 'view_blog_log', 'view_log'",
+    name => 'Can not Make Shared Preview',
+    permissions =>
+        "'create_site', 'edit_assets', 'edit_categories', 'edit_config', 'edit_notifications', 'edit_tags', 'manage_category_set', 'manage_member_blogs', 'manage_pages', 'manage_plugins', 'manage_themes', 'manage_users', 'manage_users_groups', 'publish_post', 'rebuild', 'send_notifications', 'set_publish_paths', 'sign_in_cms', 'sign_in_data_api', 'send_notifications', 'upload', 'view_blog_log', 'view_log'",
 );
 
 MT::Association->link( $create_post_author,    $create_post_role,    $blog1 );
@@ -103,71 +103,82 @@ subtest 'make_shared_preview' => sub {
         subtest 'create_post user' => sub {
             subtest 'entry created by create_post user' => sub {
                 my $output
-                    = SharedPreviewTest::request_make_shared_preview( $create_post_author,
-                    $blog1->id, $entry1->id, $type );
+                    = SharedPreviewTest::request_make_shared_preview(
+                    $create_post_author, $blog1->id, $entry1->id, $type );
                 ok( $output, 'Output' ) or return;
-                check_response_make_shared_preview( $output, $blog1,
-                    $entry1 );
+                SharedPreviewTest::check_response_make_shared_preview(
+                    $output, $blog1, $entry1 );
             };
 
             subtest 'entry created by super user' => sub {
                 my $output
-                    = SharedPreviewTest::request_make_shared_preview( $create_post_author,
-                    $blog1->id, $entry2->id, $type );
+                    = SharedPreviewTest::request_make_shared_preview(
+                    $create_post_author, $blog1->id, $entry2->id, $type );
                 ok( $output, 'Output' ) or return;
-                check_response_permission_error($output);
+                SharedPreviewTest::check_response_permission_error($output);
             };
         };
 
         subtest 'edit_all_posts user' => sub {
-            my $output = SharedPreviewTest::request_make_shared_preview( $edit_all_posts_author,
-                $blog1->id, $entry1->id, $type );
+            my $output = SharedPreviewTest::request_make_shared_preview(
+                $edit_all_posts_author, $blog1->id, $entry1->id, $type );
             ok( $output, 'Output' ) or return;
-            check_response_make_shared_preview( $output, $blog1, $entry1 );
+            SharedPreviewTest::check_response_make_shared_preview( $output,
+                $blog1, $entry1 );
         };
 
         subtest 'super user' => sub {
-            my $output = SharedPreviewTest::request_make_shared_preview( $super_author,
-                $blog1->id, $entry1->id, $type );
+            my $output = SharedPreviewTest::request_make_shared_preview(
+                $super_author, $blog1->id, $entry1->id, $type );
             ok( $output, 'Output' ) or return;
-            check_response_make_shared_preview( $output, $blog1, $entry1 );
+            SharedPreviewTest::check_response_make_shared_preview( $output,
+                $blog1, $entry1 );
         };
     };
 
     subtest "Users who can't create share previews" => sub {
         my $type = 'entry';
         my $output
-            = SharedPreviewTest::request_make_shared_preview( $not_permission_author,
-            $blog1->id, $entry1->id, $type );
+            = SharedPreviewTest::request_make_shared_preview(
+            $not_permission_author, $blog1->id, $entry1->id, $type );
         ok( $output, 'Output' ) or return;
-        check_response_permission_error($output);
+        SharedPreviewTest::check_response_permission_error($output);
     };
 
     subtest 'Request parameter check' => sub {
         subtest '_type is empty' => sub {
             my $output
-                = SharedPreviewTest::request_make_shared_preview( $super_author,
-                $blog1->id, $entry1->id, '' );
+                = SharedPreviewTest::request_make_shared_preview(
+                $super_author, $blog1->id, $entry1->id, '' );
             ok( $output, 'Output' ) or return;
-            like( $output, qr/Invalid request/,
-                'Invalid request error message output.' );
+            like(
+                $output,
+                qr/Invalid request/,
+                'Invalid request error message output.'
+            );
         };
 
         subtest 'id is empty' => sub {
             my $output
-                = SharedPreviewTest::request_make_shared_preview( $super_author,
-                $blog1->id, '', $type );
+                = SharedPreviewTest::request_make_shared_preview(
+                $super_author, $blog1->id, '', $type );
             ok( $output, 'Output' ) or return;
-            like( $output , qr/Invalid request/,
-                'Invalid request error message output.' );
+            like(
+                $output,
+                qr/Invalid request/,
+                'Invalid request error message output.'
+            );
         };
 
         subtest 'type is not found' => sub {
             my $output
-                = SharedPreviewTest::request_make_shared_preview( $super_author,
+                = SharedPreviewTest::request_make_shared_preview(
+                $super_author,
                 $blog1->id, $entry1->id, 'test_shared_preview' );
             ok( $output, 'Output' ) or return;
-            like( $output , qr/Invalid type: test_shared_preview/,
+            like(
+                $output,
+                qr/Invalid type: test_shared_preview/,
                 'Invalid request error message output.'
             );
         };
@@ -186,7 +197,8 @@ subtest 'make_shared_preview' => sub {
             $blog1->id, $entry1->id, $type );
 
         ok( $output, 'Output' ) or return;
-        check_response_make_shared_preview( $output, $blog1, $entry1 );
+        SharedPreviewTest::check_response_make_shared_preview( $output,
+            $blog1, $entry1 );
 
         my $after_preview = MT->model('preview')->load(
             {   blog_id     => $blog1->id,
@@ -212,7 +224,8 @@ subtest 'make_shared_preview' => sub {
             $blog1->id, $entry2->id, $type );
 
         ok( $output, 'Output' ) or return;
-        check_response_make_shared_preview( $output, $blog1, $entry2 );
+        SharedPreviewTest::check_response_make_shared_preview( $output,
+            $blog1, $entry2 );
 
         my $after_preview = MT->model('preview')->load(
             {   blog_id     => $blog1->id,
@@ -226,68 +239,4 @@ subtest 'make_shared_preview' => sub {
     };
 };
 
-sub request_entry_page {
-    my ( $author, $blog_id, $entry_id, $type ) = @_;
-    my $app = _run_app(
-        'MT::App::CMS',
-        {   __test_user             => $author,
-            __test_follow_redirects => 1,
-            __mode                  => 'view',
-            _type                   => $type,
-            blog_id                 => $blog_id,
-            id                      => $entry_id,
-        },
-    );
-
-    my $output = delete $app->{__test_output};
-    return $output || '';
-}
-
-sub request_save_entry {
-    my ( $author, $blog_id, $entry_id, $type, $status ) = @_;
-    my $app = _run_app(
-        'MT::App::CMS',
-        {   __test_user             => $author,
-            __test_follow_redirects => 1,
-            __mode                  => 'save_entry',
-            __request_method        => 'POSt',
-            _type                   => $type,
-            blog_id                 => $blog_id,
-            id                      => $entry_id,
-            status                  => $status,
-        },
-    );
-
-    my $output = delete $app->{__test_output};
-    return $output || '';
-}
-
-sub check_response_make_shared_preview {
-    my ( $output, $blog, $entry ) = @_;
-    my $preview = MT->model('preview')->load(
-        {   blog_id     => $blog->id,
-            object_id   => $entry->id,
-            object_type => 'entry'
-        }
-    );
-    ok( $preview, 'create shared preview' ) or return ;
-
-    my $spid = $preview->id;
-
-    ok( $spid, 'Success in creating shared preview' );
-    like( $output , qr/Status: 302 Found/, 'is redirect' );
-
-    my ($location) = $output =~ /Location: (\S+)/;
-    my $uri = URI->new($location);
-    is ($uri->query_param('__mode') ,'shared_preview', 'correct mode');
-    is ($uri->query_param('spid') , $spid, 'correct spid');
-}
-
-sub check_response_permission_error {
-    my ($output) = @_;
-    like( $output , qr/Status: 200/, 'Status is 200' );
-    like( $output , qr/You attempted to use a feature that you do not have permission to access. If you believe you are seeing this message in error contact your system administrator./,
-        'Permission error message output.'
-    );
-}
 done_testing;

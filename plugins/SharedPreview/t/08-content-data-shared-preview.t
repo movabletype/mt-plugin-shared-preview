@@ -6,6 +6,9 @@ use Cwd;
 use lib Cwd::realpath("./t/lib");
 use Test::More;
 use MT::Test::Env;
+use MT::Test::Fixture;
+use MT::Test::Permission;
+use MT::Association;
 
 our $test_env;
 
@@ -18,19 +21,13 @@ BEGIN {
 
 use MT;
 use MT::Test;
-use MT::Test::Fixture;
-use MT::Test::Permission;
-use MT::Association;
 use SharedPreviewTest;
 
 MT::Test->init_app;
 
 $test_env->prepare_fixture('db');
 
-my $blog1_name  = 'SharedPreviewBlog1-' . time();
-my $entry1_name = 'SharedPreviewEntry1-' . time();
-my $entry2_name = 'SharedPreviewEntry2-' . time();
-my $entry3_name = 'SharedPreviewEntry3-' . time();
+my $blog1_name = 'SharedPreviewBlog1-' . time();
 
 my $super          = 'super';
 my $create_post    = 'create_post';
@@ -44,34 +41,11 @@ my $objs = MT::Test::Fixture->prepare(
             { 'name' => $edit_all_posts, is_superuser => 0 },
             { 'name' => $not_permission, is_superuser => 0 },
         ],
-        blog  => [ { name => $blog1_name, }, ],
-        entry => [
-            {   basename    => $entry1_name,
-                title       => $entry1_name,
-                author      => $create_post,
-                status      => 'draft',
-                authored_on => '20190703121110',
-            },
-            {   basename    => $entry2_name,
-                title       => $entry2_name,
-                author      => $super,
-                status      => 'draft',
-                authored_on => '20190703121110',
-            },
-            {   basename    => $entry3_name,
-                title       => $entry3_name,
-                author      => $super,
-                status      => 'publish',
-                authored_on => '20190703121110',
-            },
-        ]
+        blog => [ { name => $blog1_name, }, ],
     }
 );
 
 my $blog1 = MT->model('blog')->load( { name => $blog1_name } ) or die;
-my $entry1 = MT->model('entry')->load( { basename => $entry1_name } ) or die;
-my $entry2 = MT->model('entry')->load( { basename => $entry2_name } ) or die;
-my $entry3 = MT->model('entry')->load( { basename => $entry3_name } ) or die;
 
 my $super_author = MT->model('author')->load( { name => $super } ) or die;
 my $create_post_author = MT->model('author')->load( { name => $create_post } )
@@ -105,18 +79,69 @@ MT::Association->link( $create_post_author,    $create_post_role,    $blog1 );
 MT::Association->link( $edit_all_posts_author, $edit_all_posts_role, $blog1 );
 MT::Association->link( $not_permission_author, $no_permission_role,  $blog1 );
 
+my $content_type1 = MT::Test::Permission->make_content_type(
+    name    => 'test content type 1',
+    blog_id => $blog1->id,
+);
+
+my $content_field1 = MT::Test::Permission->make_content_field(
+    blog_id         => $content_type1->blog_id,
+    content_type_id => $content_type1->id,
+    name            => 'single line text',
+    type            => 'single_line_text',
+);
+
+my $fields1 = [
+    {   id        => $content_field1->id,
+        order     => 1,
+        type      => $content_field1->type,
+        options   => { label => $content_field1->name },
+        unique_id => $content_field1->unique_id,
+    },
+];
+
+$content_type1->fields($fields1);
+$content_type1->save or die;
+
+my $content_data1 = MT::Test::Permission->make_content_data(
+    blog_id         => $content_type1->blog_id,
+    content_type_id => $content_type1->id,
+    status          => MT::ContentStatus::RELEASE(),
+    data => { $content_field1->id => 'test single line text (RELEASE)', },
+    author_id   => $create_post_author->id,
+    authored_on => '2019-08-01',
+);
+
+my $content_data2 = MT::Test::Permission->make_content_data(
+    blog_id         => $content_type1->blog_id,
+    content_type_id => $content_type1->id,
+    status          => MT::ContentStatus::HOLD(),
+    data        => { $content_field1->id => 'test single line text (HOLD)', },
+    author_id   => $super_author->id,
+    authored_on => '2019-08-01',
+);
+
+my $content_data3 = MT::Test::Permission->make_content_data(
+    blog_id         => $content_type1->blog_id,
+    content_type_id => $content_type1->id,
+    status          => MT::ContentStatus::HOLD(),
+    data        => { $content_field1->id => 'test single line text (HOLD)', },
+    author_id   => $super_author->id,
+    authored_on => '2019-08-01',
+);
+
 my $plugin_data = MT::Test::Permission->make_plugindata(
     plugin => 'SharedPreview',
     key    => 'configuration:blog:' . $blog1->id,
     data   => { 'sp_password[]' => [ 'test', 'test2' ] }
 );
 
-subtest 'entry page' => sub {
-    subtest 'create new entry' => sub {
-        my $output
-            = request_entry_page( $super_author, $blog1->id, '', 'entry',
-            '' );
+subtest 'content data page' => sub {
+    subtest 'create new content data' => sub {
+        my $output = request_content_data_page( $super_author, $blog1->id,
+            $content_type1->id, '', 'content_data', '' );
         ok( $output, 'Output' ) or return;
+        unlike( $output, qr/An error occurred/, 'no error' ) or return;
         unlike( $output, qr/shared-preview-widget/, 'shared preview widget' );
         unlike(
             $output,
@@ -127,12 +152,12 @@ subtest 'entry page' => sub {
             'shared preview label' );
     };
 
-    subtest 'edit entry' => sub {
+    subtest 'edit content data' => sub {
         subtest 'published' => sub {
-            my $output
-                = request_entry_page( $super_author, $blog1->id, $entry3->id,
-                'entry', '' );
+            my $output = request_content_data_page( $super_author, $blog1->id,
+                $content_type1->id, $content_data1->id, 'content_data', '' );
             ok( $output, 'Output' ) or return;
+            unlike( $output, qr/An error occurred/, 'no error' ) or return;
             unlike( $output, qr/shared-preview-widget/,
                 'shared preview widget' );
             unlike(
@@ -149,10 +174,10 @@ subtest 'entry page' => sub {
         };
 
         subtest 'unpublished' => sub {
-            my $output
-                = request_entry_page( $super_author, $blog1->id, $entry1->id,
-                'entry', '' );
+            my $output = request_content_data_page( $super_author, $blog1->id,
+                $content_type1->id, $content_data2->id, 'content_data', '' );
             ok( $output, 'Output' ) or return;
+            unlike( $output, qr/An error occurred/, 'no error' ) or return;
 
             like( $output, qr/shared-preview-widget/,
                 'shared preview widget' );
@@ -177,20 +202,19 @@ subtest 'entry page' => sub {
             is( $uri->query_param('__mode'),
                 'make_shared_preview', 'correct mode' );
             is( $uri->query_param('blog_id'), $blog1->id, 'correct blog_id' );
-            is( $uri->query_param('id'), $entry1->id, 'correct blog_id' );
+            is( $uri->query_param('id'), $content_data2->id, 'correct id' );
 
         };
     };
 
-    subtest 'save entry' => sub {
+    subtest 'save content_data' => sub {
         subtest 'unpublished to published' => sub {
-            my ( $app, $make_preview )
-                = SharedPreviewTest::make_shared_preview( $super_author,
-                $blog1->id, $entry2->id )
-                or return;
-            my $output
-                = request_save_entry( $super_author, $blog1->id, $entry2, 2,
-                0 );
+            my $make_preview = SharedPreviewTest::make_shared_preview(
+                $super_author,      $blog1->id,
+                $content_data3->id, $content_type1->id
+            ) or return;
+            my $output = request_save_content_data( $super_author, $blog1->id,
+                $content_type1->id, $content_data3->id, 2, 0 );
             ok( $output, 'Output' ) or return;
 
             my $after_preview = MT->model('preview')->load($make_preview);
@@ -198,11 +222,12 @@ subtest 'entry page' => sub {
         };
     };
 
-    subtest 'saved added entry page' => sub {
+    subtest 'saved added content_data page' => sub {
         subtest 'published' => sub {
             my $output
-                = request_entry_page( $super_author, $blog1->id, $entry3->id,
-                'entry', 'added' );
+                = request_content_data_page( $super_author, $blog1->id,
+                $content_type1->id, $content_data1->id, 'content_data',
+                'added' );
             ok( $output, 'Output' ) or return;
 
             my ($make_shared_preview_link)
@@ -213,29 +238,30 @@ subtest 'entry page' => sub {
 
         subtest 'unpublished' => sub {
             my $output
-                = request_entry_page( $super_author, $blog1->id, $entry1->id,
-                'entry', 'added' );
+                = request_content_data_page( $super_author, $blog1->id,
+                $content_type1->id, $content_data2->id, 'content_data',
+                'added' );
             ok( $output, 'Output' ) or return;
 
             my ($make_shared_preview_link)
                 = $output
-                =~ m/jQuery\('#saved-added'\)\.append.*href=\\"(.*?)\\"/;
+                =~ m/jQuery\('#saved-added'\)\.after.*href=\\"(.*?)\\"/;
             my $uri = URI->new($make_shared_preview_link);
 
             is( $uri->query_param('__mode'),
                 'make_shared_preview', 'correct mode' );
             is( $uri->query_param('blog_id'), $blog1->id, 'correct blog_id' );
-            is( $uri->query_param('id'), $entry1->id, 'correct blog_id' );
+            is( $uri->query_param('id'), $content_data2->id, 'correct id' );
         };
 
     };
 
-    subtest 'saved changes entry page' => sub {
+    subtest 'saved changes content_data page' => sub {
         subtest 'published' => sub {
-            my $output = request_entry_page(
-                $super_author, $blog1->id, $entry3->id, 'entry',
-                'changes'
-            );
+            my $output
+                = request_content_data_page( $super_author, $blog1->id,
+                $content_type1->id, $content_data1->id, 'content_data',
+                'changes' );
             ok( $output, 'Output' ) or return;
 
             my ($make_shared_preview_link)
@@ -246,10 +272,10 @@ subtest 'entry page' => sub {
         };
 
         subtest 'unpublished' => sub {
-            my $output = request_entry_page(
-                $super_author, $blog1->id, $entry1->id, 'entry',
-                'changes'
-            );
+            my $output
+                = request_content_data_page( $super_author, $blog1->id,
+                $content_type1->id, $content_data2->id, 'content_data',
+                'changes' );
             ok( $output, 'Output' ) or return;
 
             my ($make_shared_preview_link)
@@ -260,24 +286,30 @@ subtest 'entry page' => sub {
             is( $uri->query_param('__mode'),
                 'make_shared_preview', 'correct mode' );
             is( $uri->query_param('blog_id'), $blog1->id, 'correct blog_id' );
-            is( $uri->query_param('id'), $entry1->id, 'correct blog_id' );
+            is( $uri->query_param('id'), $content_data2->id, 'correct id' );
+            is( $uri->query_param('content_type_id'),
+                $content_type1->id, 'correct content_type_id' );
 
         };
 
     };
 };
 
-sub request_entry_page {
-    my ( $author, $blog_id, $entry_id, $type, $saved ) = @_;
+sub request_content_data_page {
+    my ( $author, $blog_id, $content_type_id, $content_data_id, $type,
+        $saved )
+        = @_;
 
     my %parameters = (
         __test_user             => $author,
         __test_follow_redirects => 1,
         __mode                  => 'view',
         _type                   => $type,
+        type                    => $type . '_' . $content_type_id,
         blog_id                 => $blog_id,
-        id                      => $entry_id,
+        content_type_id         => $content_type_id
     );
+    $parameters{id} = $content_data_id if $content_data_id;
 
     if ($saved) {
         $parameters{saved_added}   = 1 if $saved eq 'added';
@@ -290,37 +322,40 @@ sub request_entry_page {
     return $output || '';
 }
 
-sub request_save_entry {
-    my ( $author, $blog_id, $entry, $status, $redirects ) = @_;
-
-    my %parameters = (
+sub request_save_content_data {
+    my ( $author, $blog_id, $content_type_id, $content_data_id, $status,
+        $redirects )
+        = @_;
+    my $content_data_type  = 'content_data' . '_' . $content_type_id;
+    my $content_type_field = 'content-field-' . $content_field1->id;
+    my %parameters         = (
         __test_user             => $author,
         __test_follow_redirects => $redirects,
         author_id               => $author->id,
         blog_id                 => $blog_id,
-        __mode                  => 'save_entry',
-        _type                   => 'entry',
-        return_args             => "__mode=view&_type=entry&blog_id=$blog_id",
-        save_revision           => 1,
-        entry_prefs             => 'Default',
-        title                   => 'entry' . time(),
-        convert_breaks          => 'richtext',
-        convert_breaks_for_mobile => '_richtext',
-        status                    => $status,
-        authored_on_date          => '2019-07-02',
-        authored_on_year          => '2019',
-        authored_on_month         => '07',
-        authored_on_day           => '02',
-        authored_on_time          => '05:09:03',
-        authored_on_hour          => '05',
-        authored_on_minute        => '09',
-        authored_on_second        => '03',
-        basename                  => 'entry' . time(),
-        basename_manual           => 0,
-        allow_comments            => 1,
+        __mode                  => 'save',
+        content_type_id         => $content_type_id,
+        _type                   => 'content_data',
+        return_args =>
+            "__mode=view&type=$content_data_type&_type=content_data&blog_id=$blog_id&content_type_id=$content_type_id",
+        save_revision       => 1,
+        data_label          => 'test',
+        $content_type_field => 'test',
+        status              => $status,
+        authored_on_date    => '2019-08-02',
+        authored_on_year    => '2019',
+        authored_on_month   => '08',
+        authored_on_day     => '02',
+        authored_on_time    => '05:09:03',
+        authored_on_hour    => '05',
+        authored_on_minute  => '09',
+        authored_on_second  => '03',
+        basename            => 'content_data' . time(),
+        basename_manual     => 0,
+        allow_comments      => 1,
     );
 
-    $parameters{id} = $entry->id if $entry;
+    $parameters{id} = $content_data_id if $content_data_id;
 
     my $app = _run_app( 'MT::App::CMS', \%parameters );
 
