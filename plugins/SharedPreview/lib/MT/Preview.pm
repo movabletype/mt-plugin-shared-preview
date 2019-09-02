@@ -171,8 +171,7 @@ sub shared_preview_link {
 
     my $output = $tmpl->output or return '';
 
-    $output = $app->translate_templatized($output)
-        if $output;
+    $output = $app->translate_templatized($output);
     $output =~ s/\r|\r\n|\n//g;
     $output = encode_js($output);
 
@@ -211,8 +210,7 @@ sub shared_preview_message {
     return '' unless $tmpl;
     my $output = $tmpl->output or return '';
 
-    $output = $app->translate_templatized($output)
-        if $output;
+    $output = $app->translate_templatized($output);
     $output =~ s/\r|\r\n|\n//g;
     $output = encode_js($output);
 
