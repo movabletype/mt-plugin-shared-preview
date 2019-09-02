@@ -173,7 +173,7 @@ sub shared_preview_link {
 
     $output = $app->translate_templatized($output)
         if $output;
-    $output =~ s/\r|\r\n|\n//g if $output;
+    $output =~ s/\r|\r\n|\n//g;
     $output = encode_js($output);
 
     return <<"__JS__";
@@ -211,7 +211,7 @@ sub shared_preview_message {
 
     $output = $app->translate_templatized($output)
         if $output;
-    $output =~ s/\r|\r\n|\n//g if $output;
+    $output =~ s/\r|\r\n|\n//g;
     $output = encode_js($output);
 
     return <<"__JS__";
