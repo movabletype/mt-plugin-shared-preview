@@ -6,7 +6,7 @@
 
 ## ダウンロード
 
-[更新履歴](https://github.com/movabletype/mt-plugin-jp-shared-preview/releases)
+[更新履歴](https://github.com/movabletype/mt-plugin-shared-preview/releases)
 
 ## インストール
 
