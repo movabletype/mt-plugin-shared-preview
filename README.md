@@ -2,6 +2,8 @@
 
 [![CircleCI](https://circleci.com/gh/movabletype/mt-plugin-shared-preview.svg?style=svg&circle-token=9ca544e8954e5c1246d099393a2ad4906c2e69a8)](https://circleci.com/gh/movabletype/mt-plugin-shared-preview)
 
+記事、ページ、コンテンツデータのプレビューを共有できるようにします。
+
 ## ダウンロード
 
 [更新履歴](https://github.com/movabletype/mt-plugin-jp-shared-preview/releases)
