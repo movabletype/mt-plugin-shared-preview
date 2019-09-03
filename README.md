@@ -13,16 +13,22 @@
 * ダウンロードした zip ファイルを展開します。
 * 展開してできた `mt-plugin-shared-preview/plugins/SharedPreview` ディレクトリを、 MT の plugins ディ>レクトリの中にコピーします。
 
-
-## 使い方
-
 ## 動作確認環境
 
 * Movable Type 7 r.4601 以降
 
 ## 制限事項
 
+### version 0.1
+
+* PHP ファイルのプレビューはできません。
+* クラウド版では環境変数 `SharedPreviewScript` の変更はできません。
+
 ## フィードバック
+
+本プラグインは Movable Type 製品サポートの対象外となります。 不具合・ご要望は GitHub リポジトリの Issues の方までご連絡ください。
+
+https://github.com/movabletype/mt-plugin-shared-preview/issues
 
 ## ライセンス
 
