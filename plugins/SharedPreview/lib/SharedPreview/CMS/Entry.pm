@@ -65,8 +65,14 @@ sub build_preview {
     my $id   = $app->param('id');
     my $type = $app->param('_type');
 
-    my $entry = $app->model($type)->load($id);
-    return $app->errtrans('Invalid request') unless $entry;
+    my $original_entry = $app->model($type)->load($id);
+    return $app->errtrans('Invalid request') unless $original_entry;
+    my $entry = $original_entry->clone;
+
+    my $user_id = $app->user ? $app->user->id : 0;
+    my @data    = ( { data_name => 'author_id', data_value => $user_id } );
+    $app->run_callbacks( 'cms_pre_shared_preview.entry',
+        $app, $entry, \@data );
 
     # build entry
     my $at       = $entry->class eq 'page' ? 'Page' : 'Individual';
