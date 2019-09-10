@@ -2,17 +2,16 @@
 
 [![CircleCI](https://circleci.com/gh/movabletype/mt-plugin-shared-preview.svg?style=svg&circle-token=9ca544e8954e5c1246d099393a2ad4906c2e69a8)](https://circleci.com/gh/movabletype/mt-plugin-shared-preview)
 
+記事、ページ、コンテンツデータのプレビューを共有できるようにします。
+
 ## ダウンロード
 
-[更新履歴](https://github.com/movabletype/mt-plugin-jp-shared-preview/releases)
+[更新履歴](https://github.com/movabletype/mt-plugin-shared-preview/releases)
 
 ## インストール
 
 * ダウンロードした zip ファイルを展開します。
 * 展開してできた `mt-plugin-shared-preview/plugins/SharedPreview` ディレクトリを、 MT の plugins ディ>レクトリの中にコピーします。
-
-
-## 使い方
 
 ## 動作確認環境
 
@@ -20,7 +19,16 @@
 
 ## 制限事項
 
+### version 0.1
+
+* PHP ファイルのプレビューはできません。
+* クラウド版では環境変数 `SharedPreviewScript` の変更はできません。
+
 ## フィードバック
+
+本プラグインは Movable Type 製品サポートの対象外となります。 不具合・ご要望は GitHub リポジトリの Issues の方までご連絡ください。
+
+https://github.com/movabletype/mt-plugin-shared-preview/issues
 
 ## ライセンス
 

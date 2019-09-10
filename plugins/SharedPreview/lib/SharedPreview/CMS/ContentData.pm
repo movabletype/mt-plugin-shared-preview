@@ -72,7 +72,13 @@ sub build_preview {
     my $type            = $app->param('_type');
     $app->{component} = 'Core';
 
-    my $content_data = $app->model($type)->load($id);
+    my $original_content_data = $app->model($type)->load($id);
+    my $content_data          = $original_content_data->clone;
+
+    my $user_id = $app->user ? $app->user->id : 0;
+    my @data    = ( { data_name => 'author_id', data_value => $user_id } );
+    $app->run_callbacks( 'cms_pre_shared_preview.content_data',
+        $app, $content_data, \@data );
 
     my $tmpl_map = $app->model('templatemap')->load(
         {   archive_type => $at,
