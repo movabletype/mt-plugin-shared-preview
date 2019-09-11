@@ -3,7 +3,7 @@ use warnings;
 use FindBin;
 use Cwd;
 
-use lib Cwd::realpath("./t/lib");
+use lib Cwd::realpath("./t/lib") ,"$FindBin::Bin/lib";
 use Test::More;
 use MT::Test::Env;
 
