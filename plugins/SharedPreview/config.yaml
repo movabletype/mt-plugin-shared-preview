@@ -1,7 +1,7 @@
 name: SharedPreview
 id: SharedPreview
 key: SharedPreview
-version: 0.01
+version: 0.1
 schema_version: 0.03
 description: <__trans phrase="Enable to share preview of entry, page and content data.">
 author_name: Six Apart Ltd.
