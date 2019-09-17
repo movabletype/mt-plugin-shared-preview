@@ -194,7 +194,7 @@ sub shared_preview_message {
     my $add_content_data;
     my $action_type;
 
-    return '' unless $app->param('_type');
+    return '' unless $type;
 
     if ( $app->param('saved_added') ) {
         $action_type = 'saved-added';
