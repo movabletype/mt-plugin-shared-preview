@@ -50,15 +50,15 @@ sub can_create_shared_preview {
         );
 
         while ( my $p = $iter->() ) {
-            my $create_allowd;
+            my $create_allowed;
 
             if ( $p->has("create_content_data:$content_type_unique_id") ) {
-                $create_allowd = 1
+                $create_allowed = 1
                     if $content_data->author_id == $app->user->id;
             }
 
             $allowed = 1, last
-                if $create_allowd
+                if $create_allowed
                 || $p->has("edit_all_content_data:$content_type_unique_id");
         }
 
