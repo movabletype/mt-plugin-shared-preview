@@ -27,14 +27,14 @@ use MT::Test::Fixture;
 use MT::Test::Permission;
 use SharedPreview::Auth;
 use SharedPreviewTest;
+use MT::ContentStatus;
+
 MT::Test->init_app;
 
 $test_env->prepare_fixture('db');
 
-my $blog1_name  = 'SharedPreviewNeedPasswordBlog1-' . time();
-my $blog2_name  = 'SharedPreviewNoPasswordBlog2-' . time();
-my $entry1_name = 'SharedPreviewEntry1-' . time();
-my $entry2_name = 'SharedPreviewEntry2-' . time();
+my $blog1_name = 'SharedPreviewNeedPasswordBlog1-' . time();
+my $blog2_name = 'SharedPreviewNoPasswordBlog2-' . time();
 
 my $super = 'super';
 
@@ -50,22 +50,68 @@ my $blog2 = MT->model('blog')->load( { name => $blog2_name } ) or die;
 
 my $super_author = MT->model('author')->load( { name => $super } ) or die;
 
-my $entry1 = MT::Test::Permission->make_entry(
-    basename    => $entry1_name,
-    title       => $entry1_name,
-    author      => $super,
-    status      => 1,
-    authored_on => '20190703121110',
-    blog_id     => $blog1->id
+my $content_type1 = MT::Test::Permission->make_content_type(
+    name    => 'test content type 1',
+    blog_id => $blog1->id,
 );
 
-my $entry2 = MT::Test::Permission->make_entry(
-    basename    => $entry2_name,
-    title       => $entry2_name,
-    author      => $super,
-    status      => 1,
-    authored_on => '20190703121110',
-    blog_id     => $blog2->id
+my $content_type2 = MT::Test::Permission->make_content_type(
+    name    => 'test content type 2',
+    blog_id => $blog2->id,
+);
+
+my $content_field1 = MT::Test::Permission->make_content_field(
+    blog_id         => $content_type1->blog_id,
+    content_type_id => $content_type1->id,
+    name            => 'single line text 1',
+    type            => 'single_line_text',
+);
+
+my $content_field2 = MT::Test::Permission->make_content_field(
+    blog_id         => $content_type2->blog_id,
+    content_type_id => $content_type2->id,
+    name            => 'single line text 2',
+    type            => 'single_line_text',
+);
+
+my $fields1 = [
+    {   id        => $content_field1->id,
+        order     => 1,
+        type      => $content_field1->type,
+        options   => { label => $content_field1->name },
+        unique_id => $content_field1->unique_id,
+    },
+];
+
+my $fields2 = [
+    {   id        => $content_field2->id,
+        order     => 1,
+        type      => $content_field2->type,
+        options   => { label => $content_field2->name },
+        unique_id => $content_field2->unique_id,
+    },
+];
+
+$content_type1->fields($fields1);
+$content_type1->save or die;
+
+$content_type2->fields($fields2);
+$content_type2->save or die;
+
+my $content_data1 = MT::Test::Permission->make_content_data(
+    blog_id         => $blog1->id,
+    content_type_id => $content_type1->id,
+    status          => MT::ContentStatus::HOLD(),
+    data            => { $content_field1->id => 'HOLD 1' },
+    author_id       => $super_author->id,
+);
+
+my $content_data2 = MT::Test::Permission->make_content_data(
+    blog_id         => $blog2->id,
+    content_type_id => $content_type2->id,
+    status          => MT::ContentStatus::HOLD(),
+    data            => { $content_field2->id => 'HOLD 2' },
+    author_id       => $super_author->id,
 );
 
 my $plugin_data = MT::Test::Permission->make_plugindata(
@@ -77,9 +123,10 @@ my $plugin_data = MT::Test::Permission->make_plugindata(
 subtest 'show_shared_preview' => sub {
     subtest 'need to login' => sub {
         subtest 'no cookie' => sub {
-            my ( $app, $spid )
-                = SharedPreviewTest::make_shared_preview( $super_author,
-                $blog1->id, $entry1->id );
+            my ( $app, $spid ) = SharedPreviewTest::make_shared_preview(
+                $super_author,      $blog1->id,
+                $content_data1->id, $content_type1->id
+            );
 
             my $output
                 = SharedPreviewTest::request_show_shared_preview($spid);
@@ -89,9 +136,10 @@ subtest 'show_shared_preview' => sub {
 
         subtest 'has cookie' => sub {
             subtest 'Password match in session' => sub {
-                my ( $app, $spid )
-                    = SharedPreviewTest::make_shared_preview( $super_author,
-                    $blog1->id, $entry1->id );
+                my ( $app, $spid ) = SharedPreviewTest::make_shared_preview(
+                    $super_author,      $blog1->id,
+                    $content_data1->id, $content_type1->id
+                );
 
                 my $module = Test::MockModule->new('MT::App::SharedPreview');
 
@@ -115,16 +163,16 @@ subtest 'show_shared_preview' => sub {
                     = SharedPreviewTest::request_show_shared_preview($spid);
                 ok( $output, 'Output' ) or return;
                 SharedPreviewTest::check_shared_preview( $output, $blog1->id,
-                    $entry1, $spid );
+                    $content_data1, $spid, $content_type1->id );
             };
 
             subtest 'Password mismatch in session' => sub {
-                my $blog_id  = $blog1->id;
-                my $entry_id = $entry1->id;
+                my $blog_id         = $blog1->id;
+                my $content_data_id = $content_data1->id;
 
                 my ( $app, $spid )
                     = SharedPreviewTest::make_shared_preview( $super_author,
-                    $blog_id, $entry_id );
+                    $blog_id, $content_data_id, $content_type1->id );
 
                 my $module = Test::MockModule->new('MT::App::SharedPreview');
 
@@ -156,14 +204,15 @@ subtest 'show_shared_preview' => sub {
     };
 
     subtest 'no need to login' => sub {
-        my ( $app, $spid )
-            = SharedPreviewTest::make_shared_preview( $super_author,
-            $blog2->id, $entry2->id );
+        my ( $app, $spid ) = SharedPreviewTest::make_shared_preview(
+            $super_author,      $blog2->id,
+            $content_data2->id, $content_type2->id
+        );
 
         my $output = SharedPreviewTest::request_show_shared_preview($spid);
         ok( $output, 'Output' ) or return;
-        SharedPreviewTest::check_shared_preview( $output, $blog2->id, $entry2,
-            $spid );
+        SharedPreviewTest::check_shared_preview( $output, $blog2->id,
+            $content_data2, $spid, $content_type2->id );
     };
 
     subtest 'Parameter Check' => sub {
@@ -187,8 +236,9 @@ subtest 'show_shared_preview' => sub {
             my $preview = MT::Preview->new;
             $preview->blog_id(999999);
             $preview->object_id(1);
-            $preview->object_type('entry');
+            $preview->object_type('content_data');
             $preview->id( $preview->make_unique_id );
+            $preview->content_type_id( $content_type1->id );
             $preview->save;
 
             my $spid = $preview->id;

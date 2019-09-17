@@ -24,7 +24,9 @@ our %Lexicon = (
     'Use basic Latin characters only.'                               => '半角英数字のみ利用できます。',
     'Please fill out this field.'                                    => 'このフィールドを入力してください。',
     'No permalink at publication'                                    => '公開時のパーマリンクがありません。',
+    'Remember me?'                                                   => 'パスワードを記憶する'
 );
+
 
 1;
 
