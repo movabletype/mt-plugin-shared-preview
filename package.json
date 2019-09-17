@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "repository": "git@github.com:movabletype/mt-plugin-shared-preview.git",
-  "author": "Six Apart, Ltd.",
+  "author": "Six Apart Ltd.",
   "license": "MIT",
   "scripts": {
     "copy": "yarn copy-mt7-style-guide-css",
