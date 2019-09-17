@@ -178,9 +178,8 @@ sub shared_preview_link {
 
     my $output = $tmpl->output or return '';
 
-    $output = $app->translate_templatized($output)
-        if $output;
-    $output =~ s/\r|\r\n|\n//g if $output;
+    $output = $app->translate_templatized($output);
+    $output =~ s/\r|\r\n|\n//g;
     $output = encode_js($output);
 
     return <<"__JS__";
@@ -194,6 +193,8 @@ sub shared_preview_message {
     my $method = 'append';
     my $add_content_data;
     my $action_type;
+
+    return '' unless $app->param('_type');
 
     if ( $app->param('saved_added') ) {
         $action_type = 'saved-added';
@@ -216,9 +217,8 @@ sub shared_preview_message {
     return '' unless $tmpl;
     my $output = $tmpl->output or return '';
 
-    $output = $app->translate_templatized($output)
-        if $output;
-    $output =~ s/\r|\r\n|\n//g if $output;
+    $output = $app->translate_templatized($output);
+    $output =~ s/\r|\r\n|\n//g;
     $output = encode_js($output);
 
     return <<"__JS__";
