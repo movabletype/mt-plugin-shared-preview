@@ -6,6 +6,8 @@
 
 ## ダウンロード
 
+* [バージョン 0.1 (2019/09/18)](https://github.com/movabletype/mt-plugin-shared-preview/releases/download/0.1/mt-plugin-shared-preview-0.1.zip)
+
 [更新履歴](https://github.com/movabletype/mt-plugin-shared-preview/releases)
 
 ## インストール
