@@ -240,6 +240,18 @@
         }
 
         jQuery(function () {
+          var orgDefaultWhiteList = jQuery.fn.tooltip.Constructor.Default.whiteList;
+
+          if (orgDefaultWhiteList !== undefined) {
+            var addList = {
+               input : ['type', 'name', 'class', 'readonly', 'value'],
+               svg   : ['title', 'role', 'class', 'xmlns', 'width', 'height'],
+               use   : ['xlink:href'],
+               span  : ['onclick'],
+            };
+
+            jQuery.extend(orgDefaultWhiteList, addList);
+          }
 
           jQuery('[data-toggle="tooltip"]').tooltip();
 
