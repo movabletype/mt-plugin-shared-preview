@@ -192,7 +192,7 @@
         App.bootstrapInline( false );
       </mt:unless>
 
-        jQuery('#frame').load( function() {
+        jQuery('#frame').on("load", function() {
           if (jQuery(this.contentDocument.body).html() == '') {
             var html = jQuery(this).attr('srcdoc');
             this.contentWindow.document.write(html);
