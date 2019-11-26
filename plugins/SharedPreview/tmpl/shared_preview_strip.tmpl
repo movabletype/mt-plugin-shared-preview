@@ -192,7 +192,7 @@
         App.bootstrapInline( false );
       </mt:unless>
 
-        jQuery('#frame').load( function() {
+        jQuery('#frame').on("load", function() {
           if (jQuery(this.contentDocument.body).html() == '') {
             var html = jQuery(this).attr('srcdoc');
             this.contentWindow.document.write(html);
@@ -240,6 +240,18 @@
         }
 
         jQuery(function () {
+          var orgDefaultWhiteList = jQuery.fn.tooltip.Constructor.Default.whiteList;
+
+          if (orgDefaultWhiteList !== undefined) {
+            var addList = {
+               input : ['type', 'name', 'class', 'readonly', 'value'],
+               svg   : ['title', 'role', 'class', 'xmlns', 'width', 'height'],
+               use   : ['xlink:href'],
+               span  : ['onclick'],
+            };
+
+            jQuery.extend(orgDefaultWhiteList, addList);
+          }
 
           jQuery('[data-toggle="tooltip"]').tooltip();
 
@@ -254,7 +266,7 @@
               jQuery('.copy-popover').popover('hide');
               jQuery('[data-toggle=tooltip]').tooltip('hide');
 
-              var content = '<div class="input-group"><input type="text" name="target_link" readonly="readonly" class="form-control popover-item" /><div class="input-group-append"><span onclick="linkCopy(this)" class="btn input-group-text popover-item"><svg title="Copy" role="img" class="mt-icon mt-icon--sm"><use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_duplicate"></svg></span></div>';
+              var content = '<div class="input-group"><input type="text" name="target_link" readonly="readonly" class="form-control popover-item" /><div class="input-group-append"><span onclick="linkCopy(this)" class="btn input-group-text popover-item"><svg title="Copy" role="img" class="mt-icon mt-icon--sm"><use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_duplicate"></svg></span></div></div>';
               if (!jQuery(event.target).attr('data-href')) {
                 content = '<div><span><__trans phrase="No permalink at publication"></span></div>';
               }
