@@ -205,7 +205,7 @@
 
         });
 
-        jQuery(window).resize(function() {
+        jQuery(window).on('resize', function() {
             frameResize();
         });
 
@@ -214,7 +214,7 @@
         }
 
         function linkCopy(span) {
-          jQuery(span).parents('.input-group').find('input[name="target_link"]').select();
+          jQuery(span).parents('.input-group').find('input[name="target_link"]').trigger('select');
           var message = "<__trans phrase="Could not copy to the clip board.">";
           if (document.execCommand("Copy")) {
             message = "<__trans phrase="Copied to the clip board.">";
@@ -226,7 +226,7 @@
           }).on('shown.bs.tooltip', function(){
             setTimeout((function(){
               jQuery(this).tooltip('dispose');
-            }).bind(this), 1000);
+            }).on(this), 1000);
           }).tooltip('show');
         }
 
@@ -280,8 +280,8 @@
 
               jQuery('.popover :text')
                 .val(link)
-                .focus()
-                .select()
+                .trigger('focus')
+                .trigger('select')
                 .tooltip({
                   container: 'body',
                   html: true,
