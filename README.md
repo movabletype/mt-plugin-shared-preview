@@ -6,7 +6,7 @@
 
 ## ダウンロード
 
-* [バージョン 0.1 (2019/09/18)](https://github.com/movabletype/mt-plugin-shared-preview/releases/download/0.1/mt-plugin-shared-preview-0.1.zip)
+* [バージョン 0.2 (2019/11/28)](https://github.com/movabletype/mt-plugin-shared-preview/releases/download/0.2/mt-plugin-shared-preview-0.2.zip)
 
 [更新履歴](https://github.com/movabletype/mt-plugin-shared-preview/releases)
 
@@ -25,6 +25,9 @@
 
 * PHP ファイルのプレビューはできません。
 * クラウド版では環境変数 `SharedPreviewScript` の変更はできません。
+
+### version 0.2
+* Movable Type 7 r.4603で共有プレビュープラグインを利用する際に一部表示の不具合があり、修正致しました。
 
 ## フィードバック
 
