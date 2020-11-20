@@ -13,7 +13,10 @@
 ## インストール
 
 * ダウンロードした zip ファイルを展開します。
-* 展開してできた `mt-plugin-shared-preview/plugins/SharedPreview` ディレクトリを、 MT の plugins ディ>レクトリの中にコピーします。
+* 展開したフォルダの中の plugins > SharedPreview のフォルダを、サーバー上の plugins フォルダの中にアップロードします。
+* 次に mt-static > plugins > SharedPreview のフォルダを、サーバー上の mt-static > plugins のフォルダの中にアップロードします。
+* 最後に mt-shared-preview.cgi のファイルをアップロードします。  
+※ Movable Type クラウド版も含む PSGI 動作の場合は mt-shared-preview.cgi のアップロードは必要ありません。
 
 ## 動作確認環境
 
