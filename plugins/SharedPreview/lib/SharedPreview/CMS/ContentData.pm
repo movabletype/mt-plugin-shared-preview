@@ -142,12 +142,15 @@ sub build_preview {
             $app->translate( "Publish error: [_1]", $tmpl->errstr ) );
     }
 
-    1 while $html =~ s{<!\-\-#include virtual="([^"]+)"\s*\-\->}{
-        my $path = $1;
-        $path = File::Spec->catfile($blog->site_path, $path);
-        my $replacement = do { open my $fh, '<', $path; local $/; <$fh>; };
-        defined $replacement ? $replacement : '';
-    }eg;
+    my $include_system = $blog->include_system;
+    if ($include_system && $include_system eq 'shtml') {
+        1 while $html =~ s{<!\-\-#include virtual="([^"]+)"\s*\-\->}{
+            my $path = $1;
+            $path = File::Spec->catfile($blog->site_path, $path);
+            my $replacement = do { open my $fh, '<', $path; local $/; <$fh>; };
+            defined $replacement ? $replacement : '';
+        }eg;
+    }
 
     my %param = (
         title           => $content_data->label,
