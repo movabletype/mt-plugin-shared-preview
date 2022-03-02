@@ -126,8 +126,8 @@ sub build_preview {
             $app->translate( "Publish error: [_1]", $tmpl->errstr ) );
     }
 
-    my $inlucde_system = $blog->include_system;
-    if ($include_system && $inlcude_system eq 'shtml') {
+    my $include_system = $blog->include_system;
+    if ($include_system && $include_system eq 'shtml') {
         1 while $html =~ s{<!\-\-#include virtual="([^"]+)"\s*\-\->}{
             my $path = $1;
             $path = File::Spec->catfile($blog->site_path, $path);
