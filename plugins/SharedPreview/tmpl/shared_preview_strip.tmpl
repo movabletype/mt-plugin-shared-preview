@@ -35,7 +35,6 @@
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery-migrate.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Core.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/JSON.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Timer.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Cookie.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/DOM.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
@@ -51,17 +50,13 @@
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/tc.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/tc/tableselect.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.validate.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.json.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jqueryui/jquery-ui.js?v=<$mt:var name="mt_version_id" escape="url" escape="html"$>"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>svg4everybody/svg4everybody.js?v=<$mt:var name="mt_version_id" escape="url" escape="html"$>"></script>
 <mt:else>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery-migrate.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/mt_core_compact.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.validate.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.json.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jqueryui/jquery-ui.min.js?v=<$mt:var name="mt_version_id" escape="url" escape="html"$>"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>svg4everybody/svg4everybody.min.js?v=<$mt:var name="mt_version_id" escape="url" escape="html"$>"></script>
 </mt:unless>
 <mt:var name="html_head" escape="none">
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>mt.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
@@ -186,8 +181,6 @@
       <div id="bootstrapper" class="hidden"></div>
       <script type="text/javascript">
       /* <![CDATA[ */
-        svg4everybody();
-
       <mt:unless name="delayed_bootstrap">
         App.bootstrapInline( false );
       </mt:unless>
