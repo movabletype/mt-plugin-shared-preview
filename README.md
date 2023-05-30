@@ -6,9 +6,7 @@
 
 ## ダウンロード
 
-* [バージョン 0.2 (2019/11/28)](https://github.com/movabletype/mt-plugin-shared-preview/releases/download/0.2/mt-plugin-shared-preview-0.2.zip)
-
-[更新履歴](https://github.com/movabletype/mt-plugin-shared-preview/releases)
+[releases](https://github.com/movabletype/mt-plugin-shared-preview/releases)からダウンロードしてください。
 
 ## インストール
 
@@ -28,6 +26,12 @@
 * クラウド版では環境変数 `SharedPreviewScript` の変更はできません。
 
 ## 更新履歴
+
+### version 0.4
+* プラグイン設定画面で、他のプラグインのスクリプトが本プラグインに悪影響しないようidにプラグイン名を前置しました。
+
+### version 0.3
+* [MTC-28655] Movable Type本体に同梱されていたsvg4everybodyが、将来廃止の予定となったため、プラグインではsvg4everybodyを利用しないように変更しました。
 
 ### version 0.2
 * Movable Type 7 r.4603で共有プレビュープラグインを利用する際に一部表示の不具合があり、修正致しました。
