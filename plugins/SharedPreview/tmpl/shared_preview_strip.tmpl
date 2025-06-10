@@ -11,10 +11,18 @@
 </mt:if>
 <mt:unless name="optimize_ui">
     <link rel="stylesheet" href="<$mt:var name="static_uri" escape="html"$>styles.css?v=<mt:var name="mt_version_id" escape="url" escape="html">" type="text/css" />
+<mt:if name="admin_theme_id">
+    <link rel="stylesheet" href="<$mt:var name="static_uri" escape="html"$>css/<$mt:var name="admin_theme_id" escape="html">/mt.css?v=<mt:var name="mt_version_id" escape="url" escape="html">" type="text/css" />
+<mt:else>
     <link rel="stylesheet" href="<$mt:var name="mt_static_shared_preview" escape="html"$>css/mt.css?v=<mt:var name="mt_version_id" escape="url" escape="html">" type="text/css" />
+</mt:if>
 <mt:else>
     <link rel="stylesheet" href="<$mt:var name="static_uri" escape="html"$>css/main.css?v=<mt:var name="mt_version_id" escape="url" escape="html">" type="text/css" />
+<mt:if name="admin_theme_id">
+    <link rel="stylesheet" href="<$mt:var name="static_uri" escape="html"$>css/<$mt:var name="admin_theme_id" escape="html">/mt.min.css?v=<mt:var name="mt_version_id" escape="url" escape="html">" type="text/css" />
+<mt:else>
     <link rel="stylesheet" href="<$mt:var name="mt_static_shared_preview" escape="html"$>css/mt.min.css?v=<mt:var name="mt_version_id" escape="url" escape="html">" type="text/css" />
+</mt:if>
 </mt:unless>
     <!--[if IE]>
     <link rel="stylesheet" href="<$mt:var name="static_uri" escape="html"$>css/hacks/ie.css?v=<mt:var name="mt_version_id" escape="url" escape="html">" type="text/css" />
@@ -71,8 +79,7 @@
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.mt.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
 </mt:unless>
 <mt:var name="js_include" escape="none">
-    <script type="text/javascript" src="<mt:var name="static_uri" escape="html">popper/popper.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
-    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>bootstrap/js/bootstrap.js?v=<$mt:var name="mt_version_id" escape="url" escape="html"$>"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>bootstrap5/js/bootstrap.bundle.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <style type="text/css">
         .popover {
           margin-top: 20px;
@@ -124,8 +131,8 @@
           <li class="mb-0">
             <b class="mt-sharedPreviewNav__arrow">
             </b>
-            <a class="text-light font-weight-bold ml-5" href="#">
-              <span class="ml-3">
+            <a class="text-light fw-bold ms-5" href="#">
+              <span class="ms-3">
                 <__trans phrase="Preview">: <mt:var name="title" escape="html">
               </span>
             </a>
@@ -133,24 +140,30 @@
         </ul>
         <ul class="mt-sharedPreviewNav__rightNav">
           <li class="mt-sharedPreviewNav__item">
-            <a class="btn item-link" href="<mt:var name="back_edit" escape="html">" id="edit" data-toggle="tooltip" data-placement="bottom" title="<__trans phrase="Go to the edit page">">
-              <svg title="Edit" class="mt-icon--inverse mt-icon">
-                <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_edit"></use>
-              </svg>
+            <a class="btn item-link" href="<mt:var name="back_edit" escape="html">" id="edit">
+              <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="<__trans phrase="Go to the edit page">">
+                <svg title="Edit" class="mt-icon--inverse mt-icon">
+                  <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_edit"></use>
+                </svg>
+              </span>
             </a>
           </li>
           <li class="mt-sharedPreviewNav__item">
-            <a class="btn item-link copy-popover" href="javascript:void(0);" id="show-preview-url" data-toggle="tooltip" data-placement="bottom" data-href="<mt:var name="script_full_url" escape="html">?__mode=shared_preview&spid=<mt:var name="spid" escape="url" escape="html">" title="<__trans phrase="Show the shared preview link">">
-              <svg title="Preview" class="mt-icon--inverse mt-icon">
-                <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_preview"></use>
-              </svg>
+            <a class="btn item-link copy-popover" href="javascript:void(0);" id="show-preview-url" data-href="<mt:var name="script_full_url" escape="html">?__mode=shared_preview&spid=<mt:var name="spid" escape="url" escape="html">" title="<__trans phrase="Show the shared preview link">">
+              <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="<__trans phrase="Show the shared preview link">">
+                <svg title="Preview" class="mt-icon--inverse mt-icon">
+                  <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_preview"></use>
+                </svg>
+              </span>
             </a>
           </li>
           <li class="mt-sharedPreviewNav__item">
-            <a class="btn item-link copy-popover" href="javascript:void(0);" id="show-permalink" data-toggle="tooltip" data-placement="bottom" data-href="<mt:var name="permalink" escape="html">" title="<__trans phrase="Show permalink at publication">">
-              <svg title="Permalink" class="mt-icon--inverse mt-icon">
-                <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_permalink"></use>
-              </svg>
+            <a class="btn item-link copy-popover" href="javascript:void(0);" id="show-permalink" data-href="<mt:var name="permalink" escape="html">" title="<__trans phrase="Show permalink at publication">">
+              <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="<__trans phrase="Show permalink at publication">">
+                <svg title="Permalink" class="mt-icon--inverse mt-icon">
+                  <use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_permalink"></use>
+                </svg>
+              </span>
             </a>
           </li>
         </ul>
@@ -184,6 +197,7 @@
       <mt:unless name="delayed_bootstrap">
         App.bootstrapInline( false );
       </mt:unless>
+        var popoverInstances = new Map();
 
         jQuery('#frame').on("load", function() {
           if (jQuery(this.contentDocument.body).html() == '') {
@@ -226,64 +240,95 @@
         function checkPopover(event) {
           var $target = jQuery(event.target);
           if ($target.hasClass('copy-popover')) {
-            $target.popover('toggle');
+            var popoverInstance = popoverInstances.get(event.target);
+            if (popoverInstance) {
+              popoverInstance.toggle();
+            }
           } else if (!$target.hasClass('popover') && $target.parents('.popover').length == 0) {
-            jQuery('.copy-popover').popover('hide');
+            jQuery('.copy-popover').each(function() {
+              var popoverInstance = popoverInstances.get(this);
+              if (popoverInstance) {
+                popoverInstance.hide();
+              }
+            });
           }
         }
 
         jQuery(function () {
-          var orgDefaultWhiteList = jQuery.fn.tooltip.Constructor.Default.whiteList;
+          var orgDefaultAllowList = jQuery.fn.tooltip.Constructor.Default.allowList;
 
-          if (orgDefaultWhiteList !== undefined) {
+          if (orgDefaultAllowList !== undefined) {
             var addList = {
                input : ['type', 'name', 'class', 'readonly', 'value'],
                svg   : ['title', 'role', 'class', 'xmlns', 'width', 'height'],
                use   : ['xlink:href'],
                span  : ['onclick'],
             };
-
-            jQuery.extend(orgDefaultWhiteList, addList);
+            jQuery.extend(orgDefaultAllowList, addList);
           }
 
-          jQuery('[data-toggle="tooltip"]').tooltip();
+          jQuery('[data-bs-toggle="tooltip"]').tooltip({
+            container: 'body',
+            fallbackPlacements: ['bottom'],
+            offset: [0, 10],
+          });
 
-          jQuery('.copy-popover')
-            .popover({
+          jQuery('.copy-popover').each(function() {
+            var element = this;
+            var content = '<div class="input-group"><input type="text" name="target_link" readonly="readonly" class="form-control popover-item" /><div class="input-group-append"><span onclick="linkCopy(this)" class="btn input-group-text popover-item"><svg title="Copy" role="img" class="mt-icon mt-icon--sm"><use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_duplicate"></svg></span></div></div>';
+            if (!jQuery(element).attr('data-href')) {
+              content = '<div><span><__trans phrase="No permalink at publication"></span></div>';
+            }
+
+            var popover = new bootstrap.Popover(element, {
               container: 'body',
               html: true,
               placement: 'bottom',
               trigger: 'manual',
-            })
-            .on('show.bs.popover', function (event) {
-              jQuery('.copy-popover').popover('hide');
-              jQuery('[data-toggle=tooltip]').tooltip('hide');
+              content: content
+            });
+            popoverInstances.set(element, popover);
 
-              var content = '<div class="input-group"><input type="text" name="target_link" readonly="readonly" class="form-control popover-item" /><div class="input-group-append"><span onclick="linkCopy(this)" class="btn input-group-text popover-item"><svg title="Copy" role="img" class="mt-icon mt-icon--sm"><use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_duplicate"></svg></span></div></div>';
-              if (!jQuery(event.target).attr('data-href')) {
-                content = '<div><span><__trans phrase="No permalink at publication"></span></div>';
+            jQuery(element).on('click', function(event) {
+              event.preventDefault();
+
+              popoverInstances.forEach(function(instance, el) {
+                if (el != element) {
+                  instance.hide();
+                }
+              });
+              jQuery('[data-bs-toggle=tooltip]').tooltip('hide');
+
+              var currentPopover = popoverInstances.get(element);
+              if (currentPopover) {
+                currentPopover.toggle();
               }
-              jQuery(event.target).attr('data-content', content);
+            });
 
-            }).on('shown.bs.popover', function (event) {
-              var link = "";
-              if (jQuery(event.target).attr('data-href')) {
-                link = jQuery(event.target).attr('data-href');
-              }
+            jQuery(element).on('shown.bs.popover', function (event) {
+              setTimeout(function() {
+                var link = "";
+                if (jQuery(event.target).attr('data-href')) {
+                  link = jQuery(event.target).attr('data-href');
+                }
 
-              jQuery('.popover :text')
-                .val(link)
-                .focus()
-                .select()
-                .tooltip({
+                jQuery('.popover input[name="target_link"]')
+                  .val(link)
+                  .focus()
+                  .select();
+
+                jQuery('.popover input[name="target_link"]').tooltip({
                   container: 'body',
                   html: true,
                   title: link,
                   placement: 'bottom',
-                   trigger: 'hover',
-                   boundary: 'window'
-                })
+                  trigger: 'hover',
+                  boundary: 'window'
+                });
+              });
             });
+          });
+
           jQuery(document).on('click', function (event) {
             checkPopover(event);
           });

@@ -153,6 +153,7 @@ sub shared_preview {
         = $app->translate_templatized( $param->{preview_content} );
     $param->{mt_static_shared_preview}
         = $app->static_path . 'plugins/SharedPreview/';
+    $param->{admin_theme_id} = MT->config->AdminThemeId;
 
     return $app->component('SharedPreview')
         ->load_tmpl( 'shared_preview_strip.tmpl', $param );
