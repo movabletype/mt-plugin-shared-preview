@@ -1,0 +1,68 @@
+<mt:setvar name="page_title" value="<__trans phrase="Shared Preview">">
+<mt:setvar name="no_page_header" value="1">
+<mt:setvar name="complete" value="1">
+<mt:setvar name="screen_id" value="sign-in">
+<mt:setvar name="screen_class" value="sign-in">
+<mt:setvarblock name="html_head" append="1" escape="none">  <meta name='robots' content='noindex,nofollow' /></mt:setvarblock>
+
+<mt:setvarblock name="page_content">
+<form method="post" action="<mt:var name="script_url" escape="html">">
+<mt:loop name="shared_preview_params">
+  <input type="hidden" name="<mt:var name="name" escape="html">" value="<mt:var name="value" escape="html">" />
+</mt:loop>
+<div id="msg-block">
+<mt:if name="error">
+  <mtapp:statusmsg
+     id="error"
+     class="error"
+     can_close="0">
+    <mt:var name="error" escape="html">
+  </mtapp:statusmsg>
+</mt:if>
+</div>
+<p>
+    <mt:if name="site_name">
+      <__trans phrase="In order to view shared preview of [_1], password is required." params="<a href="<mt:var name="site_url" escape="html">"><mt:var name="site_name" escape="html"></a>" >
+    <mt:else>
+      <__trans phrase="Password is required to display this shared preview." >
+    </mt:if>
+    </p>
+  <mtapp:setting
+     id="password"
+     label="<__trans phrase="Password">"
+     label_for="password"
+     label_class="top-label">
+    <input type="password" name="password" id="password" class="form-control text password full" value="" />
+    <p><__trans phrase="This password is different from your login password."></p>
+  </mtapp:setting>
+    <div id="remember-me" class="checkbox mb-4">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" name="sp_remember" id="sp_remember" class="custom-control-input" value="1" accesskey="r" />
+        <label class="custom-control-label" for="sp_remember"><__trans phrase="Remember me?"></label>
+      </div>
+    </div>
+    <div class="row align-items-center actions-bar actions-bar-login">
+      <div class="col-12 col-md-auto order-first order-md-last mb-4 mb-md-0 ml-auto text-right">
+        <button
+           type="submit"
+           id="sign-in-button"
+           accesskey="s"
+           title="<__trans phrase="View">"
+           class="btn__mobile btn-primary">
+          <__trans phrase="View">
+        </button>
+      </div>
+    </div>
+</form>
+</mt:setvarblock>
+
+<mt:setvarblock name="js_include" append="1" escape="none">
+<script type="text/javascript">
+/* <![CDATA[ */
+
+/* ]]> */
+</script>
+</mt:setvarblock>
+
+<mt:include name="layout/chromeless.tmpl">
+<mt:var name="layout" escape="none">

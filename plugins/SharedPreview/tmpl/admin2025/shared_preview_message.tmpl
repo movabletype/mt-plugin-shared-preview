@@ -1,0 +1,11 @@
+<mt:setvar name="message" value="<__trans phrase="Open the shared preview">">
+<mt:if name="add_content_data">
+<mtapp:statusmsg
+  id="saved-shared-preview"
+  class="success"
+  can_close="1">
+  <a href="<mt:var name="href">"><mt:var name="message"></a>
+</mtapp:statusmsg>
+<mt:else>
+<a href="<mt:var name="href">"><mt:var name="message"></a>
+</mt:if>

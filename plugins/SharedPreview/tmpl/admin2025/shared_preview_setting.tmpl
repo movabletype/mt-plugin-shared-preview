@@ -1,0 +1,127 @@
+
+<mtapp:setting
+    id="shared-preview-password"
+    label="<__trans phrase="Password">"
+    show_hint="1">
+  <p><__trans phrase="Use basic Latin characters only."></p>
+  <mt:loop name="sp_password[]">
+  <mt:setvar name="is_loop" value="1">
+  <ul id="sp_password_block<mt:var name="__counter__" escape="html">" class="list-inline mb-0" style="clear: both;">
+    <li class="list-inline-item w-25 float-left">
+      <input type="text" name="sp_password[]" class="form-control" value="<mt:var name="__value__" escape="html">" data-index="<mt:var name="__counter__" escape="html">" maxlength="20" />
+    </li>
+    <li class="list-inline-item delete-password-btn" <mt:if name="__counter__" eq="1">style="display: none;"</mt:if>>
+        <button type="button" class="btn btn-default btn-sm delete-password" data-target="#sp_password_block<mt:var name="__counter__" escape="html">" style="margin-top: 3px;"><svg title="<__trans phrase="Delete">" role="img" class="mt-icon mt-icon--sm"><use xlink:href="<$mt:var name="static_uri" escape="html"$>images/sprite.svg#ic_trash"></use></svg><__trans phrase="Delete"></button>
+    </li>
+  </ul>
+  </mt:loop>
+  <div style="clear: both;">
+    <a href="javascript:void(0);" id="add_password" ><__trans phrase="Add Password."></a>
+  </div>
+</mtapp:setting>
+
+<script type="text/javascript">
+jQuery(function($) {
+
+    jQuery('button.delete-password').on('click', function () {
+        clickDeletePassword(this);
+    });
+
+    jQuery('#add_password').on('click', function(){
+        setPasswordArea();
+        setSpValidate();
+    });
+
+    jQuery('form').on('submit', function(){
+        if (jQuery(this).find('input[name="plugin_sig"]').val() != 'SharedPreview') {
+            return;
+        }
+
+        if (jQuery(this).find('input[name="sp_password[]"]').length < 1) {
+            return;
+        }
+
+        jQuery(this).find('input[name="sp_password[]"]').each(function(index){
+            var value = jQuery(this).val();
+            var duplicate = 0;
+            jQuery('form').find('input[name="sp_password[]"]').each(function(index){
+                if (jQuery(this).val() === value) {
+                    duplicate++;
+                };
+            });
+
+            if (duplicate > 1) {
+                jQuery(this).attr('name', 'sp_duplicate');
+            }
+        });
+
+    });
+
+    function setPasswordArea() {
+        var copy = jQuery('ul[id^=sp_password_block]').last().clone();
+        var count = jQuery('input[name="sp_password[]"]').length;
+        var counter = parseInt(copy.find('input').attr('data-index')) + 1;
+        var newId = 'sp_password_block' + counter;
+        var target = '#' + copy.attr('id');
+
+        copy.attr('id', newId)
+        .find('input')
+        .attr('name', 'sp_password[]')
+        .attr('data-index', counter)
+        .val('');
+
+        if (jQuery('input[name="sp_password[]"]').length >= 1) {
+            copy.find('.delete-password-btn').css('display','');
+        } else {
+            copy.find('.delete-password-btn').css('display','none');
+        }
+
+        copy.find('.delete-password').attr('data-target', '#' + newId)
+        .on('click', function () {
+            clickDeletePassword(this)
+        });
+
+        jQuery(target).after(copy);
+    }
+
+    function clickDeletePassword(event) {
+        var target = jQuery(event).attr('data-target');
+        var inputName = 'input[name="sp_password[]"]';
+
+        if (jQuery('input[name="sp_password[]"]').length > 1) {
+           jQuery(target).remove();
+           if (jQuery(inputName).length <= 1) {
+               jQuery(inputName).parent().next().css('display','none');
+           }
+        }
+    }
+
+    function setSpValidate() {
+        jQuery('input[name="sp_password[]"]').off('invalid');
+        jQuery('input[name="sp_password[]"]').attr({required:true, pattern:"^[0-9A-Za-z]+$"});
+        jQuery('input[name="sp_password[]"]').on('invalid', function(e) {
+            var target = e.target;
+            var message = '';
+
+            if (target.validity.patternMismatch) {
+                message = "<__trans phrase="Use basic Latin characters only.">";
+                target.setCustomValidity(message);
+            } else if (target.validity.valueMissing) {
+                message = "<__trans phrase="Please fill out this field.">";
+                target.setCustomValidity(message);
+            }
+            else {
+                target.setCustomValidity('');
+            }
+
+            if (target.validity.customError === false
+                && target.validity.patternMismatch === false
+                && target.validity.valueMissing === false)
+            {
+                e.preventDefault();
+            }
+
+        });
+    }
+});
+</script>
