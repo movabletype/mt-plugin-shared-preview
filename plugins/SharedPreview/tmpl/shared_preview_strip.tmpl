@@ -32,8 +32,13 @@
       /* ]]> */
     </script>
 <mt:unless name="optimize_ui">
+<mt:if name="config.usejquery4">
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery4/jquery.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery4/jquery-migrate.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+<mt:else>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery-migrate.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+</mt:if>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Core.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Timer.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Cookie.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
@@ -52,8 +57,13 @@
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.validate.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jqueryui/jquery-ui.js?v=<$mt:var name="mt_version_id" escape="url" escape="html"$>"></script>
 <mt:else>
+<mt:if name="config.usejquery4">
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery4/jquery.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery4/jquery-migrate.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+<mt:else>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery-migrate.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+</mt:if>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/mt_core_compact.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.validate.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jqueryui/jquery-ui.min.js?v=<$mt:var name="mt_version_id" escape="url" escape="html"$>"></script>
