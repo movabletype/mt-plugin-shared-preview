@@ -1,7 +1,5 @@
 # SharedPreview プラグイン for Movable Type
 
-[![CircleCI](https://circleci.com/gh/movabletype/mt-plugin-shared-preview.svg?style=svg&circle-token=9ca544e8954e5c1246d099393a2ad4906c2e69a8)](https://circleci.com/gh/movabletype/mt-plugin-shared-preview)
-
 記事、ページ、コンテンツデータのプレビューを共有できるようにします。
 
 ## ダウンロード
@@ -13,7 +11,7 @@
 * ダウンロードした zip ファイルを展開します。
 * 展開したフォルダの中の plugins > SharedPreview のフォルダを、サーバー上の plugins フォルダの中にアップロードします。
 * 次に mt-static > plugins > SharedPreview のフォルダを、サーバー上の mt-static > plugins のフォルダの中にアップロードします。
-* 最後に mt-shared-preview.cgi のファイルをアップロードします。  
+* 最後に mt-shared-preview.cgi のファイルをアップロードします。
 ※ Movable Type クラウド版も含む PSGI 動作の場合は mt-shared-preview.cgi のアップロードは必要ありません。
 
 ## 動作確認環境
