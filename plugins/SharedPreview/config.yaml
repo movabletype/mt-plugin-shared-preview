@@ -14,6 +14,10 @@ object_types:
 blog_config_template:
   code: $SharedPreview::SharedPreview::CMS::SharedPreview::config_template
 
+backup_instructions:
+  preview:
+    skip: 1
+
 settings:
   sp_password[]:
     scope: blog
