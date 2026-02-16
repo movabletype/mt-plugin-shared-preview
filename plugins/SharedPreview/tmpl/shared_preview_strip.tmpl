@@ -240,7 +240,7 @@
         }
 
         function checkPopover(event) {
-          var $target = jQuery(event.target);
+          var $target = jQuery(event.target).closest('a');
           if ($target.hasClass('copy-popover')) {
             var popoverInstance = popoverInstances.get(event.target);
             if (popoverInstance) {
