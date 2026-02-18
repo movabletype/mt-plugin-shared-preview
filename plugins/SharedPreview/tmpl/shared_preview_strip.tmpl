@@ -247,6 +247,7 @@
               popoverInstance.toggle();
             }
           } else if (!$target.hasClass('popover') && $target.parents('.popover').length == 0) {
+            jQuery('div.tooltip').tooltip('dispose');
             jQuery('.copy-popover').each(function() {
               var popoverInstance = popoverInstances.get(this);
               if (popoverInstance) {
