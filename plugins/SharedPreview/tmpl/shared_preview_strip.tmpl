@@ -246,7 +246,7 @@
             if (popoverInstance) {
               popoverInstance.toggle();
             }
-          } else if (!$target.hasClass('popover') && $target.parents('.popover').length == 0) {
+          } else if (!$target.hasClass('popover') && jQuery(event.target).parents('.popover').length == 0) {
             jQuery('.copy-popover').each(function() {
               var popoverInstance = popoverInstances.get(this);
               if (popoverInstance) {
