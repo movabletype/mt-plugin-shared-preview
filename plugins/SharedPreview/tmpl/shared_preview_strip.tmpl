@@ -247,7 +247,6 @@
               popoverInstance.toggle();
             }
           } else if (!$target.hasClass('popover') && $target.parents('.popover').length == 0) {
-            jQuery('div.tooltip').tooltip('dispose');
             jQuery('.copy-popover').each(function() {
               var popoverInstance = popoverInstances.get(this);
               if (popoverInstance) {
@@ -317,6 +316,7 @@
                 }
 
                 jQuery('.popover input[name="target_link"]')
+                  .on('click', false)
                   .val(link)
                   .trigger('focus')
                   .trigger('select');
