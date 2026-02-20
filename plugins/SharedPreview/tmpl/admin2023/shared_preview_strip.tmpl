@@ -240,13 +240,13 @@
         }
 
         function checkPopover(event) {
-          var $target = jQuery(event.target);
+          var $target = jQuery(event.target).closest('a');
           if ($target.hasClass('copy-popover')) {
             var popoverInstance = popoverInstances.get(event.target);
             if (popoverInstance) {
               popoverInstance.toggle();
             }
-          } else if (!$target.hasClass('popover') && $target.parents('.popover').length == 0) {
+          } else if (!$target.hasClass('popover') && jQuery(event.target).parents('.popover').length == 0) {
             jQuery('.copy-popover').each(function() {
               var popoverInstance = popoverInstances.get(this);
               if (popoverInstance) {
@@ -316,6 +316,7 @@
                 }
 
                 jQuery('.popover input[name="target_link"]')
+                  .on('click', false)
                   .val(link)
                   .trigger('focus')
                   .trigger('select');
