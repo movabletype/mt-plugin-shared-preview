@@ -32,8 +32,13 @@
       /* ]]> */
     </script>
 <mt:unless name="optimize_ui">
+<mt:if name="config.usejquery4">
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery4/jquery.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery4/jquery-migrate.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+<mt:else>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery-migrate.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+</mt:if>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Core.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Timer.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/common/Cookie.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
@@ -52,8 +57,13 @@
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.validate.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jqueryui/jquery-ui.js?v=<$mt:var name="mt_version_id" escape="url" escape="html"$>"></script>
 <mt:else>
+<mt:if name="config.usejquery4">
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery4/jquery.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+    <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery4/jquery-migrate.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+<mt:else>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery-migrate.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
+</mt:if>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>js/mt_core_compact.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jquery/jquery.validate.min.js?v=<mt:var name="mt_version_id" escape="url" escape="html">"></script>
     <script type="text/javascript" src="<$mt:var name="static_uri" escape="html"$>jqueryui/jquery-ui.min.js?v=<$mt:var name="mt_version_id" escape="url" escape="html"$>"></script>
@@ -204,7 +214,7 @@
 
         });
 
-        jQuery(window).resize(function() {
+        jQuery(window).on('resize', function() {
             frameResize();
         });
 
@@ -213,7 +223,7 @@
         }
 
         function linkCopy(span) {
-          jQuery(span).parents('.input-group').find('input[name="target_link"]').select();
+          jQuery(span).parents('.input-group').find('input[name="target_link"]').trigger('select');
           var message = "<__trans phrase="Could not copy to the clip board.">";
           if (document.execCommand("Copy")) {
             message = "<__trans phrase="Copied to the clip board.">";
@@ -230,13 +240,13 @@
         }
 
         function checkPopover(event) {
-          var $target = jQuery(event.target);
+          var $target = jQuery(event.target).closest('a');
           if ($target.hasClass('copy-popover')) {
             var popoverInstance = popoverInstances.get(event.target);
             if (popoverInstance) {
               popoverInstance.toggle();
             }
-          } else if (!$target.hasClass('popover') && $target.parents('.popover').length == 0) {
+          } else if (!$target.hasClass('popover') && jQuery(event.target).parents('.popover').length == 0) {
             jQuery('.copy-popover').each(function() {
               var popoverInstance = popoverInstances.get(this);
               if (popoverInstance) {
@@ -306,9 +316,10 @@
                 }
 
                 jQuery('.popover input[name="target_link"]')
+                  .on('click', false)
                   .val(link)
-                  .focus()
-                  .select();
+                  .trigger('focus')
+                  .trigger('select');
 
                 jQuery('.popover input[name="target_link"]').tooltip({
                   container: 'body',
