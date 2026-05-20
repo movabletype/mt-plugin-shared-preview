@@ -25,6 +25,10 @@
 
 ## 更新履歴
 
+### version 0.6
+* jQuery 4 対応を行いました。
+* 合わせて jQuery Migrate の警告に伴う修正をしました。
+
 ### version 0.5
 * Bootstrap 5 対応を行いました。
 
