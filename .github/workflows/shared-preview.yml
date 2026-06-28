@@ -1,0 +1,60 @@
+name: movabletype/mt-plugin-shared-preview
+on:
+  push:
+    branches:
+    - "**/*"
+  pull_request:
+  schedule:
+    - cron:  '30 0 * * 0' # Sunday Only
+concurrency:
+#   # This item has no matching transformer
+#   maximum_number_of_builds: 0
+  group: "${{ github.ref }}"
+  cancel-in-progress: true
+env:
+  MT_TEST_IGNORE_FIXTURE: '0'
+  MT_TEST_CORE_REPOSITORY: 'movabletype'
+permissions:
+  contents: read
+  packages: write
+jobs:
+  test:
+    env:
+      TEST_IMAGE_NAME: fedora39
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test:
+          - "plugins/SharedPreview/t"
+    steps:
+      - name: Generate token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ secrets.CI_CHECKOUT_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_CHECKOUT_APP_PRIVATE_KEY }}
+          owner: movabletype
+          repositories: ${{ env.MT_TEST_CORE_REPOSITORY }}
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: docker login
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: core checkout
+        uses: actions/checkout@v6
+        with:
+          repository: movabletype/${{ env.MT_TEST_CORE_REPOSITORY }}
+          ref: ${{ steps.check_branch.outputs.ref }}
+          token: ${{ steps.app-token.outputs.token }}
+          path: movabletype
+          persist-credentials: false
+      - name: copy core
+        run: |
+          cp -r movabletype/* .
+          cp movabletype/.perlcriticrc .
+      - name: test
+        run: docker run -t -v $PWD:/mt -w /mt ghcr.io/movabletype/movabletype/test:$TEST_IMAGE_NAME bash -c "prove -lr -j4 -PMySQLPool=MT::Test::Env -It/lib ${{ matrix.test }}"
