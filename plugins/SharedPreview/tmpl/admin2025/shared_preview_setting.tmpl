@@ -98,7 +98,7 @@ jQuery(function($) {
 
     function setSpValidate() {
         jQuery('input[name="sp_password[]"]').off('invalid');
-        jQuery('input[name="sp_password[]"]').attr({required:true, pattern:"^[0-9A-Za-z]+$"});
+        jQuery('input[name="sp_password[]"]').prop('required', true).attr('pattern', "^[0-9A-Za-z]+$");
         jQuery('input[name="sp_password[]"]').on('invalid', function(e) {
             var target = e.target;
             var message = '';
