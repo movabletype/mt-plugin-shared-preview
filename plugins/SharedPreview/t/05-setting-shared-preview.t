@@ -30,6 +30,7 @@ my $blog1_name = 'SharedPreviewBlog1-' . time();
 my $blog2_name = 'SharedPreviewBlog2-' . time();
 my $blog3_name = 'SharedPreviewBlog3-' . time();
 my $blog4_name = 'SharedPreviewBlog4-' . time();
+my $blog5_name = 'SharedPreviewBlog5-' . time();
 
 my $super = 'super';
 my $objs  = MT::Test::Fixture->prepare(
@@ -38,7 +39,8 @@ my $objs  = MT::Test::Fixture->prepare(
             { name => $blog1_name, },
             { name => $blog2_name, },
             { name => $blog3_name, },
-            { name => $blog4_name, }
+            { name => $blog4_name, },
+            { name => $blog5_name, }
         ],
     }
 );
@@ -47,6 +49,7 @@ my $blog1 = MT->model('blog')->load( { name => $blog1_name } ) or die;
 my $blog2 = MT->model('blog')->load( { name => $blog2_name } ) or die;
 my $blog3 = MT->model('blog')->load( { name => $blog3_name } ) or die;
 my $blog4 = MT->model('blog')->load( { name => $blog4_name } ) or die;
+my $blog5 = MT->model('blog')->load( { name => $blog5_name } ) or die;
 
 my $super_author = MT->model('author')->load( { name => $super } ) or die;
 
@@ -58,6 +61,11 @@ my $plugin_data1 = MT::Test::Permission->make_plugindata(
 my $plugin_data2 = MT::Test::Permission->make_plugindata(
     plugin => 'SharedPreview',
     key    => 'configuration:blog:' . $blog2->id,
+);
+my $plugin_data5 = MT::Test::Permission->make_plugindata(
+    plugin => 'SharedPreview',
+    key    => 'configuration:blog:' . $blog5->id,
+    data   => { 'sp_password[]' => '0' }
 );
 
 subtest 'shared preview setting' => sub {
@@ -71,6 +79,17 @@ subtest 'shared preview setting' => sub {
         my $output = request_setting( $blog1->id );
         ok( $output, 'Output' ) or return;
         check_setting($output);
+    };
+
+    subtest 'password is "0"' => sub {
+        my $output = request_setting( $blog5->id );
+        ok( $output, 'Output' ) or return;
+        check_setting($output);
+        like(
+            $output,
+            qr/<input type="text" name="sp_password\[\]"[^>]*value="0"/,
+            'password "0" is shown'
+        );
     };
 
     subtest 'save shared preview setting' => sub {
