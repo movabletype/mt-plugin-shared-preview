@@ -56,7 +56,7 @@ sub login {
     my $password = $app->param('password');
     return load_login_form( $app, $preview_data,
         $site, $app->translate('You must supply a password.') )
-        unless $password;
+        unless defined $password && $password ne '';
 
     my $check_result
         = SharedPreview::Auth::check_auth( $password, $plugin_data );
