@@ -32,20 +32,26 @@ $test_env->prepare_fixture('db');
 
 my $blog1_name  = 'SharedPreviewNeedPasswordBlog1-' . time();
 my $blog2_name  = 'SharedPreviewNoPasswordBlog2-' . time();
+my $blog3_name  = 'SharedPreviewZeroPasswordBlog3-' . time();
 my $entry1_name = 'SharedPreviewEntry1-' . time();
 my $entry2_name = 'SharedPreviewEntry2-' . time();
+my $entry3_name = 'SharedPreviewEntry3-' . time();
 
 my $super = 'super';
 
 my $objs = MT::Test::Fixture->prepare(
     {   author => [ { 'name' => $super }, ],
-        blog   => [ { name   => $blog1_name, }, { name => $blog2_name, }, ],
-
+        blog   => [
+            { name => $blog1_name, },
+            { name => $blog2_name, },
+            { name => $blog3_name, },
+        ],
     }
 );
 
 my $blog1 = MT->model('blog')->load( { name => $blog1_name } ) or die;
 my $blog2 = MT->model('blog')->load( { name => $blog2_name } ) or die;
+my $blog3 = MT->model('blog')->load( { name => $blog3_name } ) or die;
 
 my $super_author = MT->model('author')->load( { name => $super } ) or die;
 
@@ -67,10 +73,24 @@ my $entry2 = MT::Test::Permission->make_entry(
     blog_id     => $blog2->id
 );
 
+my $entry3 = MT::Test::Permission->make_entry(
+    basename    => $entry3_name,
+    title       => $entry3_name,
+    author      => $super,
+    status      => 1,
+    authored_on => '20190703121110',
+    blog_id     => $blog3->id
+);
+
 my $plugin_data = MT::Test::Permission->make_plugindata(
     plugin => 'SharedPreview',
     key    => 'configuration:blog:' . $blog1->id,
-    data   => { 'sp_password[]' => [ 'test', 'test2' ] }
+    data   => { 'sp_password[]' => [ 'test', 'test2', '0' ] }
+);
+my $zero_plugin_data = MT::Test::Permission->make_plugindata(
+    plugin => 'SharedPreview',
+    key    => 'configuration:blog:' . $blog3->id,
+    data   => { 'sp_password[]' => '0' }
 );
 
 my ( $app1, $need_password_spid )
@@ -79,6 +99,9 @@ my ( $app1, $need_password_spid )
 my ( $app2, $no_password_spid )
     = SharedPreviewTest::make_shared_preview( $super_author, $blog2->id,
     $entry2->id );
+my ( $app3, $zero_password_spid )
+    = SharedPreviewTest::make_shared_preview( $super_author, $blog3->id,
+    $entry3->id );
 
 subtest 'login_shared_preview' => sub {
     subtest 'Not need login' => sub {
@@ -94,6 +117,12 @@ subtest 'login_shared_preview' => sub {
                 my $output = get_request_login($need_password_spid);
                 ok( $output, 'Output' ) or return;
                 check_login( $output, $blog1, $need_password_spid, '' );
+            };
+
+            subtest 'password is "0"' => sub {
+                my $output = get_request_login($zero_password_spid);
+                ok( $output, 'Output' ) or return;
+                check_login( $output, $blog3, $zero_password_spid, '' );
             };
         };
 
@@ -125,6 +154,14 @@ subtest 'login_shared_preview' => sub {
             subtest 'Login successful' => sub {
                 my $output
                     = post_request_login( $need_password_spid, 'test', '' );
+                ok( $output, 'Output' ) or return;
+                SharedPreviewTest::check_redirect_shared_preview( $output,
+                    $need_password_spid );
+            };
+
+            subtest 'Login successful with "0"' => sub {
+                my $output
+                    = post_request_login( $need_password_spid, '0', '' );
                 ok( $output, 'Output' ) or return;
                 SharedPreviewTest::check_redirect_shared_preview( $output,
                     $need_password_spid );
