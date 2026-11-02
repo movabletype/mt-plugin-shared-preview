@@ -28,6 +28,7 @@ MT::Test->init_app;
 $test_env->prepare_fixture('db');
 
 my $blog1_name  = 'SharedPreviewBlog1-' . time();
+my $blog2_name  = 'SharedPreviewBlog2-' . time();
 my $entry1_name = 'SharedPreviewEntry1-' . time();
 my $entry2_name = 'SharedPreviewEntry2-' . time();
 
@@ -43,25 +44,28 @@ my $objs = MT::Test::Fixture->prepare(
             { 'name' => $edit_all_posts, is_superuser => 0 },
             { 'name' => $not_permission, is_superuser => 0 },
         ],
-        blog  => [ { name => $blog1_name, }, ],
+        blog  => [ { name => $blog1_name, }, { name => $blog2_name, }, ],
         entry => [
             {   basename    => $entry1_name,
                 title       => $entry1_name,
                 author      => $create_post,
                 status      => 'draft',
                 authored_on => '20190703121110',
+                blog        => $blog1_name,
             },
             {   basename    => $entry2_name,
                 title       => $entry2_name,
                 author      => $super,
                 status      => 'draft',
                 authored_on => '20190703121110',
+                blog        => $blog1_name,
             },
         ]
     }
 );
 
 my $blog1 = MT->model('blog')->load( { name => $blog1_name } ) or die;
+my $blog2 = MT->model('blog')->load({ name => $blog2_name }) or die;
 my $entry1 = MT->model('entry')->load( { basename => $entry1_name } ) or die;
 my $entry2 = MT->model('entry')->load( { basename => $entry2_name } ) or die;
 
@@ -182,6 +186,40 @@ subtest 'make_shared_preview' => sub {
                 'Invalid request error message output.'
             );
         };
+
+        subtest 'type is not supported' => sub {
+            my $output = SharedPreviewTest::request_make_shared_preview(
+                $super_author,     $blog1->id,
+                $super_author->id, 'author'
+            );
+            ok($output, 'Output') or return;
+            like(
+                $output,
+                qr/Invalid type: author/,
+                'Invalid type error message output.'
+            );
+            ok(
+                !MT->model('preview')->exist({ object_type => 'author' }),
+                'Not created a shared preview.'
+            );
+        };
+    };
+
+    subtest 'object does not belong to blog_id' => sub {
+        my $output = SharedPreviewTest::request_make_shared_preview(
+            $super_author, $blog2->id,
+            $entry1->id,   $type
+        );
+        ok($output, 'Output') or return;
+        like(
+            $output,
+            qr/Invalid request/,
+            'Invalid request error message output.'
+        );
+        ok(
+            !MT->model('preview')->exist({ blog_id => $blog2->id }),
+            'Not created a shared preview.'
+        );
     };
 
     subtest 'shared preview data is found' => sub {

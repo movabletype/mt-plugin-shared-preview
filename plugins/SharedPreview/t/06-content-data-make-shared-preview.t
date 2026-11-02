@@ -28,6 +28,7 @@ MT::Test->init_app;
 $test_env->prepare_fixture('db');
 
 my $blog1_name = 'SharedPreviewBlog1-' . time();
+my $blog2_name = 'SharedPreviewBlog2-' . time();
 
 my $super = 'super';
 
@@ -38,11 +39,12 @@ my $objs = MT::Test::Fixture->prepare(
             { 'name' => $super },
             { 'name' => $not_permission, is_superuser => 0 },
         ],
-        blog => [ { name => $blog1_name, }, ],
+        blog => [ { name => $blog1_name, }, { name => $blog2_name, }, ],
     }
 );
 
 my $blog1 = MT->model('blog')->load( { name => $blog1_name } ) or die;
+my $blog2 = MT->model('blog')->load({ name => $blog2_name }) or die;
 
 my $super_author = MT->model('author')->load( { name => $super } ) or die;
 
@@ -278,6 +280,23 @@ subtest 'make_shared_preview' => sub {
                 'Invalid request error message output.'
             );
         };
+    };
+
+    subtest 'object does not belong to blog_id' => sub {
+        my $output = SharedPreviewTest::request_make_shared_preview(
+            $super_author, $blog2->id, $content_data1->id,
+            $type,         $content_type1->id
+        );
+        ok($output, 'Output') or return;
+        like(
+            $output,
+            qr/Invalid request/,
+            'Invalid request error message output.'
+        );
+        ok(
+            !MT->model('preview')->exist({ blog_id => $blog2->id }),
+            'Not created a shared preview.'
+        );
     };
 
     subtest 'shared preview data is found' => sub {
