@@ -20,9 +20,11 @@ sub make_shared_preview {
     my $blog_id = $app->blog->id;
     return $app->errtrans('Invalid request') unless $blog_id;
 
-    my $obj_class = $app->model($type);
     return $app->errtrans( 'Invalid type: [_1]', $type )
-        unless $obj_class;
+        unless grep { $type eq $_ } qw( entry page content_data );
+
+    my $obj = $app->model($type)->load({ id => $id, blog_id => $blog_id });
+    return $app->errtrans('Invalid request') unless $obj;
 
     my $permission_result
         = MT::Preview->can_create_shared_preview( $app, $blog_id, $type,
