@@ -31,6 +31,6 @@ jobs:
             -v ${{ github.workspace }}/mt:/app \
             -v ${{ github.workspace }}/plugins/SharedPreview:/app/plugins/SharedPreview \
             -w /app \
-            ghcr.io/movabletype/movabletype/test:${{ matrix.config.image }} \
+            movabletype/test:${{ matrix.config.image }} \
           prove -j4 -PMySQLPool=MT::Test::Env -It/lib \
             plugins/SharedPreview/t
