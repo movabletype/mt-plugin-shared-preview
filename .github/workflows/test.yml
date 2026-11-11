@@ -1,0 +1,36 @@
+name: Test
+on:
+  push:
+    branches:
+      - "**/*"
+    tags:
+      - "v*"
+      - "*@v*"
+
+jobs:
+  perl:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config:
+          - { image: fedora44 }
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          repository: movabletype/movabletype
+          ref: develop
+          path: mt
+      - uses: docker/login-action@v4.7.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run tests
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}/mt:/app \
+            -v ${{ github.workspace }}/plugins/SharedPreview:/app/plugins/SharedPreview \
+            -w /app \
+            ghcr.io/movabletype/movabletype/test:${{ matrix.config.image }} \
+          prove -j4 -PMySQLPool=MT::Test::Env -It/lib \
+            plugins/SharedPreview/t
