@@ -16,6 +16,7 @@ jobs:
           - { image: fedora44 }
     steps:
       - uses: actions/checkout@v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           repository: movabletype/movabletype
           ref: develop
